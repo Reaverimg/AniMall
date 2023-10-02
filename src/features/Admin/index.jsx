@@ -1,9 +1,7 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { Route, Switch } from "react-router-dom/cjs/react-router-dom";
 import { useRouteMatch } from "react-router-dom/cjs/react-router-dom.min";
-import { Switch, Route } from "react-router-dom/cjs/react-router-dom";
 import AdminCms from "./pages/AdminCms";
-import AccountManage from "./pages/AccountManage";
 
 AdminFeature.propTypes = {};
 
@@ -13,7 +11,7 @@ function AdminFeature(props) {
     <div>
       <Switch>
         <Route path={match.path} component={AdminCms} exact></Route>
-        <Route path={`${match.path}/accounts`} componen={AccountManage}></Route>
+        <Route path={`${match.path}/???`}></Route>
       </Switch>
     </div>
   );

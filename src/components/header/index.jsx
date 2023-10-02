@@ -1,6 +1,7 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom/cjs/react-router-dom";
+import SideBar from "../sidebar";
 
 Header.propTypes = {};
 
@@ -9,6 +10,10 @@ function Header(props) {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
+          <Button color="white">
+            <SideBar></SideBar>
+          </Button>
+
           <Button color="inherit">
             <NavLink
               style={{ color: "white", textDecoration: "none" }}

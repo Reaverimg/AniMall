@@ -8,6 +8,7 @@ import AdminFeature from "./features/Admin/index";
 import StaffFeature from "./features/Staff";
 import Footer from "./components/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
+import SideBar from "./components/sidebar";
 
 function App() {
   return (
@@ -15,7 +16,11 @@ function App() {
       {/* //Neu check role id la guest thi se hien header cua Landing page
     //Neu khong dung thi se hien UI (Navbar, Sidebar,..) cua CMS (Staff,Admin,Trainer) page
     {accounts.roleId === "id" && <Header></Header>} */}
+
       <Header></Header>
+      <Box>
+        <SideBar></SideBar>
+      </Box>
 
       <Switch>
         <Route path="/" component={BuyerFeature} exact></Route>
