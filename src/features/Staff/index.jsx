@@ -5,7 +5,7 @@ import StaffCms from "./pages/StaffCms";
 import newsManage from "./pages/newsManage";
 
 StaffFeature.propTypes = {};
-
+// Note
 function StaffFeature(props) {
   const match = useRouteMatch();
   return (
