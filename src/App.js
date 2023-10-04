@@ -1,13 +1,13 @@
-import { Box, Typography } from "@mui/material";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Switch } from "react-router-dom/cjs/react-router-dom";
 import BuyerFeature from "../src/features/Buyer/index";
 import TrainerFeature from "../src/features/Trainer/index";
 import "./App.css";
+import Footer from "./components/footer";
 import Header from "./components/header";
 import AdminFeature from "./features/Admin/index";
 import StaffFeature from "./features/Staff";
-import Footer from "./components/footer";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { Box } from "@mui/material";
 
 function App() {
   return (
@@ -24,6 +24,9 @@ function App() {
         <Route path="/admin" component={AdminFeature}></Route>
       </Switch>
 
+      {/* //Neu check role id la guest thi se hien footer cua Landing page
+    //Neu khong dung thi se khong hien footer vi CMS (Staff,Admin,Trainer) page khong can footer
+     {accounts.roleId === "id" && <Footer></Footer>} */}
       <Footer></Footer>
     </Box>
   );
