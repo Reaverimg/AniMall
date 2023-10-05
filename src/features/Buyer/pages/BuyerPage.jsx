@@ -148,6 +148,7 @@ function BuyerPage(props) {
         </div>
       </div>
     </section>
+    {/* Commit */}
   </div>;
 }
 
