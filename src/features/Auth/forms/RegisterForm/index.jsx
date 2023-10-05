@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
+  Box,
   Button,
   IconButton,
   InputAdornment,
@@ -11,8 +12,10 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import InputField from "../inputField";
+import PasswordField from "../passwordField";
+import { useFormik } from "formik";
 
 RegisterForm.propTypes = {
   onSubmit: PropTypes.func,
@@ -48,51 +51,12 @@ const classes = {
 };
 
 function RegisterForm(props) {
-  //Validation
-  const schema = yup.object().shape({
-    fullName: yup
-      .string()
-      .required("Pls enter your full name")
-      .test(
-        "should has at least two words",
-        "Please enter at least two words.",
-        (value) => {
-          return value.split("").length >= 2;
-        }
-      ),
-    email: yup
-      .string()
-      .required("Pls enter your email")
-      .email("Pls enter a valid email"),
-    password: yup
-      .string()
-      .required("Pls enter your password")
-      .min(6, "Ples enter at least 6 letters"),
-    retypePassword: yup
-      .string()
-      .required("Pls retype your password")
-      .oneOf([yup.ref("password")], "Password does not match"),
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    retypePassword: "",
   });
-
-  //defaultValue cua form
-  const form = useForm({
-    defaultValues: {
-      fullName: "",
-      email: "",
-      password: "",
-      retypePassword: "",
-    },
-    resolver: yupResolver(schema),
-  });
-
-  //Gui values cua form lên trên component cha
-  const handleSubmit = async (values) => {
-    const { onSubmit } = props;
-    if (onSubmit) {
-      await onSubmit(values);
-    }
-    form.reset();
-  };
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -100,88 +64,157 @@ function RegisterForm(props) {
     setShowPassword((x) => !x);
   };
 
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      retypePassword: "",
+    },
+    validationSchema: yup.object({
+      name: yup
+        .string()
+        .required("Please enter your username")
+        .min(3, "Name too short")
+        .max(20, "Name too long"),
+      email: yup
+        .string()
+        .required("Please enter your username")
+        .email("Invalid email (ABC@gmail.com)"),
+      password: yup
+        .string()
+        .required("Please enter your password")
+        .min(3, "Password too short"),
+      retypePassword: yup
+        .string()
+        .required("Please retype your password")
+        .oneOf(
+          [yup.ref("password")],
+          "Retype password does not match password"
+        ),
+    }),
+    onSubmit: (values) => {
+      setFormData(values);
+      console.log("Register form submitted with values:", values);
+    },
+  });
+
+  const postRegister = async () => {
+    try {
+      const response = await fetch(
+        "http://animall-400708.et.r.appspot.com/api/v1/accounts/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Registration successful:", data);
+        // Handle successful registration, such as redirecting to login page
+      } else {
+        console.error("Registration failed");
+        // Handle failed registration, show error message, etc.
+      }
+    } catch (error) {
+      console.error("Error during registration:", error);
+      // Handle error, show error message, etc.
+    }
+  };
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   postRegister();
+  // };
+
   return (
-    <div>
+    <Box>
       <Typography style={classes.title} component="h3" variant="h5">
         Create Account
       </Typography>
-      {/* <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <InputField name="fullName" label="Fullname" form={form}></InputField>
-        <InputField name="email" label="Email" form={form}></InputField>
-        <PasswordField
-          name="password"
+
+      <form onSubmit={formik.handleSubmit}>
+        <TextField
+          fullWidth
+          margin="normal"
+          id="name"
+          label="Fullname"
+          name="name"
+          type="name"
+          value={formik.values.name}
+          onChange={formik.handleChange}
+        />
+        {formik.touched.name && formik.errors.name ? (
+          <Typography variant="caption" color="red">
+            {formik.errors.name}
+          </Typography>
+        ) : null}
+
+        <TextField
+          fullWidth
+          margin="normal"
+          id="email"
+          label="Email"
+          name="email"
+          type="email"
+          value={formik.values.email}
+          onChange={formik.handleChange}
+        />
+        {formik.touched.email && formik.errors.email ? (
+          <Typography variant="caption" color="red">
+            {formik.errors.email}
+          </Typography>
+        ) : null}
+
+        <TextField
+          fullWidth
+          margin="normal"
+          //helperText="Please enter your email"
+          id="password"
           label="Password"
-          form={form}
-        ></PasswordField>
-        <PasswordField
-          name="retypePassword"
+          name="password"
+          type="password"
+          value={formik.values.password}
+          onChange={formik.handleChange}
+        />
+        {formik.touched.password && formik.errors.password ? (
+          <Typography variant="caption" color="red">
+            {formik.errors.password}
+          </Typography>
+        ) : null}
+
+        <TextField
+          fullWidth
+          margin="normal"
+          //helperText="Please enter your email"
+          id="retypePassword"
           label="Retype Password"
-          form={form}
-        ></PasswordField>
+          name="retypePassword"
+          type="password"
+          value={formik.values.retypePassword}
+          onChange={formik.handleChange}
+        />
+        {formik.touched.retypePassword && formik.errors.retypePassword ? (
+          <Typography variant="caption" color="red">
+            {formik.errors.retypePassword}
+          </Typography>
+        ) : null}
+
         <Button
           type="submit"
-          style={classes.submit}
           variant="contained"
           color="primary"
           fullWidth
           size="large"
         >
-          Create an account
-        </Button>
-      </form> */}
-      <form>
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Email"
-          variant="outlined"
-          type="email"
-          required
-        />
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Password"
-          variant="outlined"
-          type="password"
-          required
-        />
-        <TextField
-          fullWidth
-          margin="normal"
-          label="Retype Password"
-          variant="outlined"
-          type="password"
-          required
-        />
-        {/* <OutlinedInput
-            fullWidth
-            label="password"
-            type={showPassword ? "text" : "password"}
-            required
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={toggleShowPassword}
-                  edge="end"
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-          ></OutlinedInput> */}
-        <Button
-          fullWidth
-          variant="contained"
-          color="primary"
-          type="submit"
-          style={{ marginTop: "1rem" }}
-        >
-          Register
+          Sign up
         </Button>
       </form>
-    </div>
+    </Box>
   );
 }
 
