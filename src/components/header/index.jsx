@@ -20,11 +20,11 @@ function Header(props) {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Button color="inherit">
+            {/* Chưa đăng nhập */}
+            {/* <Button color="inherit">
               <SideBar></SideBar>
-            </Button>
-
-            <Button color="inherit">
+            </Button> */}
+            {/* <Button color="inherit">
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/"
@@ -32,9 +32,9 @@ function Header(props) {
               >
                 Buyer
               </NavLink>
-            </Button>
+            </Button> */}
 
-            <Button color="inherit">
+            {/* <Button color="inherit">
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/trainer/newsmanage"
@@ -42,8 +42,8 @@ function Header(props) {
               >
                 Traniner
               </NavLink>
-            </Button>
-            <Button color="inherit">
+            </Button> */}
+            {/* <Button color="inherit">
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/staff"
@@ -51,8 +51,8 @@ function Header(props) {
               >
                 Staff
               </NavLink>
-            </Button>
-            <Button color="inherit">
+            </Button> */}
+            {/* <Button color="inherit">
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/admin"
@@ -60,8 +60,17 @@ function Header(props) {
               >
                 Admin
               </NavLink>
+            </Button> */}
+            <Button color="inherit">
+              <NavLink
+                style={{ color: "white", textDecoration: "none" }}
+                to="/"
+                activeClassName="active"
+              >
+                Trang chủ
+              </NavLink>
             </Button>
-            <Button color="inherit">Login</Button>
+            <Button color="inherit">Đăng nhập</Button>
           </Toolbar>
         </AppBar>
       </Box>
