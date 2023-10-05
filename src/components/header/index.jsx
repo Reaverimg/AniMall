@@ -46,6 +46,7 @@ function Header(props) {
   };
 
   const handleClose = () => {
+    console.log('close');
     setOpen(false);
   };
 
@@ -54,9 +55,11 @@ function Header(props) {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Box color="inherit">
-              <SideBar></SideBar>
-            </Box>
+            <Button color="inherit">
+              <Box color="inherit">
+                <SideBar></SideBar>
+              </Box>
+            </Button>
 
             <Button color="inherit">
               <NavLink
@@ -68,7 +71,7 @@ function Header(props) {
               </NavLink>
             </Button>
 
-            <Button color="inherit">
+            {/* <Button color="inherit">
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/trainer/newsmanage"
@@ -76,8 +79,8 @@ function Header(props) {
               >
                 Traniner
               </NavLink>
-            </Button>
-            <Button color="inherit">
+            </Button> */}
+            {/* <Button color="inherit">
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/staff"
@@ -85,16 +88,7 @@ function Header(props) {
               >
                 Staff
               </NavLink>
-            </Button>
-            <Button color="inherit">
-              <NavLink
-                style={{ color: "white", textDecoration: "none" }}
-                to="/admin"
-                activeClassName="active"
-              >
-                Admin
-              </NavLink>
-            </Button>
+            </Button> */}
             <Button color="inherit" onClick={handleClickOpen}>
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
@@ -111,8 +105,8 @@ function Header(props) {
           open={open}
           onClose={handleClose}
           aria-labelledby="form-dialog-title"
-          // aria-labelledby="alert-dialog-title"
-          // aria-describedby="alert-dialog-description"
+        // aria-labelledby="alert-dialog-title"
+        // aria-describedby="alert-dialog-description"
         >
           <IconButton
             style={{
@@ -122,7 +116,7 @@ function Header(props) {
               color: theme.palette.grey[500],
               zIndex: 1,
             }}
-            onClose={handleClose}
+            onClick={handleClose}
           >
             <Close></Close>
           </IconButton>
@@ -152,7 +146,7 @@ function Header(props) {
               </>
             )}
           </DialogContent>
-          {/* <DialogActions>
+          <DialogActions>
             <Button
               onClick={handleClose}
               variant="contained"
@@ -162,7 +156,7 @@ function Header(props) {
             >
               Sign in
             </Button>
-          </DialogActions> */}
+          </DialogActions>
         </Dialog>
       </Box>
     </ThemeProvider>
