@@ -122,7 +122,7 @@ function Header(props) {
               color: theme.palette.grey[500],
               zIndex: 1,
             }}
-            onClose={handleClose}
+            onClick={handleClose}
           >
             <Close></Close>
           </IconButton>
