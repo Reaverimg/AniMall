@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./style.css"
+import { Box } from "@mui/material";
 
 BuyerPage.propTypes = {};
 
@@ -28,7 +29,7 @@ function BuyerPage(props) {
     height: `900px`, // Sử dụng chiều cao tính toán từ JavaScript
   };
 
-  return <div>
+  return <Box>
     {/* Banner Section */}
     <section>
       <section className="banner" style={divStyle}>
@@ -149,7 +150,7 @@ function BuyerPage(props) {
       </div>
     </section>
     {/* Commit */}
-  </div>;
+  </Box>;
 }
 
 export default BuyerPage;
