@@ -1,0 +1,91 @@
+.banner {
+    justify-content: center;
+    display: flex;
+}
+
+.buttonSection {
+    background: #fff;
+    width: 250px;
+    height: 90px;
+    border-radius: 50%;
+    border-color: #435334;
+    color: #435334;
+    margin-left: 20%;
+    margin-top: 25%;
+    font-size: x-large;
+    font-weight: 700;
+}
+
+.row {
+    width: 100%;
+}
+
+section {
+    padding: 0 0 10px 0;
+}
+
+.pt-10 {
+    padding-top: 10px;
+}
+.pt-50 {
+    padding-top: 50px;
+}
+
+.pt-100 {
+    padding-top: 100px;
+}
+
+.decor-bg {
+    background-color: #435334;
+    min-height: fit-content;
+}
+
+.decor-bg-img-top {
+    padding: 10px 5px;
+}
+
+.decor-bg-img-top img {
+    height: 500px;
+}
+
+.decor-bg-img-bot {
+    padding: 10px 5px;
+}
+
+.decor-bg-img-bot img {
+    height: 300px;
+}
+
+.decor-bg-img-top-2 {
+    padding: 10px 5px;
+}
+
+.decor-bg-img-top-2 img {
+    height: 300px;
+}
+
+.decor-bg-img-bot-2 {
+    padding: 10px 5px;
+}
+
+.decor-bg-img-bot-2 img {
+    height: 500px;
+}
+
+.about-us {
+    background-color: lightgray;
+}
+ 
+.about-us-text {
+    padding: 30px;
+    padding-top: 40%;
+    justify-content: center;
+    vertical-align: middle;
+    margin: auto 0;
+}
+
+.about-us-text h1 {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
