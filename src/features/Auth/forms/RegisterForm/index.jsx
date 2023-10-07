@@ -53,9 +53,10 @@ const classes = {
 function RegisterForm(props) {
   const [formData, setFormData] = useState({
     name: "",
+    phone: "",
     email: "",
     password: "",
-    retypePassword: "",
+    roleId: 4,
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -67,6 +68,7 @@ function RegisterForm(props) {
   const formik = useFormik({
     initialValues: {
       name: "",
+      phone: "",
       email: "",
       password: "",
       retypePassword: "",
@@ -77,6 +79,11 @@ function RegisterForm(props) {
         .required("Please enter your username")
         .min(3, "Name too short")
         .max(20, "Name too long"),
+      phone: yup
+        .string()
+        .required("Please enter your phone number")
+        .min(7, "Phone number too short")
+        .max(13, "Phone number too long"),
       email: yup
         .string()
         .required("Please enter your username")
@@ -99,8 +106,20 @@ function RegisterForm(props) {
     },
   });
 
+  const handleRegisterSubmit = (event) => {
+    // event.preventDefault();
+    postRegister();
+  };
+
   const postRegister = async () => {
     try {
+      const newAccount = {
+        name: `${formik.values.name}`,
+        phone: `${formik.values.phone}`,
+        email: `${formik.values.email}`,
+        password: `${formik.values.password}`,
+        roleId: 4,
+      };
       const response = await fetch(
         "http://animall-400708.et.r.appspot.com/api/v1/accounts/register",
         {
@@ -108,7 +127,7 @@ function RegisterForm(props) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(newAccount),
         }
       );
 
@@ -125,11 +144,6 @@ function RegisterForm(props) {
       // Handle error, show error message, etc.
     }
   };
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   postRegister();
-  // };
 
   return (
     <Box>
@@ -151,6 +165,22 @@ function RegisterForm(props) {
         {formik.touched.name && formik.errors.name ? (
           <Typography variant="caption" color="red">
             {formik.errors.name}
+          </Typography>
+        ) : null}
+
+        <TextField
+          fullWidth
+          margin="normal"
+          id="phone"
+          label="Phonenumber"
+          name="phone"
+          type="text"
+          value={formik.values.phone}
+          onChange={formik.handleChange}
+        />
+        {formik.touched.phone && formik.errors.phone ? (
+          <Typography variant="caption" color="red">
+            {formik.errors.phone}
           </Typography>
         ) : null}
 
@@ -210,6 +240,7 @@ function RegisterForm(props) {
           color="primary"
           fullWidth
           size="large"
+          onClick={handleRegisterSubmit()}
         >
           Sign up
         </Button>

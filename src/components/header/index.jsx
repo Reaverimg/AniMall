@@ -17,7 +17,7 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { default as React, useState } from "react";
 import { NavLink } from "react-router-dom/cjs/react-router-dom";
 import SideBar from "../sidebar";
-import { Close } from "@mui/icons-material";
+import { AccountCircle, Close } from "@mui/icons-material";
 import LoginForm from "../../features/Auth/forms/LoginForm";
 import RegisterForm from "../../features/Auth/forms/RegisterForm";
 
@@ -37,17 +37,42 @@ const MODE = {
 
 Header.propTypes = {};
 function Header(props) {
+  //state login/register MODE
   const [mode, setMode] = useState(MODE.LOGIN);
 
-  const [open, setOpen] = React.useState(false);
+  //state login/register dialog
+  const [open, setOpen] = useState(false);
 
+  //state menu account
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  // const [loggedInUser, setLoggedInUser] = useState({});
+
+  // const isLoggedIn = !!loggedInUser.id;
+
+  //Open login/register dialog
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  //Close login/register dialog
   const handleClose = () => {
     console.log('close');
     setOpen(false);
+  };
+
+  //close menu account
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  //open menu accoun
+  const handleUserClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleLoggedAccount = (account) => {
+    console.log("Account Logged in :", account);
   };
 
   return (
@@ -98,9 +123,48 @@ function Header(props) {
                 Log in
               </NavLink>
             </Button>
+            {/* {!isLoggedIn && (
+              <NavLink
+                style={{ color: "white", textDecoration: "none" }}
+                to="/"
+              >
+                <Button color="inherit" onClick={handleClickOpen}>
+                  Login
+                </Button>
+              </NavLink>
+            )}
+            {isLoggedIn && (
+              <IconButton style={{ color: "white", textDecoration: "none" }}>
+                <AccountCircle
+                  color="inherit"
+                  onClick={handleUserClick}
+                ></AccountCircle>
+              </IconButton>
+            )} */}
           </Toolbar>
         </AppBar>
 
+        {/* Menu profile */}
+        {/* <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleCloseMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          getContentAnchorEl={null}
+        >
+          <MenuItem onClick={handleCloseMenu}>My account</MenuItem>
+          <MenuItem onClick={handleLoggedAccount}>Logout</MenuItem>
+        </Menu> */}
+
+        {/* Dialog login registrer */}
         <Dialog
           open={open}
           onClose={handleClose}

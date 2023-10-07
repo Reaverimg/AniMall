@@ -8,6 +8,8 @@ import Header from "./components/header";
 import AdminFeature from "./features/Admin/index";
 import StaffFeature from "./features/Staff";
 import { Box } from "@mui/material";
+import { useEffect } from "react";
+import accAPI from "./api/accAPI";
 
 function App() {
   return (
