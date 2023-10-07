@@ -24,6 +24,10 @@ import DeleteDialog from "./Dialog/DeleteDialog";
 import RegisterForm from "./Dialog/RegistrationForm";
 import CloseIcon from '@mui/icons-material/Close';
 import UpdateDialog from "./Dialog/UpdateDialog";
+import RefreshIcon from '@mui/icons-material/Refresh';
+import UpdateAlert from "./Dialog/UpdateAlert";
+import DeleteAler from "./Dialog/DeleteAlert";
+import RegistrationAlert from "./Dialog/RegistrationAlert";
 
 function AccountManage(props) {
     const [searchValue, setSearchValue] = useState("");
@@ -34,8 +38,12 @@ function AccountManage(props) {
     const [filteredAccountData, setFilteredAccountData] = useState([]);
     const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
     const [updateSuccess, setUpdateSuccess] = useState(false);
+    const [deleteSuccess, setDeleteSuccess] = useState(false);
+    const [registereSuccess, setRegisterSuccess] = useState(false);
     const [updateFail, setUpdateFail] = useState(false);
-    //Update and delete data
+
+
+    //Update data
     const [formData, setFormData] = useState({
         idAccount: "",
         roleId: "",
@@ -45,6 +53,7 @@ function AccountManage(props) {
         status: ""
     });
 
+    //Delete data
     const [deleteData, setDeleteData] = useState({
         idAccount: "",
         roleId: "",
@@ -52,6 +61,16 @@ function AccountManage(props) {
         email: "",
         phoneNumber: "",
         status: "false"
+    });
+
+    //Unban data
+    const [unbanData, setUnbandata] = useState({
+        idAccount: "",
+        roleId: "",
+        name: "",
+        email: "",
+        phoneNumber: "",
+        status: "true"
     });
 
     //Create account dialog
@@ -90,7 +109,7 @@ function AccountManage(props) {
             setUpdateSuccess(true)
             setTimeout(() => {
                 setUpdateSuccess(false)
-            }, 2000);
+            }, 3000);
             fetchData()
 
         } catch (error) {
@@ -111,19 +130,18 @@ function AccountManage(props) {
         setUpdateDialogOpen(true);
     };
 
-
+    //Handle Delete account
     const handleDeleteAccount = async () => {
         try {
 
             const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, deleteData);
             console.log("Account delete successfully:", response.data);
-            setUpdateSuccess(true);
+            setDeleteSuccess(true);
             setTimeout(() => {
-                setUpdateSuccess(false)
-            }, 2000);
+                setDeleteSuccess(false)
+            }, 3000);
             handleCloseDeleteDialog();
             fetchData();
-            handleCloseUpdateDialog();
         } catch (error) {
             console.error("Error delete account:", error);
         }
@@ -140,6 +158,34 @@ function AccountManage(props) {
             status: "false"
         });
         setDeleteDialogOpen(true);
+    };
+
+    //Handel Unban acocunt
+    const handleUnbanAccount = async () => {
+        try {
+            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, unbanData);
+            console.log("Account unban successfully:", response.data);
+            setUpdateSuccess(true);
+            setTimeout(() => {
+                setUpdateSuccess(false)
+            }, 3000);
+            handleCloseDeleteDialog();
+            fetchData();
+        } catch (error) {
+            console.error("Error unban account:", error);
+        }
+    };
+
+    const handleUnbanLog = (accountID) => {
+        setSelectedAccount(accountID);
+        setUnbandata({
+            idAccount: accountID.idAccount,
+            roleId: accountID.role.id,
+            name: accountID.name,
+            email: accountID.email,
+            phoneNumber: accountID.phoneNumber,
+            status: "true"
+        });
     };
 
     // Get all account
@@ -224,7 +270,7 @@ function AccountManage(props) {
                     <DialogContent>
                         <RegisterForm
                             fetchData={fetchData}
-                            setUpdateSuccess={setUpdateSuccess}
+                            setRegisterSuccess={setRegisterSuccess}
                             handleCloseCreateDialog={handleCloseCreateDialog}
                         />
                     </DialogContent>
@@ -296,21 +342,36 @@ function AccountManage(props) {
                                         </TableCell>
                                         <TableCell align="right" sx={{ display: 'flex', gap: '8px' }}>
 
-                                            {/* Delete button */}
-                                            <Button
-                                                variant="outlined"
-                                                size="small"
-                                                color="error"
-                                                onClick={() => handleOpenDeleteDialog(account)}
-                                            >
+                                            {account.status === true ? (
 
-                                                <Typography>
-                                                    <DeleteOutlinedIcon />
+                                                //Delete button
+                                                <Button
+                                                    variant="outlined"
+                                                    size="small"
+                                                    color="error"
+                                                    onClick={() => handleOpenDeleteDialog(account)}
+                                                >
+                                                    <Typography>
+                                                        <DeleteOutlinedIcon />
+                                                    </Typography>
+                                                </Button>
+                                            ) : (
 
-                                                </Typography>
-                                            </Button>
-
-
+                                                //Unban button
+                                                <Button
+                                                    variant="outlined"
+                                                    size="small"
+                                                    color="primary"
+                                                    onClick={() => {
+                                                        handleUnbanLog(account);
+                                                        handleUnbanAccount(account);
+                                                    }}
+                                                >
+                                                    <Typography>
+                                                        <RefreshIcon />
+                                                    </Typography>
+                                                </Button>
+                                            )}
 
                                             {/* Update Button */}
                                             <Button
@@ -369,21 +430,21 @@ function AccountManage(props) {
                         </Dialog>
 
 
-                        {/* Success alert  */}
+                        {/* Update alert  */}
                         {updateSuccess && (
-                            <div
-                                style={{
-                                    position: 'fixed',
-                                    top: 20,
-                                    right: 20
-                                }}>
-                                <Paper>
-                                    <Alert variant="filled" severity="success">
-                                        Làm tốt lắm contrai nó hoạt động kìa !!
-                                    </Alert>
-                                </Paper>
-                            </div>
+                            <UpdateAlert />
                         )}
+
+                        {/* Delete alert  */}
+                        {deleteSuccess && (
+                            <DeleteAler />
+                        )}
+
+                        {/* Delete alert  */}
+                        {registereSuccess && (
+                            <RegistrationAlert />
+                        )}
+
                     </Table>
                 </TableContainer>
             </Grid>
