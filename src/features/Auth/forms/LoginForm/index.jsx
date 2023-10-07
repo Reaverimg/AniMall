@@ -1,15 +1,29 @@
-import { Box, Button, TextField, Typography, createTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Snackbar,
+  TextField,
+  Typography,
+  createTheme,
+} from "@mui/material";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import * as Yup from "yup";
+import { SnackbarProvider, useSnackbar } from "notistack";
+import { useEffect } from "react";
 
-LoginForm.propTypes = {};
+LoginForm.propTypes = {
+  closeDialog: PropTypes.func.isRequired,
+  //onSubmit: PropTypes.func.isRequired,
+};
 
 const theme = createTheme();
 
 function LoginForm(props) {
   const [showPassword, setShowPassword] = useState(false);
+
+  const [response, setResponse] = useState({});
 
   const [formData, setFormData] = useState({
     email: "",
@@ -19,6 +33,8 @@ function LoginForm(props) {
   const toggleShowPassword = () => {
     setShowPassword((x) => !x);
   };
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const formik = useFormik({
     initialValues: {
@@ -31,46 +47,53 @@ function LoginForm(props) {
         .email("Invalid email (ABC@gmail.com)"),
       password: Yup.string().required("Please enter your password"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setFormData(values);
-      console.log("Login form submitted with values:", values);
+      // console.log("Login form submitted with values:", values);
     },
   });
 
-  const postLogin = async () => {
-    try {
-      const response = await fetch(
-        "http://animall-400708.et.r.appspot.com/api/v1/accounts/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+  // fetch api login
+  useEffect(() => {
+    const postLogin = async () => {
+      try {
+        const response = await fetch(
+          "http://animall-400708.et.r.appspot.com/api/v1/accounts/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Login successful:", data);
+          localStorage.setItem("ACCOUNT__LOGGED", JSON.stringify(data.data));
+          enqueueSnackbar("Login successful", { variant: "success" });
+          // Handle successful login, such as setting authentication state
+        } else {
+          console.error("Login failed");
+          // Handle failed login, show error message, etc.
         }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Login successful:", data);
-        // Handle successful login, such as setting authentication state
-      } else {
-        console.error("Login failed");
-        // Handle failed login, show error message, etc.
+      } catch (error) {
+        // console.error("Error during login:", error);
+        enqueueSnackbar(error.message, { variant: "error" });
+        // Handle error, show error message, etc.
       }
-    } catch (error) {
-      console.error("Error during login:", error);
-      // Handle error, show error message, etc.
-    }
-  };
+    };
+    postLogin();
+  }, []);
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   postLogin();
-  // };
+  const handleLoginSubmit = (event) => {
+    // event.preventDefault();
+  };
 
   return (
     <Box>
+      {/* Title form */}
       <Typography
         style={{ margin: theme.spacing(2, 0, 3, 0), textAlign: "center" }}
         component="h3"
@@ -79,6 +102,7 @@ function LoginForm(props) {
         Sign In
       </Typography>
 
+      {/* Login Form */}
       <form onSubmit={formik.handleSubmit}>
         <TextField
           fullWidth
@@ -120,6 +144,7 @@ function LoginForm(props) {
           color="primary"
           fullWidth
           size="large"
+          onClick={handleLoginSubmit()}
         >
           Sign in
         </Button>
