@@ -8,8 +8,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-
-function DeleteDialog({ deleteData, setDeleteData, handleCloseDeleteDialog, handleDeleteAccount }) {
+//deleteData, setDeleteData,
+function DeleteDialog({  handleCloseDeleteDialog, handleDeleteAccount }) {
 
   return (
     <div>
@@ -20,20 +20,11 @@ function DeleteDialog({ deleteData, setDeleteData, handleCloseDeleteDialog, hand
         >Are you sure you want to delete this account?</Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
-        <TextField
-          hidden
-          value={deleteData.status}
-          onChange={(e) => setDeleteData({ ...deleteData, status: false })}
-        >
-          <MenuItem value="false">Admin</MenuItem>
-        </TextField>
-        <Button color="error"
-
-
+        <Button variant="contained" color="error"
           onClick={handleDeleteAccount} >
           Delete
         </Button>
+        <Button variant="outlined" color="success" onClick={handleCloseDeleteDialog}>Cancel</Button>
       </DialogActions>
     </div>
 
