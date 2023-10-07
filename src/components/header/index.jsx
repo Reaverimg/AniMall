@@ -67,7 +67,7 @@ function Header(props) {
                 to="/"
                 activeClassName="active"
               >
-                Buyer
+                HOME
               </NavLink>
             </Button>
 
@@ -80,7 +80,7 @@ function Header(props) {
                 Traniner
               </NavLink>
             </Button> */}
-            {/* <Button color="inherit">
+            <Button color="inherit">
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/staff"
@@ -88,7 +88,7 @@ function Header(props) {
               >
                 Staff
               </NavLink>
-            </Button> */}
+            </Button>
             <Button color="inherit" onClick={handleClickOpen}>
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
