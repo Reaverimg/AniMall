@@ -1,22 +1,9 @@
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  IconButton,
-  InputAdornment,
-  OutlinedInput,
-  TextField,
-  Typography,
-  createTheme,
-} from "@mui/material";
+import { Box, Button, TextField, Typography, createTheme } from "@mui/material";
+import { useFormik } from "formik";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import * as yup from "yup";
-import InputField from "../inputField";
-import PasswordField from "../passwordField";
-import { useFormik } from "formik";
-
+import { enqueueSnackbar, useSnackbar } from "notistack";
 RegisterForm.propTypes = {
   onSubmit: PropTypes.func,
 };
@@ -51,13 +38,21 @@ const classes = {
 };
 
 function RegisterForm(props) {
-  const [formData, setFormData] = useState({
+  // const [formData, setFormData] = useState({
+  //   name: "",
+  //   phone: "",
+  //   email: "",
+  //   password: "",
+  //   roleId: 4,
+  // });
+
+  const registerAccount = {
     name: "",
     phone: "",
     email: "",
     password: "",
     roleId: 4,
-  });
+  };
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -67,10 +62,10 @@ function RegisterForm(props) {
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      phone: "",
-      email: "",
-      password: "",
+      name: registerAccount.name,
+      phone: registerAccount.phone,
+      email: registerAccount.email,
+      password: registerAccount.password,
       retypePassword: "",
     },
     validationSchema: yup.object({
@@ -100,55 +95,111 @@ function RegisterForm(props) {
           "Retype password does not match password"
         ),
     }),
-    onSubmit: (values) => {
-      setFormData(values);
-      console.log("Register form submitted with values:", values);
+
+    onSubmit: async (values) => {
+      try {
+        const newAccount = {
+          name: values.name,
+          phone: values.phone,
+          email: values.email,
+          password: values.password,
+          roleId: 4,
+        };
+
+        const response = await fetch(
+          "http://animall-400708.et.r.appspot.com/api/v1/accounts/register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newAccount),
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          enqueueSnackbar("Register Successfully", { variant: "success" });
+          const logIn = async () => {
+            try {
+              const LoggedAccount = {
+                email: data.email,
+                password: data.password,
+              };
+              const response = await fetch(
+                "http://animall-400708.et.r.appspot.com/api/v1/accounts/login",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(LoggedAccount),
+                }
+              );
+
+              if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem(
+                  "ACCOUNT__LOGGED",
+                  JSON.stringify(data.data)
+                );
+                enqueueSnackbar("Register successful", { variant: "success" });
+              } else {
+                console.error("Login failed");
+              }
+            } catch (error) {
+              enqueueSnackbar(error.message, { variant: "error" });
+            }
+          };
+          logIn();
+          // console.log("Registration successful:", data);
+        } else {
+          console.error("Registration failed");
+        }
+      } catch (error) {
+        console.error("Error during registration:", error);
+      }
     },
   });
 
-  const handleRegisterSubmit = (event) => {
-    // event.preventDefault();
-    postRegister();
-  };
+  // const postRegister = async () => {
+  //   try {
+  //     const newAccount = {
+  //       name: `${formik.values.name}`,
+  //       phone: `${formik.values.phone}`,
+  //       email: `${formik.values.email}`,
+  //       password: `${formik.values.password}`,
+  //       roleId: 4,
+  //     };
+  //     const response = await fetch(
+  //       "http://animall-400708.et.r.appspot.com/api/v1/accounts/register",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(newAccount),
+  //       }
+  //     );
 
-  const postRegister = async () => {
-    try {
-      const newAccount = {
-        name: `${formik.values.name}`,
-        phone: `${formik.values.phone}`,
-        email: `${formik.values.email}`,
-        password: `${formik.values.password}`,
-        roleId: 4,
-      };
-      const response = await fetch(
-        "http://animall-400708.et.r.appspot.com/api/v1/accounts/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newAccount),
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Registration successful:", data);
-        // Handle successful registration, such as redirecting to login page
-      } else {
-        console.error("Registration failed");
-        // Handle failed registration, show error message, etc.
-      }
-    } catch (error) {
-      console.error("Error during registration:", error);
-      // Handle error, show error message, etc.
-    }
-  };
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       console.log("Registration successful:", data);
+  //       // Handle successful registration, such as redirecting to login page
+  //     } else {
+  //       console.error("Registration failed");
+  //       // Handle failed registration, show error message, etc.
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during registration:", error);
+  //     // Handle error, show error message, etc.
+  //   }
+  // };
 
   return (
     <Box>
       <Typography style={classes.title} component="h3" variant="h5">
-        Create Account
+        CREATE ACCOUNT
       </Typography>
 
       <form onSubmit={formik.handleSubmit}>
@@ -240,7 +291,6 @@ function RegisterForm(props) {
           color="primary"
           fullWidth
           size="large"
-          onClick={handleRegisterSubmit()}
         >
           Sign up
         </Button>

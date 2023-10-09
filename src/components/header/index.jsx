@@ -1,10 +1,9 @@
+import { AccountCircle, Close } from "@mui/icons-material";
+import GoogleIcon from "@mui/icons-material/Google";
 import {
   AppBar,
   Box,
   Button,
-  DialogActions,
-  DialogContentText,
-  DialogTitle,
   IconButton,
   MenuItem,
   Toolbar,
@@ -14,12 +13,11 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { default as React, useState } from "react";
+import { default as React, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom/cjs/react-router-dom";
-import SideBar from "../sidebar";
-import { AccountCircle, Close } from "@mui/icons-material";
 import LoginForm from "../../features/Auth/forms/LoginForm";
 import RegisterForm from "../../features/Auth/forms/RegisterForm";
+import SideBar from "../sidebar";
 
 const theme = createTheme({
   palette: {
@@ -46,9 +44,11 @@ function Header(props) {
   //state menu account
   const [anchorEl, setAnchorEl] = useState(null);
 
-  // const [loggedInUser, setLoggedInUser] = useState({});
+  //getItem localStorage
+  const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
 
-  // const isLoggedIn = !!loggedInUser.id;
+  //state login icon
+  const [accountLogged, setAccountLogged] = useState(localStorageValue);
 
   //Open login/register dialog
   const handleClickOpen = () => {
@@ -57,34 +57,38 @@ function Header(props) {
 
   //Close login/register dialog
   const handleClose = () => {
-    console.log('close');
     setOpen(false);
   };
 
-  //close menu account
+  //Close menu account
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
 
-  //open menu accoun
+  //Open menu accoun
   const handleUserClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
 
-  const handleLoggedAccount = (account) => {
-    console.log("Account Logged in :", account);
+  const handleLoggedAccount = () => {
+    localStorage.removeItem("ACCOUNT__LOGGED");
   };
+
+  useEffect(() => {
+    if (localStorageValue) {
+      const parsedAccountLogged = JSON.parse(localStorageValue);
+      setAccountLogged(parsedAccountLogged);
+    }
+  }, [localStorageValue]);
 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Button color="inherit">
-              <Box color="inherit">
-                <SideBar></SideBar>
-              </Box>
-            </Button>
+            <Box color="inherit">
+              <SideBar></SideBar>
+            </Box>
 
             <Button color="inherit">
               <NavLink
@@ -96,7 +100,7 @@ function Header(props) {
               </NavLink>
             </Button>
 
-            {/* <Button color="inherit">
+            <Button color="inherit">
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/trainer/newsmanage"
@@ -104,8 +108,9 @@ function Header(props) {
               >
                 Traniner
               </NavLink>
-            </Button> */}
-            {/* <Button color="inherit">
+            </Button>
+
+            <Button color="inherit">
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/staff"
@@ -113,64 +118,55 @@ function Header(props) {
               >
                 Staff
               </NavLink>
-            </Button> */}
-            <Button color="inherit" onClick={handleClickOpen}>
-              <NavLink
-                style={{ color: "white", textDecoration: "none" }}
-                to="/"
-                activeClassName="active"
-              >
-                Log in
-              </NavLink>
             </Button>
-            {/* {!isLoggedIn && (
+
+            {accountLogged == null && (
               <NavLink
                 style={{ color: "white", textDecoration: "none" }}
                 to="/"
               >
                 <Button color="inherit" onClick={handleClickOpen}>
-                  Login
+                  Sign in
                 </Button>
               </NavLink>
             )}
-            {isLoggedIn && (
-              <IconButton style={{ color: "white", textDecoration: "none" }}>
-                <AccountCircle
-                  color="inherit"
-                  onClick={handleUserClick}
-                ></AccountCircle>
+            {accountLogged != null && (
+              <IconButton
+                style={{ color: "white", textDecoration: "none" }}
+                onClick={handleUserClick}
+              >
+                <AccountCircle color="inherit"></AccountCircle>
               </IconButton>
-            )} */}
+            )}
           </Toolbar>
         </AppBar>
 
         {/* Menu profile */}
-        {/* <Menu
+        <Menu
           keepMounted
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleCloseMenu}
           anchorOrigin={{
             vertical: "bottom",
-            horizontal: "right",
+            horizontal: "left",
           }}
           transformOrigin={{
             vertical: "top",
-            horizontal: "right",
+            horizontal: "left",
           }}
-          getContentAnchorEl={null}
         >
-          <MenuItem onClick={handleCloseMenu}>My account</MenuItem>
-          <MenuItem onClick={handleLoggedAccount}>Logout</MenuItem>
-        </Menu> */}
+          <MenuItem onClick={handleCloseMenu}>MY ACCOUNT</MenuItem>
+          <MenuItem onClick={handleLoggedAccount}>SIGN OUT</MenuItem>
+        </Menu>
 
         {/* Dialog login registrer */}
         <Dialog
           open={open}
-          onClose={handleClose}
+          // onClose={handleClose}
           aria-labelledby="form-dialog-title"
-        // aria-labelledby="alert-dialog-title"
-        // aria-describedby="alert-dialog-description"
+          // aria-labelledby="alert-dialog-title"
+          // aria-describedby="alert-dialog-description"
         >
           <IconButton
             style={{
@@ -189,9 +185,9 @@ function Header(props) {
             {mode === MODE.REGISTER && (
               <>
                 <RegisterForm closeDialog={handleClose}></RegisterForm>
-                <Box style={{ margin: "0 auto" }}>
+                <Box style={{ display: "flex" }} justifyContent="center">
                   <Button color="primary" onClick={() => setMode(MODE.LOGIN)}>
-                    Already have account, LOG IN here
+                    Already have account, LOG IN here !
                   </Button>
                 </Box>
               </>
@@ -200,17 +196,29 @@ function Header(props) {
               <>
                 <LoginForm closeDialog={handleClose}></LoginForm>
                 <Box style={{ margin: "0 auto" }}>
-                  <Button
-                    color="primary"
-                    onClick={() => setMode(MODE.REGISTER)}
-                  >
-                    Don't have an account, REGISTER here
-                  </Button>
+                  <Button color="primary">Forgot password ?</Button>
+                  <Typography align="center">━━━━ OR ━━━━</Typography>
+                  <Box style={{ display: "flex" }} justifyContent="center">
+                    <IconButton color="primary">
+                      <GoogleIcon></GoogleIcon>
+                    </IconButton>
+                  </Box>
+                  <Typography align="center">
+                    ____________________________________________________________
+                  </Typography>
+                  <Box style={{ display: "flex" }} justifyContent="center">
+                    <Button
+                      color="primary"
+                      onClick={() => setMode(MODE.REGISTER)}
+                    >
+                      Don't have an account, REGISTER here !
+                    </Button>
+                  </Box>
                 </Box>
               </>
             )}
           </DialogContent>
-          <DialogActions>
+          {/* <DialogActions>
             <Button
               onClick={handleClose}
               variant="contained"
@@ -220,7 +228,7 @@ function Header(props) {
             >
               Sign in
             </Button>
-          </DialogActions>
+          </DialogActions> */}
         </Dialog>
       </Box>
     </ThemeProvider>
