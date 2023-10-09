@@ -1,21 +1,18 @@
-import {
-  Box,
-  Button,
-  Snackbar,
-  TextField,
-  Typography,
-  createTheme,
-} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { Box, Button, TextField, Typography, createTheme } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import { useSnackbar } from "notistack";
 import PropTypes from "prop-types";
+import React, { useState } from "react";
 import * as Yup from "yup";
-import { SnackbarProvider, useSnackbar } from "notistack";
-import { useEffect } from "react";
 
 LoginForm.propTypes = {
   closeDialog: PropTypes.func.isRequired,
-  //onSubmit: PropTypes.func.isRequired,
 };
 
 const theme = createTheme();
@@ -23,23 +20,25 @@ const theme = createTheme();
 function LoginForm(props) {
   const [showPassword, setShowPassword] = useState(false);
 
-  const [response, setResponse] = useState({});
+  const { enqueueSnackbar } = useSnackbar();
 
-  const [formData, setFormData] = useState({
+  const { closeDialog } = props;
+
+  const Account = {
     email: "",
     password: "",
-  });
-
-  const toggleShowPassword = () => {
-    setShowPassword((x) => !x);
   };
 
-  const { enqueueSnackbar } = useSnackbar();
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: Account.email,
+      password: Account.password,
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -48,15 +47,11 @@ function LoginForm(props) {
       password: Yup.string().required("Please enter your password"),
     }),
     onSubmit: async (values) => {
-      setFormData(values);
-      // console.log("Login form submitted with values:", values);
-    },
-  });
-
-  // fetch api login
-  useEffect(() => {
-    const postLogin = async () => {
       try {
+        const LoggedAccount = {
+          email: values.email,
+          password: values.password,
+        };
         const response = await fetch(
           "http://animall-400708.et.r.appspot.com/api/v1/accounts/login",
           {
@@ -64,18 +59,21 @@ function LoginForm(props) {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(LoggedAccount),
           }
         );
 
         if (response.ok) {
           const data = await response.json();
           console.log("Login successful:", data);
+          if (closeDialog) {
+            closeDialog();
+          }
           localStorage.setItem("ACCOUNT__LOGGED", JSON.stringify(data.data));
           enqueueSnackbar("Login successful", { variant: "success" });
           // Handle successful login, such as setting authentication state
         } else {
-          console.error("Login failed");
+          enqueueSnackbar("Login failed, Check your username or password", { variant: "error" });
           // Handle failed login, show error message, etc.
         }
       } catch (error) {
@@ -83,13 +81,40 @@ function LoginForm(props) {
         enqueueSnackbar(error.message, { variant: "error" });
         // Handle error, show error message, etc.
       }
-    };
-    postLogin();
-  }, []);
+    },
+  });
 
-  const handleLoginSubmit = (event) => {
-    // event.preventDefault();
-  };
+  // // fetch api login
+  //   const postLogin = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         "http://animall-400708.et.r.appspot.com/api/v1/accounts/login",
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify(formData),
+  //         }
+  //       );
+
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log("Login successful:", data);
+  //         localStorage.setItem("ACCOUNT__LOGGED", JSON.stringify(data.data));
+  //         enqueueSnackbar("Login successful", { variant: "success" });
+  //         // Handle successful login, such as setting authentication state
+  //       } else {
+  //         console.error("Login failed");
+  //         // Handle failed login, show error message, etc.
+  //       }
+  //     } catch (error) {
+  //       // console.error("Error during login:", error);
+  //       enqueueSnackbar(error.message, { variant: "error" });
+  //       // Handle error, show error message, etc.
+  //     }
+  //   };
+  //   postLogin();
 
   return (
     <Box>
@@ -99,7 +124,7 @@ function LoginForm(props) {
         component="h3"
         variant="h5"
       >
-        Sign In
+        SIGN IN
       </Typography>
 
       {/* Login Form */}
@@ -138,13 +163,31 @@ function LoginForm(props) {
           </Typography>
         ) : null}
 
+        {/* <OutlinedInput>
+          id="outlined-adornment-password" type=
+          {showPassword ? "text" : "password"}
+          endAdornment=
+          {
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
+          label="Password"
+        </OutlinedInput> */}
+
         <Button
           type="submit"
           variant="contained"
           color="primary"
           fullWidth
           size="large"
-          onClick={handleLoginSubmit()}
         >
           Sign in
         </Button>
