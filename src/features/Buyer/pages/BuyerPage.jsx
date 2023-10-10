@@ -48,57 +48,57 @@ function BuyerPage(props) {
         <h1 className="text-center fw-bolder pt-50">
           TIN TỨC
         </h1>
-        <div className="row pt-50">
+        <section className="row pt-50">
           {/* Column 1 */}
           <div className="col-md-3">
-            <div class="card" style={{ width: 18 + 'rem' }}>
-              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" class="card-img-top" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title">Sự kiện mở cửa sở thú</h5>
-                <p class="card-text">Sở thú sẽ mở cửa cho du khách vào cuối tuần này...</p>
+            <div className="card" style={{ width: 18 + 'rem' }}>
+              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" className="card-img-top" alt="..." />
+              <div className="card-body">
+                <h5 className="card-title">Sự kiện mở cửa sở thú</h5>
+                <p className="card-text">Sở thú sẽ mở cửa cho du khách vào cuối tuần này...</p>
               </div>
             </div>
           </div>
 
           {/* Column 2 */}
           <div className="col-md-3">
-            <div class="card" style={{ width: 18 + 'rem' }}>
-              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" class="card-img-top" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title">Sự kiện mở cửa sở thú</h5>
-                <p class="card-text">Sở thú sẽ mở cửa cho du khách vào cuối tuần này...</p>
+            <div className="card" style={{ width: 18 + 'rem' }}>
+              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" className="card-img-top" alt="..." />
+              <div className="card-body">
+                <h5 className="card-title">Sự kiện mở cửa sở thú</h5>
+                <p className="card-text">Sở thú sẽ mở cửa cho du khách vào cuối tuần này...</p>
               </div>
             </div>
           </div>
           {/* Column 3 */}
           <div className="col-md-3">
-            <div class="card" style={{ width: 18 + 'rem' }}>
-              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" class="card-img-top" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title">Sự kiện mở cửa sở thú</h5>
-                <p class="card-text">Sở thú sẽ mở cửa cho du khách vào cuối tuần này...</p>
+            <div className="card" style={{ width: 18 + 'rem' }}>
+              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" className="card-img-top" alt="..." />
+              <div className="card-body">
+                <h5 className="card-title">Sự kiện mở cửa sở thú</h5>
+                <p className="card-text">Sở thú sẽ mở cửa cho du khách vào cuối tuần này...</p>
               </div>
             </div>
           </div>
 
           {/* Column 4 */}
           <div className="col-md-3">
-            <div class="card" style={{ width: 18 + 'rem' }}>
-              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" class="card-img-top" alt="..." />
-              <div class="card-body">
-                <h5 class="card-title">Sự kiện mở cửa sở thú</h5>
-                <p class="card-text">Sở thú sẽ mở cửa cho du khách vào cuối tuần này...</p>
+            <div className="card" style={{ width: 18 + 'rem' }}>
+              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" className="card-img-top" alt="..." />
+              <div className="card-body">
+                <h5 className="card-title">Sự kiện mở cửa sở thú</h5>
+                <p className="card-text">Sở thú sẽ mở cửa cho du khách vào cuối tuần này...</p>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </section>
     <section className="pt-100">
       <div className="row about-us">
         <div className="col-md-6">
           <div style={{ width: '100%' }}>
-            <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" class="card-img-top" alt="..." />
+            <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" className="card-img-top" alt="..." />
           </div>
         </div>
         <div className="col-md-6">
@@ -116,34 +116,34 @@ function BuyerPage(props) {
         <div className="decor-bg row">
           <div className="col-md-3">
             <div className="decor-bg-img-top">
-              <img src="https://res.cloudinary.com/dv0jmkfnn/image/upload/v1696499134/news/b9iswyhoqyh9agpdtkqf.jpg" class="card-img-top" alt="..." />
+              <img src="https://res.cloudinary.com/dv0jmkfnn/image/upload/v1696499134/news/b9iswyhoqyh9agpdtkqf.jpg" className="card-img-top" alt="..." />
             </div>
             <div className="decor-bg-img-bot">
-              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" class="card-img-top" alt="..." />
+              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" className="card-img-top" alt="..." />
             </div>
           </div>
           <div className="col-md-3">
             <div className="decor-bg-img-top-2">
-              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" class="card-img-top" alt="..." />
+              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" className="card-img-top" alt="..." />
             </div>
             <div className="decor-bg-img-bot-2">
-              <img src="https://res.cloudinary.com/dv0jmkfnn/image/upload/v1696499132/news/sno7jdpq1o1sydh54xym.jpg" class="card-img-top" alt="..." />
+              <img src="https://res.cloudinary.com/dv0jmkfnn/image/upload/v1696499132/news/sno7jdpq1o1sydh54xym.jpg" className="card-img-top" alt="..." />
             </div>
           </div>
           <div className="col-md-3">
             <div className="decor-bg-img-top">
-              <img src="https://res.cloudinary.com/dv0jmkfnn/image/upload/v1696499132/news/dyxcck4djxqysdvx6dyv.jpg" class="card-img-top" alt="..." />
+              <img src="https://res.cloudinary.com/dv0jmkfnn/image/upload/v1696499132/news/dyxcck4djxqysdvx6dyv.jpg" className="card-img-top" alt="..." />
             </div>
             <div className="decor-bg-img-bot">
-              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" class="card-img-top" alt="..." />
+              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" className="card-img-top" alt="..." />
             </div>
           </div>
           <div className="col-md-3">
             <div className="decor-bg-img-top-2">
-              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" class="card-img-top" alt="..." />
+              <img src="https://res.cloudinary.com/dw5ucgy1y/image/upload/v1696334107/news/jku6bumsu9eyjxuvbpy4.png" className="card-img-top" alt="..." />
             </div>
             <div className="decor-bg-img-bot-2">
-              <img src="https://res.cloudinary.com/dv0jmkfnn/image/upload/v1696499132/news/cquxj6zjrxfacxrlnicd.jpg" class="card-img-top" alt="..." />
+              <img src="https://res.cloudinary.com/dv0jmkfnn/image/upload/v1696499132/news/cquxj6zjrxfacxrlnicd.jpg" className="card-img-top" alt="..." />
             </div>
           </div>
         </div>
