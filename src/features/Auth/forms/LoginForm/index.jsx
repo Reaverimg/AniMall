@@ -73,7 +73,9 @@ function LoginForm(props) {
           enqueueSnackbar("Login successful", { variant: "success" });
           // Handle successful login, such as setting authentication state
         } else {
-          enqueueSnackbar("Login failed, Check your username or password", { variant: "error" });
+          enqueueSnackbar("Login failed, Check your username or password", {
+            variant: "error",
+          });
           // Handle failed login, show error message, etc.
         }
       } catch (error) {
