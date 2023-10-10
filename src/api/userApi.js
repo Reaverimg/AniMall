@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 
 const userApi = {
   register(data) {
-    const url = "/accounts/register";
+    const url = "v1/accounts/register";
     return axiosClient.post(url, data);
   },
   login(data) {
