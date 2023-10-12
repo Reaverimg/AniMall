@@ -1,15 +1,11 @@
 
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 7%;
-  max-width: 1200px;
-  min-width: none;
+.admin-container { 
+  display: block;
+  margin: 9%;
 }
 
 
-.table-title {
+.admin-table-title {
   display: flex;
   justify-content: center;
   align-items: center;
