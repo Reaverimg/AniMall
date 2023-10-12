@@ -8,6 +8,7 @@ import {
     DialogTitle,
     Grid,
     IconButton,
+    Pagination,
     Table,
     TableBody,
     TableCell,
@@ -17,68 +18,107 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import Pagination from '@mui/material/Pagination';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Paper from '@mui/material/Paper';
 import "./AccountManage.css";
-import DeleteDialog from "./AdminDialog/DeleteDialog";
-import RegisterForm from "./AdminDialog/RegistrationForm";
+import DeleteDialog from "./TicketDialog/DeleteDialog";
+import RegisterForm from "./TicketDialog/RegistrationForm";
 import CloseIcon from '@mui/icons-material/Close';
-import UpdateDialog from "./AdminDialog/UpdateDialog";
+import UpdateDialog from "./TicketDialog/UpdateDialog";
+import UpdateAlert from "./TicketDialog/UpdateAlert";
+import DeleteAler from "./TicketDialog/DeleteAlert";
+import RegistrationAlert from "./TicketDialog/RegistrationAlert";
 import RefreshIcon from '@mui/icons-material/Refresh';
-import UpdateAlert from "./AdminDialog/UpdateAlert";
-import DeleteAler from "./AdminDialog/DeleteAlert";
-import RegistrationAlert from "./AdminDialog/RegistrationAlert";
-import ErrorAlert from "./AdminDialog/ErrorAlert";
-
-function AccountManage(props) {
+import ErrorAlert from "./TicketDialog/ErrorAlert";
+import "./TicketManage.css";
+function TicketManage(props) {
     const [searchValue, setSearchValue] = useState("");
-    const [accountData, setAccountData] = useState([]);
-    const [selectedAccount, setSelectedAccount] = useState(null);
+    const [ticketData, setTicketData] = useState([]);
+    const [selectedTicket, setSelectedTicket] = useState(null);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
-    const [filteredAccountData, setFilteredAccountData] = useState([]);
+    const [filteredTicketData, setFilteredTicketData] = useState([]);
     const [updateDialogOpen, setUpdateDialogOpen] = React.useState(false);
     const [updateSuccess, setUpdateSuccess] = useState(false);
     const [deleteSuccess, setDeleteSuccess] = useState(false);
     const [registereSuccess, setRegisterSuccess] = useState(false);
     const [updateFail, setUpdateFail] = useState(false);
-    const [unbanFail, setUbanFail] = useState(false);
     const [perPage, setPerPage] = useState(10); // Số lượng dữ liệu trên mỗi trang
     const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(0); // Tổng số trang
 
-    //Update data
-    const [formData, setFormData] = useState({
-        idAccount: "",
-        roleId: "",
-        name: "",
-        email: "",
-        phoneNumber: "",
+
+    const [updateData, setUpdateData] = useState({
+        idTicket: "",
+        ticketName: "",
+        ticketPrice: "",
+        ticketType: "",
         status: ""
     });
 
-    //Delete data
     const [deleteData, setDeleteData] = useState({
-        idAccount: "",
-        roleId: "",
-        name: "",
-        email: "",
-        phoneNumber: "",
+        idTicket: "",
+        ticketName: "",
+        ticketPrice: "",
+        ticketType: "",
         status: "false"
     });
 
-    //Unban data
-    const [unbanData, setUnbandata] = useState({
-        idAccount: "",
-        roleId: "",
-        name: "",
-        email: "",
-        phoneNumber: "",
+    const [activeData, setActiveData] = useState({
+        idTicket: "",
+        ticketName: "",
+        ticketPrice: "",
+        ticketType: "",
         status: "true"
     });
 
-    //Create account dialog
+    //Update ticket dialog
+    const handleCloseUpdateDialog = () => {
+        setUpdateDialogOpen(false);
+    };
+
+    //Handle Update ticket
+    const handleUpdateTicket = async () => {
+        console.log(updateData);
+        if (!updateData.ticketName || !updateData.ticketPrice || !updateData.ticketType) {
+            setUpdateFail(true);
+            setTimeout(() => {
+                setUpdateFail(false);
+            }, 2000);
+            return;
+        }
+        try {
+            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/tickets/${selectedTicket.idTicket}`, updateData);
+            console.log("Ticket updated successfully:", response.data.data);
+            handleCloseUpdateDialog();
+            setUpdateSuccess(true);
+            setTimeout(() => {
+                setUpdateSuccess(false);
+            }, 3000);
+            fetchData(currentPage);
+        } catch (error) {
+            console.error("Error updating ticket:", error);
+            setUpdateFail(true);
+            setTimeout(() => {
+                setUpdateFail(false);
+            }, 3000);
+        }
+    };
+
+    const handleOpenUpdateDialog = (ticket) => {
+        setSelectedTicket(ticket);
+        console.log("select ticket", selectedTicket)
+        setUpdateData({
+            idTicket: ticket.idTicket,
+            ticketName: ticket.ticketName,
+            ticketPrice: ticket.ticketPrice,
+            ticketType: ticket.ticketType,
+            status: ticket.status
+        });
+        setUpdateDialogOpen(true);
+    };
+
+    //Create ticket dialog
     const handleCloseCreateDialog = () => {
         setCreateDialogOpen(false);
     };
@@ -87,153 +127,99 @@ function AccountManage(props) {
         setCreateDialogOpen(true);
     };
 
-    //Delete account dialog
+    //Delete dialog
+    const handleOpenDeletetDialog = (ticketD) => {
+        setSelectedTicket(ticketD);
+        setDeleteData({
+            idTicket: ticketD.idTicket,
+            ticketName: ticketD.ticketName,
+            ticketPrice: ticketD.ticketPrice,
+            ticketType: ticketD.ticketType,
+            status: "false"
+        });
+        console.log("delete trươc khi gui", setDeleteData);
+        setDeleteDialogOpen(true);
+    }
+
     const handleCloseDeleteDialog = () => {
         setDeleteDialogOpen(false);
     };
 
-
-    //Update account dialog
-    const handleCloseUpdateDialog = () => {
-        setUpdateDialogOpen(false);
-    };
-
-    // Handle updating the account
-    const handleUpdateAccount = async () => {
-        if (!formData.name || !formData.email || !formData.phoneNumber) {
+    const handleDeleteTicket = async () => {
+        try {
+            console.log(deleteData)
+            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/tickets/${selectedTicket.idTicket}`, deleteData);
+            console.log("Delete success", response.data.data);
+            setDeleteSuccess(true);
+            setTimeout(() => {
+                setDeleteSuccess(false);
+            }, 3000);
+            fetchData(currentPage);
+            handleCloseDeleteDialog(true);
+        } catch (error) {
+            console.error(error);
             setUpdateFail(true);
             setTimeout(() => {
-                setUpdateFail(false);
-            }, 2000);
-            return;
+                setUpdateFail(true);
+            }, 3000);
         }
+    };
+
+    //Un Disable Ticket
+    const handleActiveTicket = async (ticketD) => {
+
+        setSelectedTicket(ticketD);
+        setActiveData({
+            idTicket: ticketD.idTicket,
+            ticketName: ticketD.ticketName,
+            ticketPrice: ticketD.ticketPrice,
+            ticketType: ticketD.ticketType,
+            status: "false"
+        });
+        console.log("Active trươc khi gui", setActiveData);
+
         try {
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, formData);
-            console.log("Account updated successfully:", response.data);
-            handleCloseUpdateDialog();
-            setUpdateSuccess(true)
+            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/tickets/${selectedTicket.idTicket}`, activeData);
+            console.log("Active success", response.data.data);
+            setUpdateSuccess(true);
             setTimeout(() => {
                 setUpdateSuccess(false);
             }, 3000);
-            fetchData(currentPage);
-
+            fetchData();
         } catch (error) {
-            console.error("Error updating account:", error);
-            setUbanFail(true);
+            console.error(error);
+            setUpdateFail(true);
             setTimeout(() => {
-                setUbanFail(false);
+                setUpdateFail(true);
             }, 3000);
         }
     };
 
-    const handleOpenUpdateDialog = (account) => {
-        setSelectedAccount(account);
-        setFormData({
-            idAccount: account.idAccount,
-            roleId: account.role.id,
-            name: account.name,
-            email: account.email,
-            phoneNumber: account.phoneNumber,
-            status: account.status
-        });
-        setUpdateDialogOpen(true);
-
-    };
-
-    //Handle Delete account
-    const handleDeleteAccount = async () => {
-        try {
-
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, deleteData);
-            console.log("Account delete successfully:", response.data);
-            setDeleteSuccess(true);
-            setTimeout(() => {
-                setDeleteSuccess(false)
-            }, 3000);
-            handleCloseDeleteDialog();
-            fetchData(currentPage);
-        } catch (error) {
-            console.error("Error delete account:", error);
-            setUbanFail(true);
-            setTimeout(() => {
-                setUbanFail(false);
-            }, 3000);
-        }
-    };
-
-    const handleOpenDeleteDialog = (accountD) => {
-        setSelectedAccount(accountD);
-        setDeleteData({
-            idAccount: accountD.idAccount,
-            roleId: accountD.role.id,
-            name: accountD.name,
-            email: accountD.email,
-            phoneNumber: accountD.phoneNumber,
-            status: "false"
-        });
-        setDeleteDialogOpen(true);
-    };
-
-    //Handel Unban acocunt
-    const handleUnbanAccount = async (accountID) => {
-
-        setSelectedAccount(accountID);
-        setUnbandata({
-            idAccount: accountID.idAccount,
-            roleId: accountID.role.id,
-            name: accountID.name,
-            email: accountID.email,
-            phoneNumber: accountID.phoneNumber,
-            status: "true"
-        });
-
-        try {
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, unbanData);
-            console.log("Account unban successfully:", response.data);
-            fetchData(currentPage);
-            setUpdateSuccess(true);
-            setTimeout(() => {
-                setUpdateSuccess(false)
-            }, 3000);
-        } catch (error) {
-            console.error("Error unban account:", error);
-            setUbanFail(true);
-            setTimeout(() => {
-                setUbanFail(false);
-            }, 3000);
-        }
-    };
-
-    //get all account
+    // Get all ticket
     async function fetchData(page) {
         try {
-            const response = await axios.get(
-                `http://animall-400708.et.r.appspot.com/api/v1/accounts`
-            );
+            const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/tickets/");
             const data = response.data.data;
-            const rolesToFetch = ["TRAINER", "ADMIN", "USER", "STAFF"];
-            const getRoles = data.filter(
-                (account) =>
-                    account.role && rolesToFetch.includes(account.role.roleDesc)
-            );
 
             // Tính toán chỉ số bắt đầu và kết thúc của dữ liệu trên trang hiện tại
             const startIndex = (page - 1) * perPage;
             const endIndex = page * perPage;
 
             // Lấy dữ liệu của trang hiện tại bằng cách slice mảng getRoles
-            const currentPageData = getRoles.slice(startIndex, endIndex);
+            const currentPageData = data.slice(startIndex, endIndex);
 
-            setTotalPages(Math.ceil(getRoles.length / perPage)); // Cập nhật tổng số trang
-            setAccountData(currentPageData); // Cập nhật dữ liệu tài khoản
+             setTotalPages(Math.ceil(data.length / perPage)); // Cập nhật tổng số trang
+
+            console.log(currentPageData)
+            setTicketData(currentPageData);
         } catch (error) {
             console.error(error);
         }
     }
-
     useEffect(() => {
         fetchData(1);
     }, []);
+
 
     function handlePageChange(event, newPage) {
         setCurrentPage(newPage); // Cập nhật trang hiện tại khi người dùng chuyển trang
@@ -242,29 +228,20 @@ function AccountManage(props) {
 
     //Search by name
     useEffect(() => {
-        filterAccountData();
-    }, [searchValue, accountData]);
+        filterTicketData();
+    }, [searchValue, ticketData]);
 
-    function filterAccountData() {
-        const filteredData = accountData.filter((account) =>
-            account.name.toLowerCase().includes(searchValue.toLowerCase())
-        );
-        setFilteredAccountData(filteredData);
-    }
-
-    //Role color
-    const getRowBackgroundColor = (role) => {
-        if (role === "USER") {
-            return { backgroundColor: "blue", color: "white" };
-        } else if (role === "ADMIN") {
-            return { backgroundColor: "darkorange", color: "white" };
-        } else if (role === "STAFF") {
-            return { backgroundColor: "green", color: "white" };
-        } else if (role === "TRAINER") {
-            return { backgroundColor: "brown", color: "white" };
+    function filterTicketData() {
+        if (Array.isArray(ticketData)) {
+            const filteredData = ticketData.filter((ticket) =>
+                ticket.ticketName.toLowerCase().includes(searchValue.toLowerCase())
+            );
+            setFilteredTicketData(filteredData);
+        } else {
+            // Xử lý trường hợp ticketData không phải là mảng
+            // console.error("ticketData is not an array");
         }
-        return {};
-    };
+    }
 
     //Status color
     const getStatusBackgroundColor = (status) => {
@@ -279,19 +256,19 @@ function AccountManage(props) {
     //Body
     return (
 
-        <div className="admin-account-container">
+        <div className="ticket-manage-account-container">
             <Grid item xs>
 
-                {/* Create new account button */}
+                {/* Create new ticket button */}
                 <Button
                     variant="contained"
                     color="success"
                     onClick={handleOpenCreateialog}>
-                    Create Account
+                    Create Ticket
                 </Button>
                 <Dialog open={createDialogOpen} onClose={handleCloseCreateDialog}>
                     <DialogTitle>
-                        Create New Account
+                        Create New Ticket
                         <IconButton
                             aria-label="close"
                             onClick={handleCloseCreateDialog}
@@ -315,18 +292,18 @@ function AccountManage(props) {
                     </DialogContent>
                 </Dialog>
 
-                {/* Account table */}
+                {/* Ticket table */}
                 <TableContainer component={Paper}>
 
                     {/* Table title */}
-                    <div className="admin-table-title">
+                    <div className="ticket-manage-table-title">
                         <span
                             style={{
                                 fontWeight: 'bold',
                                 fontSize: '16px',
                                 marginLeft: '20px'
                             }}>
-                            Account List
+                            Ticket List
                         </span>
                         <TextField
                             label="Search"
@@ -345,17 +322,16 @@ function AccountManage(props) {
                     <Table >
                         <TableHead>
                             <TableRow sx={{ backgroundColor: '#f0f0f0' }}>
-                                <TableCell align="left">User Name</TableCell>
-                                <TableCell align="left">Role</TableCell>
-                                <TableCell align="left">Email</TableCell>
-                                <TableCell align="left">Phone Number</TableCell>
+                                <TableCell align="left">Name</TableCell>
+                                <TableCell align="left">Price</TableCell>
+                                <TableCell align="left">Type</TableCell>
                                 <TableCell align="left">Status</TableCell>
                                 <TableCell align="center">Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {/* No search results */}
-                            {filteredAccountData.length === 0 ? (
+                            {filteredTicketData.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={6} align="center">
                                         <Typography variant="body2">No results found.</Typography>
@@ -363,32 +339,33 @@ function AccountManage(props) {
                                 </TableRow>
                             ) : (
                                 // Search found
-                                filteredAccountData.map((account) => (
-                                    <TableRow key={account.idAccount}>
-                                        <TableCell align="left">{account.name}</TableCell>
+                                filteredTicketData && filteredTicketData.map((ticket) => (
+                                    <TableRow key={ticket.idTicket}>
+                                        <TableCell align="left">{ticket.ticketName}</TableCell>
+
                                         <TableCell align="left">
-                                            <button className="role-but" style={getRowBackgroundColor(account.role.roleDesc)}>
-                                                {account.role.roleDesc}
-                                            </button>
-                                        </TableCell>
-                                        <TableCell align="left">{account.email}</TableCell>
-                                        <TableCell align="left">{account.phoneNumber}</TableCell>
+                                            <button className="price-but">
+                                                {ticket.ticketPrice}
+                                            </button>$</TableCell>
+                                        <TableCell align="left">{ticket.ticketType}</TableCell>
                                         <TableCell align="left">
-                                            <button className="role-but"
-                                                style={getStatusBackgroundColor(account.status.toString())}>
-                                                {account.status ? "Active" : "Banned"}
-                                            </button>
+                                            <div>
+                                                <button className="status-but"
+                                                    style={getStatusBackgroundColor(ticket.status.toString())}>
+                                                    {ticket.status ? "Active" : "Disable"}
+                                                </button>
+                                            </div>
                                         </TableCell>
                                         <TableCell align="right" sx={{ display: 'flex', gap: '8px' }}>
 
-                                            {account.status === true ? (
+                                            {ticket.status === true ? (
 
                                                 //Delete button
                                                 <Button
                                                     variant="outlined"
                                                     size="small"
                                                     color="error"
-                                                    onClick={() => handleOpenDeleteDialog(account)}
+                                                    onClick={() => handleOpenDeletetDialog(ticket)}
                                                 >
                                                     <Typography>
                                                         <DeleteOutlinedIcon />
@@ -401,7 +378,7 @@ function AccountManage(props) {
                                                     variant="outlined"
                                                     size="small"
                                                     color="primary"
-                                                    onClick={() => { handleUnbanAccount(account) }}
+                                                    onClick={() => { handleActiveTicket(ticket) }}
                                                 >
                                                     <Typography>
                                                         <RefreshIcon />
@@ -414,7 +391,7 @@ function AccountManage(props) {
                                                 variant="contained"
                                                 size="small"
                                                 color="success"
-                                                onClick={() => handleOpenUpdateDialog(account)}
+                                                onClick={() => handleOpenUpdateDialog(ticket)}
                                             >
                                                 Update
                                             </Button>
@@ -424,14 +401,13 @@ function AccountManage(props) {
                             )}
                         </TableBody>
 
-                        {/*Open Update dialog */}
-
+                        {/* Open Update dialog */}
                         <Dialog open={updateDialogOpen} onClose={handleCloseUpdateDialog}>
                             <UpdateDialog
-                                formData={formData}
-                                setFormData={setFormData}
+                                updateData={updateData}
+                                setUpdateData={setUpdateData}
                                 handleCloseUpdateDialog={handleCloseUpdateDialog}
-                                handleUpdateAccount={handleUpdateAccount}
+                                handleUpdateTicket={handleUpdateTicket}
                                 updateFail={updateFail}
                             />
                         </Dialog >
@@ -440,13 +416,9 @@ function AccountManage(props) {
                         <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
                             <DeleteDialog
                                 handleCloseDeleteDialog={handleCloseDeleteDialog}
-                                deleteData={deleteData}
-                                setDeleteData={setDeleteData}
-                                handleDeleteAccount={handleDeleteAccount}
-
+                                handleDeleteTicket={handleDeleteTicket}
                             />
                         </Dialog>
-
 
                         {/* Update alert  */}
                         {updateSuccess && (
@@ -463,8 +435,8 @@ function AccountManage(props) {
                             <RegistrationAlert />
                         )}
 
-                        {/* Unban alert */}
-                        {unbanFail && (
+                        {/* Fail alert */}
+                        {updateFail && (
                             <ErrorAlert />
                         )}
 
@@ -485,4 +457,4 @@ function AccountManage(props) {
     );
 }
 
-export default AccountManage;
+export default TicketManage;
