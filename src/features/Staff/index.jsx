@@ -10,7 +10,7 @@ StaffFeature.propTypes = {};
 function StaffFeature(props) {
   const match = useRouteMatch();
   return (
-    <div className="staff-container">
+    <div>
       <Switch>
         <Route path={match.path} component={StaffCms} exact></Route>
         <Route path={`${match.path}/news`} component={newsManage}></Route>
