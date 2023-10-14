@@ -70,7 +70,13 @@ function LoginForm(props) {
             closeDialog();
           }
           localStorage.setItem("ACCOUNT__LOGGED", JSON.stringify(data.data));
-          enqueueSnackbar("Login successful", { variant: "success" });
+          enqueueSnackbar("Login successful", {
+            variant: "success",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "top",
+            },
+          });
           // Handle successful login, such as setting authentication state
         } else {
           enqueueSnackbar("Login failed, Check your username or password", {
@@ -80,7 +86,13 @@ function LoginForm(props) {
         }
       } catch (error) {
         // console.error("Error during login:", error);
-        enqueueSnackbar(error.message, { variant: "error" });
+        enqueueSnackbar(error.message, {
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
         // Handle error, show error message, etc.
       }
     },
