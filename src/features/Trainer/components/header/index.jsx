@@ -10,16 +10,13 @@ import {
   Typography,
 } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
+// import DialogContent from "@mui/material/DialogContent";
 import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { default as React, useEffect, useState } from "react";
-import { NavLink, useHistory } from "react-router-dom/cjs/react-router-dom";
-import LoginForm from "../../features/Auth/forms/LoginForm";
-import RegisterForm from "../../features/Auth/forms/RegisterForm";
-import SideBar from "../sidebar";
-import TrainerHeader from "../../features/Trainer/components/header";
-import { useSnackbar } from "notistack";
+import { NavLink } from "react-router-dom/cjs/react-router-dom";
+import TrainerSideBar from "../../../Trainer/components/sidebar/index";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const theme = createTheme({
   palette: {
@@ -35,13 +32,10 @@ const MODE = {
   REGISTER: "register",
 };
 
-Header.propTypes = {};
-function Header(props) {
+TrainerHeader.propTypes = {};
+function TrainerHeader({ loggout }) {
   //history
   const history = useHistory();
-
-  //snackbar
-  const { enqueueSnackbar } = useSnackbar();
 
   //state login/register MODE
   const [mode, setMode] = useState(MODE.LOGIN);
@@ -54,10 +48,6 @@ function Header(props) {
 
   //getItem localStorage
   const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
-
-  //get RoleId user
-  // const roleID = localStorageValue.roleId;
-  const [roleId, setRoleId] = useState(1);
 
   //state login icon
   const [accountLogged, setAccountLogged] = useState(localStorageValue);
@@ -82,17 +72,10 @@ function Header(props) {
     setAnchorEl(e.currentTarget);
   };
 
-  const handleLoggedAccount = () => {
-    localStorage.removeItem("ACCOUNT__LOGGED");
-    history.push("/");
-    setAccountLogged(localStorage.getItem("ACCOUNT__LOGGED"));
-    enqueueSnackbar("Sign out successfully", {
-      variant: "success",
-      anchorOrigin: {
-        horizontal: "right",
-        vertical: "top",
-      },
-    });
+  const handleLoggedAccount= () => {
+    if (loggout) {
+      loggout();
+    }
   };
 
   useEffect(() => {
@@ -102,80 +85,36 @@ function Header(props) {
     }
   }, [localStorageValue]);
 
-  //Check navabar Role
-  const renderNavbar = () => {
-    switch (roleId) {
-      case 1:
-        return <TrainerHeader loggout={handleLoggedAccount}></TrainerHeader>;
-      case 2:
-        // <StaffHeader></StaffHeader>
-        console.log(2);
-        break;
-      case 3:
-        // <AdminHeader></AdminHeader>
-        console.log(3);
-        break;
-      default:
-        return (
-          <AppBar position="static">
-            <Toolbar>
-              <Box color="inherit">
-                <SideBar></SideBar>
-              </Box>
-
-              <Button color="inherit">
-                <NavLink
-                  style={{ color: "white", textDecoration: "none" }}
-                  to="/"
-                  activeClassName="active"
-                >
-                  Buyer
-                </NavLink>
-              </Button>
-
-              <Button color="inherit">
-                <NavLink
-                  style={{ color: "white", textDecoration: "none" }}
-                  to="/trainer/animalManage"
-                  activeClassName="active"
-                >
-                  Traniner
-                </NavLink>
-              </Button>
-
-              <Button color="inherit">
-                <NavLink
-                  style={{ color: "white", textDecoration: "none" }}
-                  to="/staff"
-                  activeClassName="active"
-                >
-                  Staff
-                </NavLink>
-              </Button>
-              {accountLogged == null && (
-                <Button color="inherit" onClick={handleClickOpen}>
-                  Sign In
-                </Button>
-              )}
-              {accountLogged != null && (
-                <IconButton
-                  style={{ color: "white", textDecoration: "none" }}
-                  onClick={handleUserClick}
-                >
-                  <AccountCircle color="inherit"></AccountCircle>
-                </IconButton>
-              )}
-            </Toolbar>
-          </AppBar>
-        );
-    }
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ flexGrow: 1 }}>
-        {/* Navbar */}
-        {renderNavbar()}
+        <AppBar position="static">
+          <Toolbar>
+            <Box color="inherit">
+              <TrainerSideBar></TrainerSideBar>
+            </Box>
+
+            {/* {accountLogged == null && (
+              <NavLink
+                style={{ color: "white", textDecoration: "none" }}
+                to="/"
+              >
+                <Button color="inherit" onClick={handleClickOpen}>
+                  Sign in
+                </Button>
+              </NavLink>
+            )} */}
+            {accountLogged != null && (
+              <IconButton
+                style={{ color: "white", textDecoration: "none" }}
+                onClick={handleUserClick}
+              >
+                <AccountCircle color="inherit"></AccountCircle>
+              </IconButton>
+            )}
+          </Toolbar>
+        </AppBar>
+
         {/* Menu profile */}
         <Menu
           keepMounted
@@ -194,6 +133,7 @@ function Header(props) {
           <MenuItem onClick={handleCloseMenu}>MY ACCOUNT</MenuItem>
           <MenuItem onClick={handleLoggedAccount}>SIGN OUT</MenuItem>
         </Menu>
+
         {/* Dialog login registrer */}
         <Dialog
           open={open}
@@ -215,7 +155,7 @@ function Header(props) {
             <Close></Close>
           </IconButton>
 
-          <DialogContent>
+          {/* <DialogContent>
             {mode === MODE.REGISTER && (
               <>
                 <RegisterForm closeDialog={handleClose}></RegisterForm>
@@ -251,8 +191,8 @@ function Header(props) {
                 </Box>
               </>
             )}
-          </DialogContent>
-          {/* <DialogActions>
+          </DialogContent> */}
+          {/* <DialogActions>s
             <Button
               onClick={handleClose}
               variant="contained"
@@ -269,4 +209,4 @@ function Header(props) {
   );
 }
 
-export default Header;
+export default TrainerHeader;
