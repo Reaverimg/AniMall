@@ -197,6 +197,17 @@ function TrainerManage(props) {
         }
     };
 
+    //Search by name
+    useEffect(() => {
+        filterAccountData();
+    }, [searchValue, accountData]);
+
+    function filterAccountData() {
+        const filteredData = accountData.filter((account) =>
+            account.name.toLowerCase().includes(searchValue.toLowerCase())
+        );
+        setFilteredAccountData(filteredData);
+    }
 
 
     // Get all account
@@ -218,7 +229,7 @@ function TrainerManage(props) {
             console.error(error);
         }
     }
-    
+
     useEffect(() => {
         fetchData(currentPage);
     }, []);
@@ -301,7 +312,28 @@ function TrainerManage(props) {
                 <TableContainer component={Paper}>
 
                     {/* Table title */}
-
+                    <div className="trainer-account-table-title">
+                        <span
+                            style={{
+                                fontWeight: 'bold',
+                                fontSize: '16px',
+                                marginLeft: '20px'
+                            }}>
+                            Account List
+                        </span>
+                        <TextField
+                            label="Search"
+                            variant="outlined"
+                            size="small"
+                            style={{
+                                marginLeft: 'auto',
+                                marginRight: '10px',
+                                backgroundColor: 'white'
+                            }}
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e.target.value)}
+                        />
+                    </div>
 
                     <Table >
                         <TableHead>
@@ -324,7 +356,7 @@ function TrainerManage(props) {
                                 </TableRow>
                             ) : (
                                 // Search found
-                                filteredTrainers.map((account) => (
+                                filteredAccountData.map((account) => (
                                     <TableRow key={account.idAccount}>
                                         <TableCell align="left">{account.name}</TableCell>
                                         <TableCell align="left">
