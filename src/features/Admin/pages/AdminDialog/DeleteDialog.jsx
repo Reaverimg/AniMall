@@ -8,16 +8,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-//deleteData, setDeleteData,
-function DeleteDialog({  handleCloseDeleteDialog, handleDeleteAccount }) {
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+
+function DeleteDialog({ handleCloseDeleteDialog, handleDeleteAccount }) {
 
   return (
     <div>
-      <DialogTitle>Delete Account</DialogTitle>
+      <DialogTitle sx={{ color: 'red' }}>Delete Account<WarningAmberOutlinedIcon /></DialogTitle>
       <DialogContent>
-        <Typography
-
-        >Are you sure you want to delete this account?</Typography>
+        <Typography>
+          Are you sure you want to delete this account?
+        </Typography>
       </DialogContent>
       <DialogActions>
         <Button variant="contained" color="error"
@@ -27,7 +28,6 @@ function DeleteDialog({  handleCloseDeleteDialog, handleDeleteAccount }) {
         <Button variant="outlined" color="success" onClick={handleCloseDeleteDialog}>Cancel</Button>
       </DialogActions>
     </div>
-
   );
 }
 

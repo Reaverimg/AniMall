@@ -18,7 +18,7 @@ const validationSchema = Yup.object().shape({
     roleId: Yup.number().required("Role is required"),
 });
 
-function RegisterForm({ currenPage,setRegisterSuccess, fetchData, handleCloseCreateDialog }) {
+function RegisterForm({ currenPage, setRegisterSuccess, fetchData, handleCloseCreateDialog }) {
     const [registerResult, setRegisterResult] = useState(null);
     const [roleId, setRoleId] = useState("");
     // const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -175,21 +175,7 @@ function RegisterForm({ currenPage,setRegisterSuccess, fetchData, handleCloseCre
                 </form>
             </div>
 
-            {/* {showSuccessAlert && (
-                <div
-                    style={{
-                        position: 'fixed',
-                        top: 20,
-                        right: 20
-                    }}>
-                    <Paper>
-                        <Alert>
-                            Register Success !!
-                        </Alert>
-                    </Paper>
-                </div>
-            )} */}
-
+            {/* Error alert */}
             {registerResult === 'error' && (
                 <Typography
                     variant="body1"

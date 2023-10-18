@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-    Alert,
     Button,
     Dialog,
     DialogContent,
@@ -20,16 +19,16 @@ import {
 } from "@mui/material";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Paper from '@mui/material/Paper';
-import "./TrainerManage.css";
-import DeleteDialog from "./StaffDialog/DeleteDialog";
-import RegisterForm from "./StaffDialog/RegistrationForm";
+import "../pages/styles/TrainerManage.css";
+import DeleteDialog from "./TrainerManageDialog/DeleteDialog";
+import RegisterForm from "./TrainerManageDialog/RegistrationForm";
 import CloseIcon from '@mui/icons-material/Close';
-import UpdateDialog from "./StaffDialog/UpdateDialog";
+import UpdateDialog from "./TrainerManageDialog/UpdateDialog";
 import RefreshIcon from '@mui/icons-material/Refresh';
-import UpdateAlert from "./StaffDialog/UpdateAlert";
-import DeleteAler from "./StaffDialog/DeleteAlert";
-import RegistrationAlert from "./StaffDialog/RegistrationAlert";
-import ErrorAlert from "./StaffDialog/ErrorAlert";
+import UpdateAlert from "./TrainerManageDialog/UpdateAlert";
+import DeleteAler from "./TrainerManageDialog/DeleteAlert";
+import RegistrationAlert from "./TrainerManageDialog/RegistrationAlert";
+import ErrorAlert from "./TrainerManageDialog/ErrorAlert";
 
 function TrainerManage(props) {
     const [searchValue, setSearchValue] = useState("");
@@ -122,6 +121,7 @@ function TrainerManage(props) {
         }
     };
 
+    // Handle open update dialog account
     const handleOpenUpdateDialog = (account) => {
         setSelectedAccount(account);
         setFormData({
@@ -152,6 +152,7 @@ function TrainerManage(props) {
         }
     };
 
+    // Handle open delete dialog account
     const handleOpenDeleteDialog = (accountD) => {
         setSelectedAccount(accountD);
         setDeleteData({
@@ -168,7 +169,6 @@ function TrainerManage(props) {
     //Handel Unban acocunt
     const handleUnbanAccount = async (accountID) => {
 
-        setSelectedAccount(accountID);
         setUnbandata({
             idAccount: accountID.idAccount,
             roleId: accountID.role.id,
@@ -193,22 +193,9 @@ function TrainerManage(props) {
             setTimeout(() => {
                 setUbanFail(false);
             }, 3000);
-            alert('unban fails')
+            alert('Unban fail, try again!!')
         }
     };
-
-    //Search by name
-    useEffect(() => {
-        filterAccountData();
-    }, [searchValue, accountData]);
-
-    function filterAccountData() {
-        const filteredData = accountData.filter((account) =>
-            account.name.toLowerCase().includes(searchValue.toLowerCase())
-        );
-        setFilteredAccountData(filteredData);
-    }
-
 
     // Get all account
     async function fetchData(page) {
@@ -216,13 +203,10 @@ function TrainerManage(props) {
             const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/accounts");
             const data = response.data.data;
             const getRole = data.filter(account => account.role && account.role.roleDesc === "TRAINER");
-
             const startIndex = (page - 1) * perPage;
             const endIndex = page * perPage;
-
             // Lấy dữ liệu của trang hiện tại bằng cách slice mảng getRoles
             const currentPageData = getRole.slice(startIndex, endIndex);
-
             setTotalPages(Math.ceil(getRole.length / perPage)); // Cập nhật tổng số trang
             setAccountData(currentPageData); // Cập nhật dữ liệu tài khoản
         } catch (error) {
@@ -234,8 +218,9 @@ function TrainerManage(props) {
         fetchData(currentPage);
     }, []);
 
+    //Page Handle
     function handlePageChange(event, newPage) {
-        setCurrentPage(newPage); // Cập nhật trang hiện tại khi người dùng chuyển trang
+        setCurrentPage(newPage);
         fetchData(newPage);
     }
 
@@ -243,7 +228,6 @@ function TrainerManage(props) {
     useEffect(() => {
         filterAccountData();
     }, [searchValue, accountData]);
-
     function filterAccountData() {
         const filteredData = accountData.filter((account) =>
             account.name.toLowerCase().includes(searchValue.toLowerCase())
@@ -254,7 +238,7 @@ function TrainerManage(props) {
     //Role color
     const getRowBackgroundColor = (role) => {
         if (role === "TRAINER") {
-            return { backgroundColor: "brown", color: "white" };
+            return { backgroundColor: "crimson", color: "white" };
         }
         return {};
     };
@@ -264,12 +248,11 @@ function TrainerManage(props) {
         if (status === "true") {
             return { backgroundColor: "green", color: "white" };
         } else if (status === "false") {
-            return { backgroundColor: "gray", color: "white" };
+            return { color: "gray" };
         }
-        return {};
     };
-
     const filteredTrainers = filteredAccountData.filter(account => account.role.roleDesc === "TRAINER");
+
     //Body
     return (
 
@@ -375,7 +358,6 @@ function TrainerManage(props) {
                                         <TableCell align="right" sx={{ display: 'flex', gap: '8px' }}>
 
                                             {account.status === true ? (
-
                                                 //Delete button
                                                 <Button
                                                     variant="outlined"
@@ -383,9 +365,7 @@ function TrainerManage(props) {
                                                     color="error"
                                                     onClick={() => handleOpenDeleteDialog(account)}
                                                 >
-                                                    <Typography>
-                                                        <DeleteOutlinedIcon />
-                                                    </Typography>
+                                                    <DeleteOutlinedIcon />
                                                 </Button>
                                             ) : (
 
@@ -396,9 +376,7 @@ function TrainerManage(props) {
                                                     color="primary"
                                                     onClick={() => { handleUnbanAccount(account) }}
                                                 >
-                                                    <Typography>
-                                                        <RefreshIcon />
-                                                    </Typography>
+                                                    <RefreshIcon />
                                                 </Button>
                                             )}
 
@@ -418,7 +396,6 @@ function TrainerManage(props) {
                         </TableBody>
 
                         {/*Open Update dialog */}
-
                         <Dialog open={updateDialogOpen} onClose={handleCloseUpdateDialog}>
                             <UpdateDialog
                                 formData={formData}
@@ -433,10 +410,7 @@ function TrainerManage(props) {
                         <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
                             <DeleteDialog
                                 handleCloseDeleteDialog={handleCloseDeleteDialog}
-                                deleteData={deleteData}
-                                setDeleteData={setDeleteData}
                                 handleDeleteAccount={handleDeleteAccount}
-
                             />
                         </Dialog>
 
@@ -455,14 +429,14 @@ function TrainerManage(props) {
                             <RegistrationAlert />
                         )}
 
+                        {/* Unban fail alert */}
                         {unbanFail === 'error' && (
                             <ErrorAlert />
                         )}
-
-
                     </Table>
                 </TableContainer>
 
+                {/* Pagination */}
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Pagination
                         count={totalPages}
@@ -470,10 +444,7 @@ function TrainerManage(props) {
                         onChange={handlePageChange}
                     />
                 </div>
-
             </Grid>
-
-
         </div>
     );
 }

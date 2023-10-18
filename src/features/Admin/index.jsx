@@ -4,7 +4,7 @@ import { useRouteMatch } from "react-router-dom/cjs/react-router-dom.min";
 import AdminCms from "./pages/AdminCms";
 import AccountManage from "./pages/AccountManage";
 import TickketManage from "./pages/TicketManage";
-import "./pages/AccountManage.css"
+import "../Admin/pages/styles/AccountManage.css"
 AdminFeature.propTypes = {};
 
 function AdminFeature(props) {

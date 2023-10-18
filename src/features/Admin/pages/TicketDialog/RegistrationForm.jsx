@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
     ticketType: Yup.string().required("Ticket type is require"),
 });
 
-function RegisterForm({ currentPage,setRegisterSuccess, fetchData, handleCloseCreateDialog }) {
+function RegisterForm({ currentPage, setRegisterSuccess, fetchData, handleCloseCreateDialog }) {
     const [registerResult, setRegisterResult] = useState(null);
     const [ticketTypeId, setTicketTypeId] = useState("");
 
@@ -42,8 +42,6 @@ function RegisterForm({ currentPage,setRegisterSuccess, fetchData, handleCloseCr
                     fetchData(currentPage);
                     setTimeout(() => {
                         setRegisterSuccess(false)
-                        // Reload the page
-
                     }, 3000);
                 } else {
                     setRegisterResult("error");
@@ -156,6 +154,7 @@ function RegisterForm({ currentPage,setRegisterSuccess, fetchData, handleCloseCr
                 </form>
             </div>
 
+            {/* Error alert */}
             {registerResult === 'error' && (
                 <Typography
                     variant="body1"
