@@ -12,12 +12,12 @@ import {
   TextField,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-function UpdateDialog({ handleCloseUpdateDialog, updateData, setUpdateData, handleUpdateTicket, updateFail }) {
+function UpdateDialog({ handleCloseUpdateDialog, formData, setFormData, handleUpdateAccount, updateFail }) {
 
   return (
     <div>
       <DialogTitle>
-        Update Ticket
+        Update Account
         <IconButton
           aria-label="close"
           onClick={handleCloseUpdateDialog}
@@ -38,52 +38,64 @@ function UpdateDialog({ handleCloseUpdateDialog, updateData, setUpdateData, hand
           {/* Name */}
           <Grid item xs={12}>
             <TextField style={{ marginTop: '10px' }}
-              label="Ticket Name"
+              label="Name"
               variant="outlined"
               fullWidth
-              value={updateData.ticketName}
-              onChange={(e) => setUpdateData({ ...updateData, ticketName: e.target.value })}
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             />
           </Grid>
 
-          {/* Price */}
+          {/* Email */}
           <Grid item xs={12}>
             <TextField
-              label="Ticket Price"
+              label="Email"
               variant="outlined"
               fullWidth
-              value={updateData.ticketPrice}
-              onChange={(e) => setUpdateData({ ...updateData, ticketPrice: e.target.value })}
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
           </Grid>
 
-          {/* Type */}
+          {/* Phone */}
           <Grid item xs={12}>
             <TextField
-              label="Ticket Type"
+              label="Phone Number"
+              variant="outlined"
+              fullWidth
+              value={formData.phoneNumber}
+              onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+            />
+          </Grid>
+
+          {/* Role */}
+          <Grid item xs={12}>
+            <TextField
+              label="Role"
               variant="outlined"
               fullWidth
               select
-              value={updateData.ticketType}
-              onChange={(e) => setUpdateData({ ...updateData, ticketType: e.target.value })}
+              value={formData.roleId}
+              onChange={(e) => setFormData({ ...formData, roleId: e.target.value })}
+              InputProps={{ readOnly: true }}
             >
-              <MenuItem value="Regular">Regular</MenuItem>
-              <MenuItem value="Adult Premium">Adult Premium</MenuItem>
+              <MenuItem value="3">Trainer</MenuItem>
             </TextField>
           </Grid>
 
           {/* Status */}
           <Grid item xs={12}>
             <TextField
-              label="Ticket Status"
+              label="Status"
               variant="outlined"
               fullWidth
               select
-              value={updateData.status}
-              onChange={(e) => setUpdateData({ ...updateData, status: e.target.value })}
+              value={formData.status}
+              onChange={(e) => setFormData({ ...formData, status: e.target.value })}
             >
               <MenuItem value="true">Active</MenuItem>
-              <MenuItem value="false">Disable</MenuItem>
+              <MenuItem value="false">Deactive</MenuItem>
+
             </TextField>
           </Grid>
         </Grid>
@@ -91,7 +103,7 @@ function UpdateDialog({ handleCloseUpdateDialog, updateData, setUpdateData, hand
       </DialogContent>
       <DialogActions>
         <Button
-          onClick={handleUpdateTicket}
+          onClick={handleUpdateAccount}
           color="success"
           variant="contained">
           Confirm
@@ -100,6 +112,7 @@ function UpdateDialog({ handleCloseUpdateDialog, updateData, setUpdateData, hand
           onClick={handleCloseUpdateDialog}
           color="error"
           variant="outlined">Cancel</Button>
+
       </DialogActions>
 
       {/* Fail alert */}
@@ -112,7 +125,7 @@ function UpdateDialog({ handleCloseUpdateDialog, updateData, setUpdateData, hand
           }}>
           <Paper>
             <Alert variant="filled" severity="error">
-              Error, please try again !!
+              Vui lòng điền đủ thông tin !
             </Alert>
           </Paper>
         </div>

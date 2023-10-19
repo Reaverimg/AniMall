@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-    Alert,
     Button,
     Dialog,
     DialogContent,
@@ -20,7 +19,6 @@ import {
 } from "@mui/material";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Paper from '@mui/material/Paper';
-import "./AccountManage.css";
 import DeleteDialog from "./TicketDialog/DeleteDialog";
 import RegisterForm from "./TicketDialog/RegistrationForm";
 import CloseIcon from '@mui/icons-material/Close';
@@ -30,7 +28,7 @@ import DeleteAler from "./TicketDialog/DeleteAlert";
 import RegistrationAlert from "./TicketDialog/RegistrationAlert";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ErrorAlert from "./TicketDialog/ErrorAlert";
-import "./TicketManage.css";
+import "../pages/styles/TicketManage.css";
 function TicketManage(props) {
     const [searchValue, setSearchValue] = useState("");
     const [ticketData, setTicketData] = useState([]);
@@ -47,7 +45,7 @@ function TicketManage(props) {
     const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(0); // Tổng số trang
 
-
+    //Update ticket data
     const [updateData, setUpdateData] = useState({
         idTicket: "",
         ticketName: "",
@@ -56,6 +54,7 @@ function TicketManage(props) {
         status: ""
     });
 
+    //Delete ticket data
     const [deleteData, setDeleteData] = useState({
         idTicket: "",
         ticketName: "",
@@ -64,6 +63,7 @@ function TicketManage(props) {
         status: "false"
     });
 
+    //Active ticket data
     const [activeData, setActiveData] = useState({
         idTicket: "",
         ticketName: "",
@@ -105,6 +105,7 @@ function TicketManage(props) {
         }
     };
 
+    //Open Update dialog
     const handleOpenUpdateDialog = (ticket) => {
         setSelectedTicket(ticket);
         console.log("select ticket", selectedTicket)
@@ -127,7 +128,7 @@ function TicketManage(props) {
         setCreateDialogOpen(true);
     };
 
-    //Delete dialog
+    //Open Delete dialog
     const handleOpenDeletetDialog = (ticketD) => {
         setSelectedTicket(ticketD);
         setDeleteData({
@@ -145,6 +146,7 @@ function TicketManage(props) {
         setDeleteDialogOpen(false);
     };
 
+    //Handle delete ticket
     const handleDeleteTicket = async () => {
         try {
             console.log(deleteData)
@@ -200,16 +202,12 @@ function TicketManage(props) {
         try {
             const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/tickets/");
             const data = response.data.data;
-
             // Tính toán chỉ số bắt đầu và kết thúc của dữ liệu trên trang hiện tại
             const startIndex = (page - 1) * perPage;
             const endIndex = page * perPage;
-
             // Lấy dữ liệu của trang hiện tại bằng cách slice mảng getRoles
             const currentPageData = data.slice(startIndex, endIndex);
-
-             setTotalPages(Math.ceil(data.length / perPage)); // Cập nhật tổng số trang
-
+            setTotalPages(Math.ceil(data.length / perPage)); // Cập nhật tổng số trang
             console.log(currentPageData)
             setTicketData(currentPageData);
         } catch (error) {
@@ -220,7 +218,7 @@ function TicketManage(props) {
         fetchData(1);
     }, []);
 
-
+    //Handle page
     function handlePageChange(event, newPage) {
         setCurrentPage(newPage); // Cập nhật trang hiện tại khi người dùng chuyển trang
         fetchData(newPage);
@@ -230,16 +228,12 @@ function TicketManage(props) {
     useEffect(() => {
         filterTicketData();
     }, [searchValue, ticketData]);
-
     function filterTicketData() {
         if (Array.isArray(ticketData)) {
             const filteredData = ticketData.filter((ticket) =>
                 ticket.ticketName.toLowerCase().includes(searchValue.toLowerCase())
             );
             setFilteredTicketData(filteredData);
-        } else {
-            // Xử lý trường hợp ticketData không phải là mảng
-            // console.error("ticketData is not an array");
         }
     }
 
@@ -248,9 +242,8 @@ function TicketManage(props) {
         if (status === "true") {
             return { backgroundColor: "green", color: "white" };
         } else if (status === "false") {
-            return { backgroundColor: "gray", color: "white" };
+            return { color: "gray" };
         }
-        return {};
     };
 
     //Body
@@ -359,7 +352,6 @@ function TicketManage(props) {
                                         <TableCell align="right" sx={{ display: 'flex', gap: '8px' }}>
 
                                             {ticket.status === true ? (
-
                                                 //Delete button
                                                 <Button
                                                     variant="outlined"
@@ -367,22 +359,17 @@ function TicketManage(props) {
                                                     color="error"
                                                     onClick={() => handleOpenDeletetDialog(ticket)}
                                                 >
-                                                    <Typography>
-                                                        <DeleteOutlinedIcon />
-                                                    </Typography>
+                                                    <DeleteOutlinedIcon />
                                                 </Button>
                                             ) : (
-
-                                                //Unban button
+                                                //Active button
                                                 <Button
                                                     variant="outlined"
                                                     size="small"
                                                     color="primary"
                                                     onClick={() => { handleActiveTicket(ticket) }}
                                                 >
-                                                    <Typography>
-                                                        <RefreshIcon />
-                                                    </Typography>
+                                                    <RefreshIcon />
                                                 </Button>
                                             )}
 
@@ -439,10 +426,10 @@ function TicketManage(props) {
                         {updateFail && (
                             <ErrorAlert />
                         )}
-
                     </Table>
                 </TableContainer>
 
+                {/* Pagination */}
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Pagination
                         count={totalPages}
@@ -450,9 +437,7 @@ function TicketManage(props) {
                         onChange={handlePageChange}
                     />
                 </div>
-
             </Grid>
-
         </div>
     );
 }

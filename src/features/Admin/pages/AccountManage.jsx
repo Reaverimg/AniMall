@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-    Alert,
     Button,
     Dialog,
     DialogContent,
@@ -20,7 +19,7 @@ import {
 import Pagination from '@mui/material/Pagination';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Paper from '@mui/material/Paper';
-import "./AccountManage.css";
+import "../pages/styles/AccountManage.css";
 import DeleteDialog from "./AdminDialog/DeleteDialog";
 import RegisterForm from "./AdminDialog/RegistrationForm";
 import CloseIcon from '@mui/icons-material/Close';
@@ -216,14 +215,11 @@ function AccountManage(props) {
                 (account) =>
                     account.role && rolesToFetch.includes(account.role.roleDesc)
             );
-
             // Tính toán chỉ số bắt đầu và kết thúc của dữ liệu trên trang hiện tại
             const startIndex = (page - 1) * perPage;
             const endIndex = page * perPage;
-
             // Lấy dữ liệu của trang hiện tại bằng cách slice mảng getRoles
             const currentPageData = getRoles.slice(startIndex, endIndex);
-
             setTotalPages(Math.ceil(getRoles.length / perPage)); // Cập nhật tổng số trang
             setAccountData(currentPageData); // Cập nhật dữ liệu tài khoản
         } catch (error) {
@@ -234,9 +230,8 @@ function AccountManage(props) {
     useEffect(() => {
         fetchData(1);
     }, []);
-
     function handlePageChange(event, newPage) {
-        setCurrentPage(newPage); // Cập nhật trang hiện tại khi người dùng chuyển trang
+        setCurrentPage(newPage);
         fetchData(newPage);
     }
 
@@ -244,7 +239,6 @@ function AccountManage(props) {
     useEffect(() => {
         filterAccountData();
     }, [searchValue, accountData]);
-
     function filterAccountData() {
         const filteredData = accountData.filter((account) =>
             account.name.toLowerCase().includes(searchValue.toLowerCase())
@@ -255,15 +249,14 @@ function AccountManage(props) {
     //Role color
     const getRowBackgroundColor = (role) => {
         if (role === "USER") {
-            return { backgroundColor: "blue", color: "white" };
+            return { backgroundColor: "deepskyblue", color: "white" };
         } else if (role === "ADMIN") {
             return { backgroundColor: "darkorange", color: "white" };
         } else if (role === "STAFF") {
             return { backgroundColor: "green", color: "white" };
         } else if (role === "TRAINER") {
-            return { backgroundColor: "brown", color: "white" };
+            return { backgroundColor: "crimson", color: "white" };
         }
-        return {};
     };
 
     //Status color
@@ -271,7 +264,7 @@ function AccountManage(props) {
         if (status === "true") {
             return { backgroundColor: "green", color: "white" };
         } else if (status === "false") {
-            return { backgroundColor: "gray", color: "white" };
+            return { color: "gray" };
         }
         return {};
     };
@@ -382,7 +375,6 @@ function AccountManage(props) {
                                         <TableCell align="right" sx={{ display: 'flex', gap: '8px' }}>
 
                                             {account.status === true ? (
-
                                                 //Delete button
                                                 <Button
                                                     variant="outlined"
@@ -390,12 +382,9 @@ function AccountManage(props) {
                                                     color="error"
                                                     onClick={() => handleOpenDeleteDialog(account)}
                                                 >
-                                                    <Typography>
-                                                        <DeleteOutlinedIcon />
-                                                    </Typography>
+                                                    <DeleteOutlinedIcon />
                                                 </Button>
                                             ) : (
-
                                                 //Unban button
                                                 <Button
                                                     variant="outlined"
@@ -403,9 +392,7 @@ function AccountManage(props) {
                                                     color="primary"
                                                     onClick={() => { handleUnbanAccount(account) }}
                                                 >
-                                                    <Typography>
-                                                        <RefreshIcon />
-                                                    </Typography>
+                                                    <RefreshIcon />
                                                 </Button>
                                             )}
 
@@ -425,7 +412,6 @@ function AccountManage(props) {
                         </TableBody>
 
                         {/*Open Update dialog */}
-
                         <Dialog open={updateDialogOpen} onClose={handleCloseUpdateDialog}>
                             <UpdateDialog
                                 formData={formData}
@@ -440,10 +426,7 @@ function AccountManage(props) {
                         <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
                             <DeleteDialog
                                 handleCloseDeleteDialog={handleCloseDeleteDialog}
-                                deleteData={deleteData}
-                                setDeleteData={setDeleteData}
                                 handleDeleteAccount={handleDeleteAccount}
-
                             />
                         </Dialog>
 
@@ -467,10 +450,10 @@ function AccountManage(props) {
                         {unbanFail && (
                             <ErrorAlert />
                         )}
-
                     </Table>
                 </TableContainer>
 
+                {/* Pagination */}
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Pagination
                         count={totalPages}
@@ -478,9 +461,7 @@ function AccountManage(props) {
                         onChange={handlePageChange}
                     />
                 </div>
-
             </Grid>
-
         </div>
     );
 }

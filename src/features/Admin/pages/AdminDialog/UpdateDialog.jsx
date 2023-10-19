@@ -97,7 +97,6 @@ function UpdateDialog({ updateDialogOpen, handleCloseUpdateDialog, formData, set
             >
               <MenuItem value="true">Active</MenuItem>
               <MenuItem value="false">Deactive</MenuItem>
-
             </TextField>
           </Grid>
         </Grid>
@@ -114,7 +113,6 @@ function UpdateDialog({ updateDialogOpen, handleCloseUpdateDialog, formData, set
           onClick={handleCloseUpdateDialog}
           color="error"
           variant="outlined">Cancel</Button>
-
       </DialogActions>
 
       {/* Fail alert */}

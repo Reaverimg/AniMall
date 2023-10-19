@@ -14,19 +14,13 @@ import DialogContent from "@mui/material/DialogContent";
 import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { default as React, useEffect, useState } from "react";
-<<<<<<< Updated upstream
 import { NavLink } from "react-router-dom/cjs/react-router-dom";
 import LoginForm from "../../features/Auth/forms/LoginForm";
 import RegisterForm from "../../features/Auth/forms/RegisterForm";
 import SideBar from "../sidebar";
-=======
-import { NavLink, useHistory } from "react-router-dom/cjs/react-router-dom";
-import LoginForm from "../../features/Auth/forms/LoginForm";
-import RegisterForm from "../../features/Auth/forms/RegisterForm";
-import SideBar from "../sidebar";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import TrainerHeader from "../../features/Trainer/components/header";
 import { useSnackbar } from "notistack";
->>>>>>> Stashed changes
 
 const theme = createTheme({
   palette: {
@@ -62,13 +56,10 @@ function Header(props) {
   //getItem localStorage
   const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
 
-<<<<<<< Updated upstream
-=======
   //get RoleId user
   // const roleID = localStorageValue.roleId;
   const [roleId, setRoleId] = useState(1);
 
->>>>>>> Stashed changes
   //state login icon
   const [accountLogged, setAccountLogged] = useState(localStorageValue);
 
@@ -87,19 +78,14 @@ function Header(props) {
     setAnchorEl(null);
   };
 
-<<<<<<< Updated upstream
   //Open menu accoun
-=======
   //Open menu account
->>>>>>> Stashed changes
   const handleUserClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
 
   const handleLoggedAccount = () => {
     localStorage.removeItem("ACCOUNT__LOGGED");
-<<<<<<< Updated upstream
-=======
     history.push("/");
     setAccountLogged(localStorage.getItem("ACCOUNT__LOGGED"));
     enqueueSnackbar("Sign out successfully", {
@@ -185,7 +171,6 @@ function Header(props) {
           </AppBar>
         );
     }
->>>>>>> Stashed changes
   };
 
   useEffect(() => {
@@ -198,7 +183,6 @@ function Header(props) {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ flexGrow: 1 }}>
-<<<<<<< Updated upstream
         <AppBar position="static">
           <Toolbar>
             <Box color="inherit">
@@ -256,10 +240,8 @@ function Header(props) {
           </Toolbar>
         </AppBar>
 
-=======
         {/* Navbar */}
         {renderNavbar()}
->>>>>>> Stashed changes
         {/* Menu profile */}
         <Menu
           keepMounted
@@ -278,10 +260,7 @@ function Header(props) {
           <MenuItem onClick={handleCloseMenu}>MY ACCOUNT</MenuItem>
           <MenuItem onClick={handleLoggedAccount}>SIGN OUT</MenuItem>
         </Menu>
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
         {/* Dialog login registrer */}
         <Dialog
           open={open}
