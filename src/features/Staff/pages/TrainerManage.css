@@ -1,11 +1,11 @@
 
-.admin-container { 
+.staff-account-container { 
   display: block;
   margin: 9%;
 }
 
 
-.admin-table-title {
+.trainer-account-table-title {
   display: flex;
   justify-content: center;
   align-items: center;

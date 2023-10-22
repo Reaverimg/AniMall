@@ -7,6 +7,7 @@ import {
     DialogTitle,
     Grid,
     IconButton,
+    Pagination,
     Table,
     TableBody,
     TableCell,
@@ -16,21 +17,20 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import Pagination from '@mui/material/Pagination';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Paper from '@mui/material/Paper';
-import "../pages/styles/AccountManage.css";
-import DeleteDialog from "./AdminDialog/DeleteDialog";
-import RegisterForm from "./AdminDialog/RegistrationForm";
+import "../pages/styles/TrainerManage.css";
+import DeleteDialog from "./TrainerManageDialog/DeleteDialog";
+import RegisterForm from "./TrainerManageDialog/RegistrationForm";
 import CloseIcon from '@mui/icons-material/Close';
-import UpdateDialog from "./AdminDialog/UpdateDialog";
+import UpdateDialog from "./TrainerManageDialog/UpdateDialog";
 import RefreshIcon from '@mui/icons-material/Refresh';
-import UpdateAlert from "./AdminDialog/UpdateAlert";
-import DeleteAler from "./AdminDialog/DeleteAlert";
-import RegistrationAlert from "./AdminDialog/RegistrationAlert";
-import ErrorAlert from "./AdminDialog/ErrorAlert";
+import UpdateAlert from "./TrainerManageDialog/UpdateAlert";
+import DeleteAler from "./TrainerManageDialog/DeleteAlert";
+import RegistrationAlert from "./TrainerManageDialog/RegistrationAlert";
+import ErrorAlert from "./TrainerManageDialog/ErrorAlert";
 
-function AccountManage(props) {
+function TrainerManage(props) {
     const [searchValue, setSearchValue] = useState("");
     const [accountData, setAccountData] = useState([]);
     const [selectedAccount, setSelectedAccount] = useState(null);
@@ -112,19 +112,16 @@ function AccountManage(props) {
             handleCloseUpdateDialog();
             setUpdateSuccess(true)
             setTimeout(() => {
-                setUpdateSuccess(false);
+                setUpdateSuccess(false)
             }, 3000);
             fetchData(currentPage);
 
         } catch (error) {
             console.error("Error updating account:", error);
-            setUbanFail(true);
-            setTimeout(() => {
-                setUbanFail(false);
-            }, 3000);
         }
     };
 
+    // Handle open update dialog account
     const handleOpenUpdateDialog = (account) => {
         setSelectedAccount(account);
         setFormData({
@@ -136,7 +133,6 @@ function AccountManage(props) {
             status: account.status
         });
         setUpdateDialogOpen(true);
-
     };
 
     //Handle Delete account
@@ -153,13 +149,10 @@ function AccountManage(props) {
             fetchData(currentPage);
         } catch (error) {
             console.error("Error delete account:", error);
-            setUbanFail(true);
-            setTimeout(() => {
-                setUbanFail(false);
-            }, 3000);
         }
     };
 
+    // Handle open delete dialog account
     const handleOpenDeleteDialog = (accountD) => {
         setSelectedAccount(accountD);
         setDeleteData({
@@ -176,7 +169,6 @@ function AccountManage(props) {
     //Handel Unban acocunt
     const handleUnbanAccount = async (accountID) => {
 
-        setSelectedAccount(accountID);
         setUnbandata({
             idAccount: accountID.idAccount,
             roleId: accountID.role.id,
@@ -189,38 +181,33 @@ function AccountManage(props) {
         try {
             const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, unbanData);
             console.log("Account unban successfully:", response.data);
-            fetchData(currentPage);
+            handleCloseDeleteDialog();
             setUpdateSuccess(true);
+            fetchData(currentPage);
             setTimeout(() => {
                 setUpdateSuccess(false)
             }, 3000);
         } catch (error) {
             console.error("Error unban account:", error);
-            setUbanFail(true);
+            setUbanFail(true)
             setTimeout(() => {
                 setUbanFail(false);
             }, 3000);
+            alert('Unban fail, try again!!')
         }
     };
 
-    //get all account
+    // Get all account
     async function fetchData(page) {
         try {
-            const response = await axios.get(
-                `http://animall-400708.et.r.appspot.com/api/v1/accounts`
-            );
+            const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/accounts");
             const data = response.data.data;
-            const rolesToFetch = ["TRAINER", "ADMIN", "USER", "STAFF"];
-            const getRoles = data.filter(
-                (account) =>
-                    account.role && rolesToFetch.includes(account.role.roleDesc)
-            );
-            // Tính toán chỉ số bắt đầu và kết thúc của dữ liệu trên trang hiện tại
+            const getRole = data.filter(account => account.role && account.role.roleDesc === "TRAINER");
             const startIndex = (page - 1) * perPage;
             const endIndex = page * perPage;
             // Lấy dữ liệu của trang hiện tại bằng cách slice mảng getRoles
-            const currentPageData = getRoles.slice(startIndex, endIndex);
-            setTotalPages(Math.ceil(getRoles.length / perPage)); // Cập nhật tổng số trang
+            const currentPageData = getRole.slice(startIndex, endIndex);
+            setTotalPages(Math.ceil(getRole.length / perPage)); // Cập nhật tổng số trang
             setAccountData(currentPageData); // Cập nhật dữ liệu tài khoản
         } catch (error) {
             console.error(error);
@@ -228,8 +215,10 @@ function AccountManage(props) {
     }
 
     useEffect(() => {
-        fetchData(1);
+        fetchData(currentPage);
     }, []);
+
+    //Page Handle
     function handlePageChange(event, newPage) {
         setCurrentPage(newPage);
         fetchData(newPage);
@@ -248,15 +237,10 @@ function AccountManage(props) {
 
     //Role color
     const getRowBackgroundColor = (role) => {
-        if (role === "USER") {
-            return { backgroundColor: "deepskyblue", color: "white" };
-        } else if (role === "ADMIN") {
-            return { backgroundColor: "darkorange", color: "white" };
-        } else if (role === "STAFF") {
-            return { backgroundColor: "green", color: "white" };
-        } else if (role === "TRAINER") {
+        if (role === "TRAINER") {
             return { backgroundColor: "crimson", color: "white" };
         }
+        return {};
     };
 
     //Status color
@@ -266,13 +250,13 @@ function AccountManage(props) {
         } else if (status === "false") {
             return { color: "gray" };
         }
-        return {};
     };
+    const filteredTrainers = filteredAccountData.filter(account => account.role.roleDesc === "TRAINER");
 
     //Body
     return (
 
-        <div className="admin-account-container">
+        <div className="staff-account-container">
             <Grid item xs>
 
                 {/* Create new account button */}
@@ -300,7 +284,6 @@ function AccountManage(props) {
                     </DialogTitle>
                     <DialogContent>
                         <RegisterForm
-                            currentPage={currentPage}
                             fetchData={fetchData}
                             setRegisterSuccess={setRegisterSuccess}
                             handleCloseCreateDialog={handleCloseCreateDialog}
@@ -312,7 +295,7 @@ function AccountManage(props) {
                 <TableContainer component={Paper}>
 
                     {/* Table title */}
-                    <div className="admin-table-title">
+                    <div className="trainer-account-table-title">
                         <span
                             style={{
                                 fontWeight: 'bold',
@@ -338,7 +321,7 @@ function AccountManage(props) {
                     <Table >
                         <TableHead>
                             <TableRow sx={{ backgroundColor: '#f0f0f0' }}>
-                                <TableCell align="left">User Name</TableCell>
+                                <TableCell align="left">Name</TableCell>
                                 <TableCell align="left">Role</TableCell>
                                 <TableCell align="left">Email</TableCell>
                                 <TableCell align="left">Phone Number</TableCell>
@@ -385,6 +368,7 @@ function AccountManage(props) {
                                                     <DeleteOutlinedIcon />
                                                 </Button>
                                             ) : (
+
                                                 //Unban button
                                                 <Button
                                                     variant="outlined"
@@ -430,7 +414,6 @@ function AccountManage(props) {
                             />
                         </Dialog>
 
-
                         {/* Update alert  */}
                         {updateSuccess && (
                             <UpdateAlert />
@@ -446,8 +429,8 @@ function AccountManage(props) {
                             <RegistrationAlert />
                         )}
 
-                        {/* Unban alert */}
-                        {unbanFail && (
+                        {/* Unban fail alert */}
+                        {unbanFail === 'error' && (
                             <ErrorAlert />
                         )}
                     </Table>
@@ -466,4 +449,4 @@ function AccountManage(props) {
     );
 }
 
-export default AccountManage;
+export default TrainerManage;
