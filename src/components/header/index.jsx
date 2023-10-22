@@ -15,6 +15,7 @@ import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { default as React, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom/cjs/react-router-dom";
+import { Link } from 'react-router-dom';
 import LoginForm from "../../features/Auth/forms/LoginForm";
 import RegisterForm from "../../features/Auth/forms/RegisterForm";
 import SideBar from "../sidebar";
@@ -156,7 +157,7 @@ function Header(props) {
             horizontal: "left",
           }}
         >
-          <MenuItem onClick={handleCloseMenu}>MY ACCOUNT</MenuItem>
+          <MenuItem component={Link} to="/user/profile">MY ACCOUNT</MenuItem>
           <MenuItem onClick={handleLoggedAccount}>SIGN OUT</MenuItem>
         </Menu>
 
