@@ -1,8 +1,10 @@
+import { useTheme } from "@emotion/react";
 import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -17,9 +19,9 @@ const drawserStyle = {
   height: "100vh",
 };
 
-SideBar.propTypes = {};
+AdminSideBar.propTypes = {};
 
-function SideBar(props) {
+function AdminSideBar(props) {
   const [state, setState] = React.useState({
     left: false,
   });
@@ -65,12 +67,12 @@ function SideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/"
+                      to="/trainer/"
                       activeClassName="active"
                     >
                       <ListItemText
                         style={{ color: "#5B6253" }}
-                        primary="My account"
+                        primary="Experience"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>
@@ -85,12 +87,12 @@ function SideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/"
+                      to="/trainer/speciesManage"
                       activeClassName="active"
                     >
                       <ListItemText
                         style={{ color: "#5B6253" }}
-                        primary="My account"
+                        primary="Species Manage"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>
@@ -105,12 +107,33 @@ function SideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/"
+                      to="/trainer/animalManage"
                       activeClassName="active"
                     >
                       <ListItemText
                         style={{ color: "#5B6253" }}
-                        primary="My account"
+                        primary="Animals Manage"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+
+              {/* Button */}
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/trainer/feedingSchedule"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="Feeding Schedule"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>
@@ -124,4 +147,4 @@ function SideBar(props) {
   );
 }
 
-export default SideBar;
+export default AdminSideBar;

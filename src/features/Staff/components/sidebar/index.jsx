@@ -1,8 +1,10 @@
+import { useTheme } from "@emotion/react";
 import MailIcon from "@mui/icons-material/Mail";
 import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -17,9 +19,9 @@ const drawserStyle = {
   height: "100vh",
 };
 
-SideBar.propTypes = {};
+StaffSideBar.propTypes = {};
 
-function SideBar(props) {
+function StaffSideBar(props) {
   const [state, setState] = React.useState({
     left: false,
   });
@@ -65,12 +67,12 @@ function SideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/"
+                      to="/trainer/"
                       activeClassName="active"
                     >
                       <ListItemText
                         style={{ color: "#5B6253" }}
-                        primary="My account"
+                        primary="Manage Areas"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>
@@ -85,12 +87,12 @@ function SideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/"
+                      to="/staff/"
                       activeClassName="active"
                     >
                       <ListItemText
                         style={{ color: "#5B6253" }}
-                        primary="My account"
+                        primary="Manage Cages"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>
@@ -105,12 +107,92 @@ function SideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/"
+                      to="/staff/"
                       activeClassName="active"
                     >
                       <ListItemText
                         style={{ color: "#5B6253" }}
-                        primary="My account"
+                        primary="Manage Trainer Accounts"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+              {/* Button */}
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/staff/"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="Manage News"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+              {/* Button */}
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <MailIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/staff/"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="Data Statistic"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+              {/* Button */}
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <MailIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/staff/"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="Manage Ticket Order"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+              {/* Button */}
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <MailIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/staff/"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="Manage Foods"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>
@@ -124,4 +206,4 @@ function SideBar(props) {
   );
 }
 
-export default SideBar;
+export default StaffSideBar;

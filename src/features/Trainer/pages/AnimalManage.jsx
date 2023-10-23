@@ -25,29 +25,6 @@ function AnimalManage(props) {
   const [specieslList, setSpeciesList] = useState([]);
   const [filterByName, setFilterByName] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  // useEffect(() => {
-  // const fetchAnimals = async () => {
-  //   try {
-  //     const response = await fetch("http://animall-400708.et.r.appspot.com/api/v1/animals", {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     if (response.ok) {
-  //       const responseData = await response.json();
-  //       console.log(responseData);
-  //       setAnimals(responseData.data);
-  //       console.log(animals);
-  //     } else {
-  //       throw new Error("Không thể lấy dữ liệu từ API.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Lỗi khi lấy dữ liệu từ API:", error);
-  //   }
-  // };
-  // fetchAnimals();
-  // }, []);
 
   //Fetch API get all animals
   useEffect(() => {
@@ -56,6 +33,8 @@ function AnimalManage(props) {
         const response = await axios.get(GET_ALL_ANIMALS);
         const animalData = response.data.data;
         setAnimalList(animalData);
+        console.log("animals :", animalData);
+        console.log("animalList :", animalList);
       } catch (error) {
         console.error(error);
       }
@@ -78,16 +57,16 @@ function AnimalManage(props) {
   }, []);
 
   //Search by name
-  useEffect(() => {
-    handleFilterByName();
-  }, [searchValue, animalList]);
+  // useEffect(() => {
+  //   handleFilterByName();
+  // }, [searchValue, animalList]);
 
-  function handleFilterByName() {
-    const filterdValue = animalList.filter((animal) =>
-      animal.cage.cageName.toLowerCase().includes(searchValue.toLowerCase())
-    );
-    setFilterByName(filterdValue);
-  }
+  // function handleFilterByName() {
+  //   const filterdValue = animalList.filter((animal) =>
+  //     animal.cage.cageName.toLowerCase().includes(searchValue.toLowerCase())
+  //   );
+  //   setFilterByName(filterdValue);
+  // }
 
   //Filter by Cage
 
@@ -119,7 +98,7 @@ function AnimalManage(props) {
             ></TextField>
             <FilterByCage></FilterByCage>
           </div>
-          {filterByName.length === 0 ? (
+          {/* {filterByName.length === 0 ? (
             <div className="d-flex justify-content-end">
               <Typography align="inherit" color="red">
                 No results found
@@ -133,7 +112,14 @@ function AnimalManage(props) {
                 </Grid>
               ))}
             </Grid>
-          )}
+          )} */}
+          <Grid container spacing={1}>
+            {animalList.map((animal) => (
+              <Grid item key={animal.idAnimal} xs={12} sm={6} md={4} lg={3}>
+                <AnimalDetail animal={animal}></AnimalDetail>
+              </Grid>
+            ))}
+          </Grid>
         </div>
         <div className="col-1">
           <Box></Box>

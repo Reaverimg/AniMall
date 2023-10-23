@@ -13,6 +13,7 @@ import * as Yup from "yup";
 
 LoginForm.propTypes = {
   closeDialog: PropTypes.func.isRequired,
+  onSignIn: PropTypes.func.isRequired,
 };
 
 const theme = createTheme();
@@ -22,7 +23,7 @@ function LoginForm(props) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { closeDialog } = props;
+  const { closeDialog, onSignIn } = props;
 
   const Account = {
     email: "",
@@ -70,6 +71,9 @@ function LoginForm(props) {
             closeDialog();
           }
           localStorage.setItem("ACCOUNT__LOGGED", JSON.stringify(data.data));
+          if (onSignIn) {
+            onSignIn();
+          }
           enqueueSnackbar("Login successful", {
             variant: "success",
             anchorOrigin: {
@@ -81,6 +85,10 @@ function LoginForm(props) {
         } else {
           enqueueSnackbar("Login failed, Check your username or password", {
             variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "top",
+            },
           });
           // Handle failed login, show error message, etc.
         }
@@ -97,38 +105,6 @@ function LoginForm(props) {
       }
     },
   });
-
-  // // fetch api login
-  //   const postLogin = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         "http://animall-400708.et.r.appspot.com/api/v1/accounts/login",
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify(formData),
-  //         }
-  //       );
-
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         console.log("Login successful:", data);
-  //         localStorage.setItem("ACCOUNT__LOGGED", JSON.stringify(data.data));
-  //         enqueueSnackbar("Login successful", { variant: "success" });
-  //         // Handle successful login, such as setting authentication state
-  //       } else {
-  //         console.error("Login failed");
-  //         // Handle failed login, show error message, etc.
-  //       }
-  //     } catch (error) {
-  //       // console.error("Error during login:", error);
-  //       enqueueSnackbar(error.message, { variant: "error" });
-  //       // Handle error, show error message, etc.
-  //     }
-  //   };
-  //   postLogin();
 
   return (
     <Box>
@@ -167,9 +143,21 @@ function LoginForm(props) {
           id="password"
           label="Password"
           name="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={formik.values.password}
           onChange={formik.handleChange}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
         />
         {formik.touched.password && formik.errors.password ? (
           <Typography variant="caption" color="red">

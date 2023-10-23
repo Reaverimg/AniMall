@@ -38,9 +38,9 @@ function AnimalDetail({ animal }) {
           <Typography gutterBottom variant="h5" component="div">
             Name :{animal.name}
           </Typography>
-          <Typography gutterBottom variant="h5" component="div">
+          {/* <Typography gutterBottom variant="h5" component="div">
             Cage : {animal.cage.cageName}
-          </Typography>
+          </Typography> */}
           <Typography variant="body2" color="text.secondary">
             Sex : {animal.sex ? "male" : "female"}
           </Typography>

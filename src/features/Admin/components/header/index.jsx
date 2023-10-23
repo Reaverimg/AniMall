@@ -1,23 +1,11 @@
-import { AccountCircle, Close } from "@mui/icons-material";
-import GoogleIcon from "@mui/icons-material/Google";
-import {
-  AppBar,
-  Box,
-  Button,
-  IconButton,
-  MenuItem,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import Dialog from "@mui/material/Dialog";
+import { AccountCircle } from "@mui/icons-material";
+import { AppBar, Box, IconButton, MenuItem, Toolbar } from "@mui/material";
 // import DialogContent from "@mui/material/DialogContent";
 import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { default as React, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom/cjs/react-router-dom";
-import TrainerSideBar from "../../../Trainer/components/sidebar/index";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import PropTypes from "prop-types";
+import { default as React, useState } from "react";
+import AdminSideBar from "../sidebar";
 
 const theme = createTheme({
   palette: {
@@ -28,11 +16,11 @@ const theme = createTheme({
   },
 });
 
-TrainerHeader.propTypes = {
+AdminHeader.propTypes = {
   loggout: PropTypes.func.isRequired,
 };
 
-function TrainerHeader({ loggout }) {
+function AdminHeader({ loggout }) {
   //state menu account
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -67,7 +55,7 @@ function TrainerHeader({ loggout }) {
         <AppBar position="static">
           <Toolbar>
             <Box color="inherit">
-              <TrainerSideBar></TrainerSideBar>
+              <AdminSideBar></AdminSideBar>
             </Box>
 
             {accountLogged != null && (
@@ -96,7 +84,7 @@ function TrainerHeader({ loggout }) {
             horizontal: "left",
           }}
         >
-          <MenuItem onClick={handleCloseMenu}>MY ACCOUNT</MenuItem>
+          {/* <MenuItem onClick={handleCloseMenu}>MY ACCOUNT</MenuItem> */}
           <MenuItem onClick={loggout}>SIGN OUT</MenuItem>
         </Menu>
       </Box>
@@ -104,4 +92,4 @@ function TrainerHeader({ loggout }) {
   );
 }
 
-export default TrainerHeader;
+export default AdminHeader;

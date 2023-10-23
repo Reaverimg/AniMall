@@ -36,6 +36,10 @@ function TrainerFeature(props) {
           path={`${match.path}/feedingSchedule`}
           component={FeedingSchedule}
         ></Route>
+        <Route
+          path={`${match.path}/experience`}
+          component={FeedingSchedule}
+        ></Route>
       </Switch>
     </div>
   );

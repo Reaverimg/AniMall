@@ -46,7 +46,7 @@ function FilterByCage(props) {
     <div className="pe-3">
       <TextField
         select
-        label="Select Cages"
+        label="Select"
         defaultValue="99b13ab9-ecf4-4196-991d-a0826fd988a8"
         onChange={(e) => e.target.value}
       >

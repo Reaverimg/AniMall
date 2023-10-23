@@ -13,13 +13,15 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Menu from "@mui/material/Menu";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { useSnackbar } from "notistack";
 import { default as React, useEffect, useState } from "react";
 import { NavLink, useHistory } from "react-router-dom/cjs/react-router-dom";
 import LoginForm from "../../features/Auth/forms/LoginForm";
 import RegisterForm from "../../features/Auth/forms/RegisterForm";
-import SideBar from "../sidebar";
 import TrainerHeader from "../../features/Trainer/components/header";
-import { useSnackbar } from "notistack";
+import StaffHeader from "../../features/Staff/components/header";
+import AdminHeader from "../../features/Admin/components/header";
+import SideBar from "../sidebar";
 
 const theme = createTheme({
   palette: {
@@ -53,11 +55,15 @@ function Header(props) {
   const [anchorEl, setAnchorEl] = useState(null);
 
   //getItem localStorage
-  const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
+  let localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
 
   //get RoleId user
-  // const roleID = localStorageValue.roleId;
-  const [roleId, setRoleId] = useState(1);
+  const [roleId, setRoleId] = useState({
+    ...JSON.parse(localStorageValue),
+  });
+
+  //state navbar
+  const [navbar, setNavbar] = useState(<></>);
 
   //state login icon
   const [accountLogged, setAccountLogged] = useState(localStorageValue);
@@ -86,6 +92,8 @@ function Header(props) {
     localStorage.removeItem("ACCOUNT__LOGGED");
     history.push("/");
     setAccountLogged(localStorage.getItem("ACCOUNT__LOGGED"));
+    // localStorageValue = null;
+    setRoleId(null);
     enqueueSnackbar("Sign out successfully", {
       variant: "success",
       anchorOrigin: {
@@ -93,6 +101,11 @@ function Header(props) {
         vertical: "top",
       },
     });
+  };
+
+  const setRoleIDWhenSignIn = () => {
+    localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
+    setRoleId(JSON.parse(localStorageValue));
   };
 
   useEffect(() => {
@@ -103,25 +116,99 @@ function Header(props) {
   }, [localStorageValue]);
 
   //Check navabar Role
-  const renderNavbar = () => {
-    switch (roleId) {
-      case 1:
-        return <TrainerHeader loggout={handleLoggedAccount}></TrainerHeader>;
-      case 2:
-        // <StaffHeader></StaffHeader>
-        console.log(2);
-        break;
-      case 3:
-        // <AdminHeader></AdminHeader>
-        console.log(3);
-        break;
-      default:
+  useEffect(() => {
+    const renderNavbar = () => {
+      if (roleId && roleId.role && roleId.role.id) {
+        switch (roleId.role.id) {
+          case 1:
+            return <AdminHeader loggout={handleLoggedAccount}></AdminHeader>;
+          case 2:
+            return <StaffHeader loggout={handleLoggedAccount}></StaffHeader>;
+          case 3:
+            return (
+              <TrainerHeader loggout={handleLoggedAccount}></TrainerHeader>
+            );
+          default:
+            return (
+              <AppBar position="static">
+                <Toolbar>
+                  {/* <Box color="inherit">
+                    <SideBar></SideBar>
+                  </Box> */}
+
+                  <Button color="inherit">
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/"
+                      activeClassName="active"
+                    >
+                      Home
+                    </NavLink>
+                  </Button>
+
+                  <Button color="inherit">
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/"
+                      activeClassName="active"
+                    >
+                      News
+                    </NavLink>
+                  </Button>
+
+                  <Button color="inherit">
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/"
+                      activeClassName="active"
+                    >
+                      Buy Ticket
+                    </NavLink>
+                  </Button>
+
+                  <Button color="inherit">
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/"
+                      activeClassName="active"
+                    >
+                      About Us
+                    </NavLink>
+                  </Button>
+
+                  <Button color="inherit">
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/"
+                      activeClassName="active"
+                    >
+                      Contact
+                    </NavLink>
+                  </Button>
+                  {accountLogged == null && (
+                    <Button color="inherit" onClick={handleClickOpen}>
+                      Sign In
+                    </Button>
+                  )}
+                  {accountLogged != null && (
+                    <IconButton
+                      style={{ color: "white", textDecoration: "none" }}
+                      onClick={handleUserClick}
+                    >
+                      <AccountCircle color="inherit"></AccountCircle>
+                    </IconButton>
+                  )}
+                </Toolbar>
+              </AppBar>
+            );
+        }
+      } else {
         return (
           <AppBar position="static">
             <Toolbar>
-              <Box color="inherit">
+              {/* <Box color="inherit">
                 <SideBar></SideBar>
-              </Box>
+              </Box> */}
 
               <Button color="inherit">
                 <NavLink
@@ -129,27 +216,47 @@ function Header(props) {
                   to="/"
                   activeClassName="active"
                 >
-                  Buyer
+                  Home
                 </NavLink>
               </Button>
 
               <Button color="inherit">
                 <NavLink
                   style={{ color: "white", textDecoration: "none" }}
-                  to="/trainer/animalManage"
+                  to="/"
                   activeClassName="active"
                 >
-                  Traniner
+                  News
                 </NavLink>
               </Button>
 
               <Button color="inherit">
                 <NavLink
                   style={{ color: "white", textDecoration: "none" }}
-                  to="/staff"
+                  to="/"
                   activeClassName="active"
                 >
-                  Staff
+                  Buy Ticket
+                </NavLink>
+              </Button>
+
+              <Button color="inherit">
+                <NavLink
+                  style={{ color: "white", textDecoration: "none" }}
+                  to="/"
+                  activeClassName="active"
+                >
+                  About Us
+                </NavLink>
+              </Button>
+
+              <Button color="inherit">
+                <NavLink
+                  style={{ color: "white", textDecoration: "none" }}
+                  to="/"
+                  activeClassName="active"
+                >
+                  Contact
                 </NavLink>
               </Button>
               {accountLogged == null && (
@@ -168,14 +275,16 @@ function Header(props) {
             </Toolbar>
           </AppBar>
         );
-    }
-  };
+      }
+    };
+    setNavbar(renderNavbar());
+  }, [accountLogged, roleId]);
 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ flexGrow: 1 }}>
         {/* Navbar */}
-        {renderNavbar()}
+        {navbar}
         {/* Menu profile */}
         <Menu
           keepMounted
@@ -192,6 +301,7 @@ function Header(props) {
           }}
         >
           <MenuItem onClick={handleCloseMenu}>MY ACCOUNT</MenuItem>
+          <MenuItem onClick={handleCloseMenu}>MY ORDER HISTORY</MenuItem>
           <MenuItem onClick={handleLoggedAccount}>SIGN OUT</MenuItem>
         </Menu>
         {/* Dialog login registrer */}
@@ -199,8 +309,6 @@ function Header(props) {
           open={open}
           // onClose={handleClose}
           aria-labelledby="form-dialog-title"
-          // aria-labelledby="alert-dialog-title"
-          // aria-describedby="alert-dialog-description"
         >
           <IconButton
             style={{
@@ -228,7 +336,10 @@ function Header(props) {
             )}
             {mode === MODE.LOGIN && (
               <>
-                <LoginForm closeDialog={handleClose}></LoginForm>
+                <LoginForm
+                  closeDialog={handleClose}
+                  onSignIn={setRoleIDWhenSignIn}
+                ></LoginForm>
                 <Box style={{ margin: "0 auto" }}>
                   <Button color="primary">Forgot password ?</Button>
                   <Typography align="center">━━━━ OR ━━━━</Typography>

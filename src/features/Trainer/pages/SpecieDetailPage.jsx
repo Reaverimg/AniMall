@@ -1,10 +1,19 @@
-import React from "react";
-import PropTypes from "prop-types";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Icon,
+  MenuItem,
+  TextField,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
-import { Box } from "@mui/material";
-import { useEffect } from "react";
-import { useState } from "react";
-import { specieAnimalsList } from "../../Trainer/components/specieAnimalsList";
+import SettingsRoundedIcon from "@mui/icons-material/Settings";
+import SpecieAnimalsList from "../../Trainer/components/SpecieAnimalsList";
 
 SpecieDetailPage.propTypes = {};
 
@@ -21,6 +30,12 @@ function SpecieDetailPage(props) {
 
   const [specieAnimals, setSpecieAnimals] = useState([]);
 
+  const [editDialogOpen, setEditDialogOpen] = useState();
+
+  const handleEditDialogOpen = () => setEditDialogOpen(true);
+
+  const handleEditDialogClose = () => setEditDialogOpen(false);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -31,6 +46,7 @@ function SpecieDetailPage(props) {
           const data = await response.json();
           setSpecie(data.data);
           setSpecieAnimals(data.data.animalList);
+          console.log("SpecieAnimals :", specieAnimals);
         } else {
           console.error("Error fetching data:", response.statusText);
         }
@@ -39,8 +55,6 @@ function SpecieDetailPage(props) {
       }
     }
     fetchData();
-    console.log("specie", specie);
-    console.log("specieAnimals", specieAnimals);
   }, [match]);
 
   return (
@@ -64,7 +78,14 @@ function SpecieDetailPage(props) {
               </div>
               <div className="col-md-8">
                 <div className="card-body">
-                  <h5 className="card-title">Loài : {specie.speciesName}</h5>
+                  <div class="d-flex flex-row-reverse">
+                    <Button onClick={handleEditDialogOpen}>
+                      <SettingsRoundedIcon></SettingsRoundedIcon>
+                    </Button>
+                  </div>
+                  <div class="d-flex flex-row ">
+                    <h5 className="card-title">Loài : {specie.speciesName} </h5>
+                  </div>
                   <p className="card-text">Nguồn gốc : {specie.origin}</p>
                   <p className="card-text">
                     Đặc điểm của loài : {specie.description}
@@ -81,7 +102,7 @@ function SpecieDetailPage(props) {
         <div className="row">
           <div className="d-flex justify-content-center">
             {specieAnimals.map((animal) => (
-              <specieAnimalsList></specieAnimalsList>
+              <SpecieAnimalsList animal={animal}></SpecieAnimalsList>
             ))}
           </div>
         </div>
@@ -89,6 +110,51 @@ function SpecieDetailPage(props) {
         {/* col-2 */}
         <div className="col-2"></div>
       </div>
+      {/* Edit Dialog */}
+      <Dialog
+        open={editDialogOpen}
+        // TransitionComponent={Transition}
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>Edit Feeding Plan</DialogTitle>
+        <DialogContent>
+          {/* <CreateFeedingPlan></CreateFeedingPlan> */}
+          <Grid container spacing={2}>
+            {/* Name */}
+            <Grid item xs={12}>
+              <TextField
+                style={{ marginTop: "10px" }}
+                label="Chọn con vật cho ăn"
+                variant="outlined"
+                fullWidth
+                select
+              >
+                <MenuItem value="1">Henry</MenuItem>
+                <MenuItem value="2">Lior</MenuItem>
+                <MenuItem value="3">Daisy</MenuItem>
+              </TextField>
+            </Grid>
+
+            {/* Status */}
+            <Grid item xs={12}>
+              <TextField
+                label="Loại thức ăn"
+                variant="outlined"
+                fullWidth
+                select
+              >
+                <MenuItem value="true">Chay</MenuItem>
+                <MenuItem value="false">Mặn</MenuItem>
+              </TextField>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditDialogClose}>Cancel</Button>
+          <Button onClick={handleEditDialogClose}>Confirm</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
