@@ -1,0 +1,20 @@
+@import "../../../index.css";
+
+.btn-group{
+    margin: auto;
+}
+
+#btn-cancel{
+    border: 1px solid var(--primary-color) ;
+    color:  var(--primary-color) ;
+    
+}
+
+#btn-paid{
+    background-color: var(--primary-color) ;
+}
+
+.btn-modal-ok{
+    background-color: rgb(12, 183, 12);
+    color: white;
+}

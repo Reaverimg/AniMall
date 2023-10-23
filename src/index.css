@@ -1,3 +1,10 @@
+:root {
+  --background-color: #d0e7d280;
+  --primary-color: #435334;
+  --border-color: rgba(152,163,148,0.5);
+  --shadow-01: 0px 1px 1px rgba(0, 0, 0, 0.14), 0px 2px 1px rgba(0, 0, 0, 0.12), 0px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
 body {
   height: fit-content;
   margin: 0;

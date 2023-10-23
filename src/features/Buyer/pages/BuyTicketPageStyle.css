@@ -1,0 +1,73 @@
+@import "../../../index.css";
+
+#buy-ticket-banner{
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    padding-top: 40%;
+    background: url("https://res.cloudinary.com/dsgm85ekm/image/upload/v1697057978/Frame_7_ahgln9.png") top center / cover no-repeat;
+}
+
+#buy-ticket-banner .buy-ticket-banner-text{
+    position: absolute;
+    top: 200px;
+    color: #fff;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+}
+
+
+#buy-ticket-banner .text-heading{
+    font-weight: 900;
+    font-size: 4rem;
+
+}
+
+.entry-img{
+    width: 100%;
+}
+
+.ticket-list{
+    border: 1px solid black;
+    box-shadow: var(--shadow-01);
+    max-height: 470px;
+    overflow-y: auto;
+}
+
+.ticket-list-title{
+    font-weight: bold;
+    font-size: 18px;
+    color: #fff;
+    background-color: var(--primary-color);
+    padding: 10px 20px;
+}
+
+.quantity{
+    width: 40%;
+   
+}
+
+.pt-4rem{
+    padding-top: 4rem;
+}
+
+.total-price{
+    font-size: 30px;
+    text-align: right;
+}
+
+.buy-now-button{
+    text-align: right;
+}
+
+#buy-ticket-container .Mui-disabled{
+    background-color:var(--primary-color) !important; /* Màu nền xám hoặc màu khác tùy bạn chọn */
+    color: #9f9d9d !important; /* Màu chữ mờ đi khi nút disabled */
+  }
+
+.overflow-ellipsis {
+    white-space: nowrap;       
+    overflow: hidden;         
+    text-overflow: ellipsis;  
+}
