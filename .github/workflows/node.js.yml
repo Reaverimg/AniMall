@@ -28,8 +28,4 @@ jobs:
       run: npm test
 
     - name: Deploy
-      run: |
-        if [ ${{ success() }} = 'true' ]; then
-          # Add your deployment commands here
-          # For example, you can deploy to a hosting service like Netlify or Vercel.
-        fi
+      run: npm start
