@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import "./style.css"
+import { Link } from 'react-router-dom';
 import { Box } from "@mui/material";
 
 BuyerPage.propTypes = {};
@@ -37,7 +38,7 @@ function BuyerPage(props) {
 
         <div className="row">
           <div className="col-md-6">
-            <button className="buttonSection">MUA VÉ NGAY</button>
+          <Link to="/buyTicket"> <button className="buttonSection">MUA VÉ NGAY</button> </Link>
           </div>
           <div className="col-md-6"></div>
         </div>

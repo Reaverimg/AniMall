@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import {
     Button,
     TextField,
@@ -18,20 +18,19 @@ const theme = createTheme();
 
 function UserProfile() {
 
+    const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
+
     //state update profile dialog
     const [open, setOpen] = useState(false);
+    const [loginedUser, setLoginedUser] = useState("");
 
-    const loginedUser = {
-        idAccount: "cf622937-4be8-438f-aea8-0e385d52ad59",
-        role: {
-            id: 4,
-            roleDesc: "USER"
-        },
-        email: "a@gmail.com",
-        name: "tui la thaooo myy ne ahihi",
-        phoneNumber: 1234567891,
-        status: true
-    }
+
+    useEffect(() => {
+        const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
+        if (localStorageValue) {
+            setLoginedUser(JSON.parse(localStorageValue));
+        }
+    }, [localStorageValue]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -47,7 +46,7 @@ function UserProfile() {
     return (
         <>
 
-            <div id="userProfile-container " className="mt-5">
+            <div className="p-5 userProfile-container">
 
                 <div className="row justify-content-center">
                     <div
@@ -72,10 +71,8 @@ function UserProfile() {
                         <TextField
                             fullWidth
                             margin="normal"
-
                             label="Full name"
-
-                            defaultValue={loginedUser.name}
+                            value={loginedUser.name}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -88,7 +85,7 @@ function UserProfile() {
                             label="Email"
                             name="email"
                             type="email"
-                            defaultValue={loginedUser.email}
+                            value={loginedUser.email}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -102,7 +99,7 @@ function UserProfile() {
                             label="Phone number"
                             name="phoneNumber"
                             type="phoneNumber"
-                            defaultValue={loginedUser.phoneNumber}
+                            value={loginedUser.phoneNumber}
                             InputProps={{
                                 readOnly: true,
                             }}
@@ -113,7 +110,7 @@ function UserProfile() {
                             onClick={handleClickOpen}
                             style={
                                 {
-                                   backgroundColor : "rgb(67, 83, 52)"
+                                    backgroundColor: "rgb(67, 83, 52)"
                                 }
                             }
                         >
@@ -147,7 +144,7 @@ function UserProfile() {
 
                 <DialogContent>
 
-                    <UpdateProfileForm   onClose={handleClose} />
+                    <UpdateProfileForm onClose={handleClose} />
 
                 </DialogContent>
 

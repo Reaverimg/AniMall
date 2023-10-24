@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-    Alert,
     Button,
     Dialog,
     DialogContent,
@@ -17,17 +16,19 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
+import Pagination from '@mui/material/Pagination';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Paper from '@mui/material/Paper';
-import "./AccountManage.css";
-import DeleteDialog from "./Dialog/DeleteDialog";
-import RegisterForm from "./Dialog/RegistrationForm";
+import "../pages/styles/AccountManage.css";
+import DeleteDialog from "./AdminDialog/DeleteDialog";
+import RegisterForm from "./AdminDialog/RegistrationForm";
 import CloseIcon from '@mui/icons-material/Close';
-import UpdateDialog from "./Dialog/UpdateDialog";
+import UpdateDialog from "./AdminDialog/UpdateDialog";
 import RefreshIcon from '@mui/icons-material/Refresh';
-import UpdateAlert from "./Dialog/UpdateAlert";
-import DeleteAler from "./Dialog/DeleteAlert";
-import RegistrationAlert from "./Dialog/RegistrationAlert";
+import UpdateAlert from "./AdminDialog/UpdateAlert";
+import DeleteAler from "./AdminDialog/DeleteAlert";
+import RegistrationAlert from "./AdminDialog/RegistrationAlert";
+import ErrorAlert from "./AdminDialog/ErrorAlert";
 
 function AccountManage(props) {
     const [searchValue, setSearchValue] = useState("");
@@ -41,7 +42,10 @@ function AccountManage(props) {
     const [deleteSuccess, setDeleteSuccess] = useState(false);
     const [registereSuccess, setRegisterSuccess] = useState(false);
     const [updateFail, setUpdateFail] = useState(false);
-
+    const [unbanFail, setUbanFail] = useState(false);
+    const [perPage, setPerPage] = useState(10); // Số lượng dữ liệu trên mỗi trang
+    const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+    const [totalPages, setTotalPages] = useState(0); // Tổng số trang
 
     //Update data
     const [formData, setFormData] = useState({
@@ -98,7 +102,7 @@ function AccountManage(props) {
         if (!formData.name || !formData.email || !formData.phoneNumber) {
             setUpdateFail(true);
             setTimeout(() => {
-                setUpdateFail(false)
+                setUpdateFail(false);
             }, 2000);
             return;
         }
@@ -108,12 +112,16 @@ function AccountManage(props) {
             handleCloseUpdateDialog();
             setUpdateSuccess(true)
             setTimeout(() => {
-                setUpdateSuccess(false)
+                setUpdateSuccess(false);
             }, 3000);
-            fetchData()
+            fetchData(currentPage);
 
         } catch (error) {
             console.error("Error updating account:", error);
+            setUbanFail(true);
+            setTimeout(() => {
+                setUbanFail(false);
+            }, 3000);
         }
     };
 
@@ -128,6 +136,7 @@ function AccountManage(props) {
             status: account.status
         });
         setUpdateDialogOpen(true);
+
     };
 
     //Handle Delete account
@@ -141,9 +150,13 @@ function AccountManage(props) {
                 setDeleteSuccess(false)
             }, 3000);
             handleCloseDeleteDialog();
-            fetchData();
+            fetchData(currentPage);
         } catch (error) {
             console.error("Error delete account:", error);
+            setUbanFail(true);
+            setTimeout(() => {
+                setUbanFail(false);
+            }, 3000);
         }
     };
 
@@ -161,22 +174,8 @@ function AccountManage(props) {
     };
 
     //Handel Unban acocunt
-    const handleUnbanAccount = async () => {
-        try {
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, unbanData);
-            console.log("Account unban successfully:", response.data);
-            setUpdateSuccess(true);
-            setTimeout(() => {
-                setUpdateSuccess(false)
-            }, 3000);
-            handleCloseDeleteDialog();
-            fetchData();
-        } catch (error) {
-            console.error("Error unban account:", error);
-        }
-    };
+    const handleUnbanAccount = async (accountID) => {
 
-    const handleUnbanLog = (accountID) => {
         setSelectedAccount(accountID);
         setUnbandata({
             idAccount: accountID.idAccount,
@@ -186,27 +185,60 @@ function AccountManage(props) {
             phoneNumber: accountID.phoneNumber,
             status: "true"
         });
+
+        try {
+            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, unbanData);
+            console.log("Account unban successfully:", response.data);
+            fetchData(currentPage);
+            setUpdateSuccess(true);
+            setTimeout(() => {
+                setUpdateSuccess(false)
+            }, 3000);
+        } catch (error) {
+            console.error("Error unban account:", error);
+            setUbanFail(true);
+            setTimeout(() => {
+                setUbanFail(false);
+            }, 3000);
+        }
     };
 
-    // Get all account
-    async function fetchData() {
+    //get all account
+    async function fetchData(page) {
         try {
-            const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/accounts");
+            const response = await axios.get(
+                `http://animall-400708.et.r.appspot.com/api/v1/accounts`
+            );
             const data = response.data.data;
-            setAccountData(data);
+            const rolesToFetch = ["TRAINER", "ADMIN", "USER", "STAFF"];
+            const getRoles = data.filter(
+                (account) =>
+                    account.role && rolesToFetch.includes(account.role.roleDesc)
+            );
+            // Tính toán chỉ số bắt đầu và kết thúc của dữ liệu trên trang hiện tại
+            const startIndex = (page - 1) * perPage;
+            const endIndex = page * perPage;
+            // Lấy dữ liệu của trang hiện tại bằng cách slice mảng getRoles
+            const currentPageData = getRoles.slice(startIndex, endIndex);
+            setTotalPages(Math.ceil(getRoles.length / perPage)); // Cập nhật tổng số trang
+            setAccountData(currentPageData); // Cập nhật dữ liệu tài khoản
         } catch (error) {
             console.error(error);
         }
     }
+
     useEffect(() => {
-        fetchData();
+        fetchData(1);
     }, []);
+    function handlePageChange(event, newPage) {
+        setCurrentPage(newPage);
+        fetchData(newPage);
+    }
 
     //Search by name
     useEffect(() => {
         filterAccountData();
     }, [searchValue, accountData]);
-
     function filterAccountData() {
         const filteredData = accountData.filter((account) =>
             account.name.toLowerCase().includes(searchValue.toLowerCase())
@@ -217,15 +249,14 @@ function AccountManage(props) {
     //Role color
     const getRowBackgroundColor = (role) => {
         if (role === "USER") {
-            return { backgroundColor: "blue", color: "white" };
+            return { backgroundColor: "deepskyblue", color: "white" };
         } else if (role === "ADMIN") {
             return { backgroundColor: "darkorange", color: "white" };
         } else if (role === "STAFF") {
             return { backgroundColor: "green", color: "white" };
         } else if (role === "TRAINER") {
-            return { backgroundColor: "brown", color: "white" };
+            return { backgroundColor: "crimson", color: "white" };
         }
-        return {};
     };
 
     //Status color
@@ -233,7 +264,7 @@ function AccountManage(props) {
         if (status === "true") {
             return { backgroundColor: "green", color: "white" };
         } else if (status === "false") {
-            return { backgroundColor: "red", color: "white" };
+            return { color: "gray" };
         }
         return {};
     };
@@ -241,7 +272,7 @@ function AccountManage(props) {
     //Body
     return (
 
-        <div className="container">
+        <div className="admin-account-container">
             <Grid item xs>
 
                 {/* Create new account button */}
@@ -269,6 +300,7 @@ function AccountManage(props) {
                     </DialogTitle>
                     <DialogContent>
                         <RegisterForm
+                            currentPage={currentPage}
                             fetchData={fetchData}
                             setRegisterSuccess={setRegisterSuccess}
                             handleCloseCreateDialog={handleCloseCreateDialog}
@@ -280,7 +312,7 @@ function AccountManage(props) {
                 <TableContainer component={Paper}>
 
                     {/* Table title */}
-                    <div className="table-title">
+                    <div className="admin-table-title">
                         <span
                             style={{
                                 fontWeight: 'bold',
@@ -306,7 +338,7 @@ function AccountManage(props) {
                     <Table >
                         <TableHead>
                             <TableRow sx={{ backgroundColor: '#f0f0f0' }}>
-                                <TableCell align="left">Name</TableCell>
+                                <TableCell align="left">User Name</TableCell>
                                 <TableCell align="left">Role</TableCell>
                                 <TableCell align="left">Email</TableCell>
                                 <TableCell align="left">Phone Number</TableCell>
@@ -337,13 +369,12 @@ function AccountManage(props) {
                                         <TableCell align="left">
                                             <button className="role-but"
                                                 style={getStatusBackgroundColor(account.status.toString())}>
-                                                {account.status.toString()}
+                                                {account.status ? "Active" : "Banned"}
                                             </button>
                                         </TableCell>
                                         <TableCell align="right" sx={{ display: 'flex', gap: '8px' }}>
 
                                             {account.status === true ? (
-
                                                 //Delete button
                                                 <Button
                                                     variant="outlined"
@@ -351,25 +382,17 @@ function AccountManage(props) {
                                                     color="error"
                                                     onClick={() => handleOpenDeleteDialog(account)}
                                                 >
-                                                    <Typography>
-                                                        <DeleteOutlinedIcon />
-                                                    </Typography>
+                                                    <DeleteOutlinedIcon />
                                                 </Button>
                                             ) : (
-
                                                 //Unban button
                                                 <Button
                                                     variant="outlined"
                                                     size="small"
                                                     color="primary"
-                                                    onClick={() => {
-                                                        handleUnbanLog(account);
-                                                        handleUnbanAccount(account);
-                                                    }}
+                                                    onClick={() => { handleUnbanAccount(account) }}
                                                 >
-                                                    <Typography>
-                                                        <RefreshIcon />
-                                                    </Typography>
+                                                    <RefreshIcon />
                                                 </Button>
                                             )}
 
@@ -389,24 +412,7 @@ function AccountManage(props) {
                         </TableBody>
 
                         {/*Open Update dialog */}
-
                         <Dialog open={updateDialogOpen} onClose={handleCloseUpdateDialog}>
-                            <DialogTitle>
-                                Update Account
-                                <IconButton
-                                    aria-label="close"
-                                    onClick={handleCloseUpdateDialog}
-                                    sx={{
-                                        position: "absolute",
-                                        right: 8,
-                                        top: 8,
-                                        color: (theme) => theme.palette.grey[500],
-                                    }}
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                            </DialogTitle>
-
                             <UpdateDialog
                                 formData={formData}
                                 setFormData={setFormData}
@@ -414,18 +420,13 @@ function AccountManage(props) {
                                 handleUpdateAccount={handleUpdateAccount}
                                 updateFail={updateFail}
                             />
-
-
                         </Dialog >
 
                         {/* Open Delete dialog */}
                         <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
                             <DeleteDialog
                                 handleCloseDeleteDialog={handleCloseDeleteDialog}
-                                deleteData={deleteData}
-                                setDeleteData={setDeleteData}
                                 handleDeleteAccount={handleDeleteAccount}
-
                             />
                         </Dialog>
 
@@ -445,20 +446,24 @@ function AccountManage(props) {
                             <RegistrationAlert />
                         )}
 
+                        {/* Unban alert */}
+                        {unbanFail && (
+                            <ErrorAlert />
+                        )}
                     </Table>
                 </TableContainer>
-            </Grid>
 
+                {/* Pagination */}
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Pagination
+                        count={totalPages}
+                        page={currentPage}
+                        onChange={handlePageChange}
+                    />
+                </div>
+            </Grid>
         </div>
     );
 }
 
 export default AccountManage;
-
-// useEffect(() => {
-//     const fetchAccountApi = async () => {
-//       const accountList = await accAPI.get();
-//       console.log(accountList);
-//     };
-//     fetchAccountApi();
-//   }, []);

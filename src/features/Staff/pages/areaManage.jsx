@@ -145,16 +145,24 @@ function AreaManage() {
             console.error(e);
         }
     }
-    const handleDeleteCageInArea = async (id) => {
+    const handleDeleteCageInArea = async ({ idCage, idArea }) => {
+        console.log('idCage', idCage);
+        console.log('idArea', idArea);
         try {
-            const response = await fetch(`${url}/cage?id=${id}`, {
-                method: 'DELETE',
+            const response = await fetch(`${url}/areas/cra`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    idCage: idCage,
+                    idArea: idArea,
+                })
             });
             if (response.ok) {
                 console.log('Cage delete successfully');
+                fetchAreaDetail(idArea);
+                handleOpenUpdateDialog(selectArea);
             } else {
                 console.log('Cage delete failed');
             }

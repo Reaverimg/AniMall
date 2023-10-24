@@ -1,0 +1,30 @@
+.ticket-manage-container {
+    display: block;
+    margin: 7%;
+}
+
+
+.ticket-manage-table-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5rem;
+    background-color: #f0f0f0;
+    box-sizing: border-box;
+    box-shadow:
+        inset 0px -0.5px 1px rgba(0, 0, 0, 0.2),
+        inset 0px 0.5px 0px rgba(0, 0, 0, 0.2);
+
+}
+
+.status-but {
+    border-radius: 5px;
+    border: none;
+}
+
+.price-but {
+    border-radius: 5px;
+    border: none;
+    background-color: rgb(223, 218, 222);
+    
+}
