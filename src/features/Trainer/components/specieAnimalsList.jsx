@@ -1,25 +1,18 @@
-import React from "react";
+import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import {
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
-import { Button } from "bootstrap";
+import React from "react";
 
-specieAnimalList.propTypes = {
-  animals: PropTypes.object.isRequired,
+SpecieAnimalsList.propTypes = {
+  animal: PropTypes.object.isRequired,
 };
 
 const thumbnailUrl = "https://via.placeholder.com/300x250";
 
-function specieAnimalList({ animal }) {
+function SpecieAnimalsList({ animal }) {
   return (
+    // console.log("specieAnimalList");
     <Box padding={1}>
-      <Card sx={{ maxWidth: 400, maxHeight: 500 }}>
+      <Card sx={{ maxWidth: 333, maxHeight: 333 }}>
         <CardMedia
           sx={{ height: 140 }}
           image={thumbnailUrl}
@@ -39,4 +32,4 @@ function specieAnimalList({ animal }) {
   );
 }
 
-export default specieAnimalList;
+export default SpecieAnimalsList;
