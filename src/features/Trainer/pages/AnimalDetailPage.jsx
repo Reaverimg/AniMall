@@ -13,7 +13,7 @@ function AnimalDetailPage(props) {
   const {
     params: { idAnimal },
   } = useRouteMatch();
-  
+
   const match = useRouteMatch();
 
   const [animal, setAnimal] = useState({});
