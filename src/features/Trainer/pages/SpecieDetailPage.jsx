@@ -19,7 +19,9 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { enqueueSnackbar, useSnackbar } from "notistack";
 import * as Yup from "yup";
-import SpecieAnimalsList from "../components/SpecieAnimalsList.jsx";
+import SpeciesAnimalsList from "../components/SpeciesAnimalsList";
+
+
 
 SpecieDetailPage.propTypes = {};
 
@@ -182,7 +184,7 @@ function SpecieDetailPage(props) {
         <Grid container justifyContent="center">
           {specieAnimals.map((animal) => (
             <Grid item key={animal.idAnimal}>
-              <SpecieAnimalsList animal={animal} />
+              <SpeciesAnimalsList animal={animal}></SpeciesAnimalsList>
             </Grid>
           ))}
         </Grid>
