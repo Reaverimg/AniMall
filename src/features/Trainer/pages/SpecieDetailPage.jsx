@@ -15,11 +15,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import SettingsRoundedIcon from "@mui/icons-material/Settings";
-import SpecieAnimalsList from ".././Trainer/components/SpecieAnimalsList";
 import { useFormik } from "formik";
 import axios from "axios";
 import { enqueueSnackbar, useSnackbar } from "notistack";
 import * as Yup from "yup";
+import SpecieAnimalsList from "../components/SpecieAnimalsList.jsx";
 
 SpecieDetailPage.propTypes = {};
 
