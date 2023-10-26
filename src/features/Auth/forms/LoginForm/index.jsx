@@ -53,7 +53,7 @@ function LoginForm(props) {
           password: values.password,
         };
         const response = await fetch(
-          "http://animall-400708.et.r.appspot.com/api/v1/accounts/login",
+          "https://animall-400708.et.r.appspot.com/api/v1/accounts/login",
           {
             method: "POST",
             headers: {
