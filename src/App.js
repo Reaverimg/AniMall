@@ -9,14 +9,13 @@ import AdminFeature from "./features/Admin/index";
 import StaffFeature from "./features/Staff";
 import { Box } from "@mui/material";
 import { useEffect } from "react";
-import accAPI from "./api/accAPI";
+
 
 function App() {
+  const localeColor = localStorage.getItem("BACKGROUND_COLOR");
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      {/* //Neu check role id la guest thi se hien header cua Landing page
-    //Neu khong dung thi se hien UI (Navbar, Sidebar,..) cua CMS (Staff,Admin,Trainer) page
-    {accounts.roleId === "id" && <Header></Header>} */}
+    <Box sx={{ flexGrow: 1, backgroundColor: localeColor }}>
+
       <Header></Header>
 
       <Switch>
@@ -26,9 +25,6 @@ function App() {
         <Route path="/admin" component={AdminFeature}></Route>
       </Switch>
 
-      {/* //Neu check role id la guest thi se hien footer cua Landing page
-    //Neu khong dung thi se khong hien footer vi CMS (Staff,Admin,Trainer) page khong can footer
-     {accounts.roleId === "id" && <Footer></Footer>} */}
       <Footer></Footer>
     </Box>
   );
