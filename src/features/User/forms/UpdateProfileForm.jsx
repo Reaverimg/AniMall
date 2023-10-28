@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Form } from 'antd';
 import {
     Button,
@@ -8,7 +8,6 @@ import {
     Snackbar,
     Alert
 } from "@mui/material";
-import PropTypes from "prop-types";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
@@ -24,18 +23,23 @@ const theme = createTheme({
 
 function UpdateProfileForm({ onClose }) {
 
-    //Fake Data chờ load user_logined của phú
-    const loginedUser = {
-        idAccount: "cf622937-4be8-438f-aea8-0e385d52ad59",
-        role: {
-            id: 4,
-            roleDesc: "USER"
-        },
-        email: "a@gmail.com",
-        name: "abc",
-        phoneNumber: 1234567891,
-        status: true
-    }
+    const [loginedUser, setLoginedUser] = useState({});
+
+
+    useEffect(() => {
+        const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
+        if (localStorageValue) {
+            const parsedAccountLogged = JSON.parse(localStorageValue);
+            setLoginedUser(parsedAccountLogged);
+
+            
+        formik.setValues({
+            name: parsedAccountLogged.name,
+            email: parsedAccountLogged.email,
+            phoneNumber: parsedAccountLogged.phoneNumber,
+        });
+        }
+    }, []);
 
     const [form] = Form.useForm();
 
@@ -82,7 +86,8 @@ function UpdateProfileForm({ onClose }) {
             email: values.email,
             idAccount: loginedUser.idAccount,
             status: loginedUser.status,
-            roleId: loginedUser.role.id
+            roleId: loginedUser.role.id,
+            status: true
         };
 
         let json = {
@@ -99,7 +104,8 @@ function UpdateProfileForm({ onClose }) {
         if (response.message == "OPERATION SUCCESSFUL") {
             console.log("Success!")
             setSnackOpen(true);
-            // onClose();
+            const updatedUser = {idAccount: response.data.idAccount ,name : response.data.name, email: response.data.email, phoneNumber :  response.data.phoneNumber};
+            localStorage.setItem("ACCOUNT__LOGGED", JSON.stringify(updatedUser));
         }
         else {
 

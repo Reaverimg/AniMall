@@ -21,22 +21,13 @@ function AnimalDetail({ animal }) {
   const history = useHistory();
 
   //   const thumbnailUrl = animal.thumbnail;
-
   const handleClick = () => {
-    history.push(`/tranier/animalManage/${animal.idAnimal}`);
+    const cleanedIdAnimal = encodeURIComponent(animal.idAnimal);
+    history.push(`/trainer/animalManage/${cleanedIdAnimal}`);
+    console.log(history);
   };
   return (
     <Box padding={1}>
-      {/* <Typography variant="body2">Name :{animal.name}</Typography>
-      <Typography variant="body2">Cage :{animal.cage.cageName}</Typography>
-      <Typography variant="body2">Quantity :{animal.cage.quantity}</Typography>
-      <Typography variant="body2">
-        {`${animal.sex}` === true ? "male" : "female"}
-      </Typography>
-      <Typography variant="body2">{animal.dob}</Typography>
-      <Typography variant="body2">{animal.status}</Typography>
-      <Typography variant="body2">{animal.description}</Typography>
-      <Typography variant="body2"></Typography> */}
       <Card sx={{ maxWidth: 400, maxHeight: 500 }}>
         <CardMedia
           sx={{ height: 140 }}
@@ -45,10 +36,13 @@ function AnimalDetail({ animal }) {
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-            Name :{animal.name} - Cage : {animal.cage.cageName}
+            Name :{animal.name}
           </Typography>
+          {/* <Typography gutterBottom variant="h5" component="div">
+            Cage : {animal.cage.cageName}
+          </Typography> */}
           <Typography variant="body2" color="text.secondary">
-            Description : {animal.description}
+            Sex : {animal.sex ? "male" : "female"}
           </Typography>
         </CardContent>
         <CardActions>
