@@ -87,6 +87,7 @@ function Header(props) {
 
   const handleLoggedAccount = () => {
     localStorage.removeItem("ACCOUNT__LOGGED");
+    handleCloseMenu();
     history.push("/");
     setAccountLogged(localStorage.getItem("ACCOUNT__LOGGED"));
     enqueueSnackbar("Sign out successfully", {
@@ -259,6 +260,7 @@ function Header(props) {
           }}
         >
           <MenuItem component={Link} to="/user/profile">MY ACCOUNT</MenuItem>
+          <MenuItem component={Link} to="/buyer/orderHistory"> MY ORDER HISTORY</MenuItem>
           <MenuItem onClick={handleLoggedAccount}>SIGN OUT</MenuItem>
         </Menu>
 

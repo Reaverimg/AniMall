@@ -4,10 +4,10 @@ Footer.propTypes = {};
 
 function Footer(props) {
   return (
-    <div className="my-5">
+    <div>
       <footer
         class="text-center text-xl-start text-white"
-        style={{ backgroundColor: "#435334", width: "100vw", height: "100%" }}
+        style={{ backgroundColor: "#435334", height: "100%" }}
       >
         <section
           className="d-flex justify-content-between p-4"

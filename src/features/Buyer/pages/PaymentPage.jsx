@@ -47,6 +47,7 @@ function PaymentPage() {
     const apiData = {
       orderId: orderId,
       paymentStatus: "Pending",
+      timeCreate: new Date(),
       status: true
     };
 

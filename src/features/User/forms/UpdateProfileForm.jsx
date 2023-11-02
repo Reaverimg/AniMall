@@ -32,7 +32,6 @@ function UpdateProfileForm({ onClose }) {
             const parsedAccountLogged = JSON.parse(localStorageValue);
             setLoginedUser(parsedAccountLogged);
 
-            
         formik.setValues({
             name: parsedAccountLogged.name,
             email: parsedAccountLogged.email,
@@ -172,6 +171,9 @@ function UpdateProfileForm({ onClose }) {
                         type="email"
                         value={formik.values.email}
                         onChange={formik.handleChange}
+                        InputProps={{
+                            readOnly: true,
+                        }}
                     />
 
                     {formik.touched.email && formik.errors.email ? (

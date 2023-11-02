@@ -1,4 +1,4 @@
-import React , { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button, TextField, Typography } from "@mui/material";
 import './CheckoutModalStyle.css'
 import { useHistory } from 'react-router-dom';
@@ -7,10 +7,8 @@ import * as yup from "yup";
 
 function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTicketIds }) {
   const selectedTickets = ticketList.filter((ticket) => ticketQuantities[ticket.ticketName] > 0);
-  const [accounts, setAccounts] =  useState([]);
-
-  //state login/register dialog
-  const [openLogin, setOpenLogin] = useState(false);
+  const [accounts, setAccounts] = useState([]);
+  const [loginedUser, setLoginedUser] = useState({});
 
   const history = useHistory();
 
@@ -26,9 +24,9 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
   const phoneRegExp = /^[0-9]{10,15}$/;
   const formik = useFormik({
     initialValues: {
-      name: "",
-      email: "",
-      phoneNumber: "",
+      name: loginedUser ? loginedUser.name : "",
+      email: loginedUser ? loginedUser.email : "",
+      phoneNumber: loginedUser ? loginedUser.phoneNumber : "",
 
     },
     validationSchema: yup.object({
@@ -56,11 +54,26 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
   });
 
   useEffect(() => {
+
+    const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
+    if (localStorageValue) {
+      const parsedAccountLogged = JSON.parse(localStorageValue);
+      setLoginedUser(parsedAccountLogged);
+      
+      formik.setValues({
+        name: parsedAccountLogged.name,
+        email: parsedAccountLogged.email,
+        phoneNumber: parsedAccountLogged.phoneNumber,
+      });
+
+    }
+    
     const apiUrl = 'http://animall-400708.et.r.appspot.com/api/v1/accounts';
     fetch(apiUrl)
       .then((response) => response.json())
       .then((result) => {
-        setAccounts(result.data);
+        setAccounts(result.data);  
+        console.log("accs", accounts)
       })
       .catch((error) => {
         console.error('There was a problem with the API request:', error);
@@ -70,7 +83,7 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
   const handleSubmit = async (values) => {
     //kiem tra nguoi mua co dang dang nhap khong
     const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
-    console.log("localStorageValue ne", typeof (localStorageValue))
+
     if (localStorageValue == null) { // neu khong dang nhap => gọi API đăng ký guest
       const apiData = {
         name: values.name,
@@ -94,22 +107,26 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
         const guestAccount = { idAccount: response.data.idAccount, email: response.data.email };
         //gọi Tiếp API create order
         apiCreateOrder(guestAccount.idAccount, guestAccount.email)
-      }else if(response.message == "Email is already in use"){
-          const matchingAccount = accounts.find((account) => account.email === values.email);
-         
-          if(matchingAccount.role.roleDesc === "GUEST"){
-            history.push(`/resetPassword`);// điều hướng sang resetpassword page nếu trùng pass && isGuest
-          }else{
-            history.push(`/`);// điều hướng sang homepage nếu trùng pass && isNotGuest
-
-          }
+      } else if (response.message == "Email is already in use") {
+        const matchingAccount = accounts.find((account) => account.email === values.email);
+        if (matchingAccount.role.roleDesc === "GUEST") {
+          history.push(`/resetPassword`);// điều hướng sang resetpassword page nếu trùng pass && isGuest
+        } else {// bật login nếu trùng mail && isNotGuest
+          history.push(`/`);
+        }
       }
       else {
-        console.log("Email is already in use!")
+        console.log(response.message)
       }
     }
-    else {
+    else { //nếu có đăng nhập
       const parsedAccountLogged = JSON.parse(localStorageValue);
+
+      formik.setValues({
+        name: parsedAccountLogged.name,
+        email: parsedAccountLogged.email,
+        phoneNumber: parsedAccountLogged.phoneNumber,
+      });
       //gọi truc tiep api create order truyền localStorageValue.idAccount vào
       apiCreateOrder(parsedAccountLogged.idAccount, parsedAccountLogged.email)
     }
@@ -192,7 +209,6 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
 
             <div className="col-md-5 contact-info border p-4 mx-auto ">
               <h3 className="text-center"> Contact Information  </h3>
-
               <form onSubmit={formik.handleSubmit}>
                 <TextField id="name"
                   label="Full name *"
@@ -200,6 +216,9 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
                   type="name"
                   value={formik.values.name}
                   onChange={formik.handleChange} fullWidth
+                  InputProps={{
+                    readOnly: loginedUser.name ? true : false,
+                  }}
                 />
                 {formik.touched.name && formik.errors.name ? (
                   <Typography variant="caption" color="red" >
@@ -213,7 +232,11 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
                   name="email"
                   value={formik.values.email}
                   onChange={formik.handleChange}
-                  className="mt-3" />
+                  className="mt-3"
+                  InputProps={{
+                    readOnly: loginedUser.email ? true : false,
+                  }}
+                />
                 {formik.touched.email && formik.errors.email ? (
                   <Typography variant="caption" color="red">
                     {formik.errors.email}
@@ -229,6 +252,9 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
                   type="phone"
                   value={formik.values.phoneNumber}
                   onChange={formik.handleChange}
+                  InputProps={{
+                    readOnly: loginedUser.phoneNumber ? true : false,
+                  }}
                 />
 
                 {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
@@ -249,7 +275,7 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
 
         </div>
       </Modal>
-     
+
 
     </>
 

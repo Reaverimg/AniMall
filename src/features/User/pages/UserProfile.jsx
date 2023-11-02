@@ -50,7 +50,7 @@ function UserProfile() {
 
                 <div className="row justify-content-center">
                     <div
-                        className="avatar text-center col-md-2 p-3 mx-4" >
+                        className="avatar text-center col-md-2 p-3 mx-4 border-radius" >
                         <Avatar
                             alt="user avatar"
                             src="https://res.cloudinary.com/dsgm85ekm/image/upload/v1696784550/08jaOdI_rw9ayo.png"
@@ -59,7 +59,7 @@ function UserProfile() {
 
                     </div>
 
-                    <div className="basicInfo col-md-6 text-center p-3">
+                    <div className="basicInfo col-md-6 text-center p-3 border-radius">
 
                         <Typography
                             style={{ margin: theme.spacing(2, 0, 2, 0), textAlign: "center", fontWeight: 600 }}

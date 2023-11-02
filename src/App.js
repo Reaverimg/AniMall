@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Switch } from "react-router-dom/cjs/react-router-dom";
-import BuyerFeature from "../src/features/Buyer/pages/BuyerPage";
+import BuyerFeature from "../src/features/Buyer/index";
 import TrainerFeature from "../src/features/Trainer/index";
 import "./App.css";
 import Footer from "./components/footer";
@@ -11,6 +11,8 @@ import UserProfileFeature  from "./features/User/pages/UserProfile";
 import BuyTicketPage from "./features/Buyer/pages/BuyTicketPage";
 import PaymentPage from "./features/Buyer/pages/PaymentPage";
 import ResetPassword from "./features/Auth/forms/ResetPassForm/ResetPassForm";
+import OrderHistory from "./features/Buyer/pages/OrderHistory";
+import OrderDetail from "./features/Buyer/pages/OrderDetail";
 import { Box } from "@mui/material";
 import { useEffect } from "react";
 // import accAPI from "./api/accAPI";
@@ -32,6 +34,8 @@ function App() {
         <Route path="/admin" component={AdminFeature}></Route>
         <Route path="/user/profile" component={UserProfileFeature}></Route>
         <Route path="/resetPassword" component={ResetPassword}></Route>
+        <Route path="/buyer/orderHistory" component={OrderHistory}></Route>
+        <Route path="/buyer/orderDetail/:idOrder" component={OrderDetail}></Route>
       </Switch>
 
       {/* //Neu check role id la guest thi se hien footer cua Landing page

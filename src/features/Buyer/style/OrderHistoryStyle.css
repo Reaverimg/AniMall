@@ -1,0 +1,16 @@
+@import url('../../../index.css');
+
+.order-history-container{
+    width: 70%;
+    margin: 30px auto;
+    box-shadow: var(--shadow-01) ;
+    border-radius: 8px;
+}
+
+.order-history-container>thead{
+    background-color: aqua;
+}
+
+.order-history-container ul{
+    justify-content: center;
+}
