@@ -15,14 +15,13 @@ import OrderHistory from "./features/Buyer/pages/OrderHistory";
 import OrderDetail from "./features/Buyer/pages/OrderDetail";
 import { Box } from "@mui/material";
 import { useEffect } from "react";
-// import accAPI from "./api/accAPI";
+
 
 function App() {
+  const localeColor = localStorage.getItem("BACKGROUND_COLOR");
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      {/* //Neu check role id la guest thi se hien header cua Landing page
-    //Neu khong dung thi se hien UI (Navbar, Sidebar,..) cua CMS (Staff,Admin,Trainer) page
-    {accounts.roleId === "id" && <Header></Header>} */}
+    <Box sx={{ flexGrow: 1, backgroundColor: localeColor }}>
+
       <Header></Header>
 
       <Switch>
@@ -38,9 +37,6 @@ function App() {
         <Route path="/buyer/orderDetail/:idOrder" component={OrderDetail}></Route>
       </Switch>
 
-      {/* //Neu check role id la guest thi se hien footer cua Landing page
-    //Neu khong dung thi se khong hien footer vi CMS (Staff,Admin,Trainer) page khong can footer
-     {accounts.roleId === "id" && <Footer></Footer>} */}
       <Footer></Footer>
     </Box>
   );

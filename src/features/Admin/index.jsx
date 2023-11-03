@@ -5,6 +5,7 @@ import AdminCms from "./pages/AdminCms";
 import AccountManage from "./pages/AccountManage";
 import TickketManage from "./pages/TicketManage";
 import "../Admin/pages/styles/AccountManage.css"
+import SystemConfiguration from "./pages/SystemConfiguration/SystemConfiguration";
 AdminFeature.propTypes = {};
 
 function AdminFeature(props) {
@@ -15,6 +16,7 @@ function AdminFeature(props) {
         <Route path={match.path} component={AdminCms} exact></Route>
         <Route path={`${match.path}/account`} component={AccountManage}></Route>
         <Route path={`${match.path}/ticket`} component={TickketManage}></Route>
+        <Route path={`${match.path}/setting`} component={SystemConfiguration}></Route>
       </Switch>
     </div>
   );

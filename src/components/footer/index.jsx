@@ -6,8 +6,8 @@ function Footer(props) {
   return (
     <div>
       <footer
-        class="text-center text-xl-start text-white"
-        style={{ backgroundColor: "#435334", height: "100%" }}
+        className="text-center text-xl-start text-white"
+        style={{ backgroundColor: "#435334", width: "100vw", height: "100%" }}
       >
         <section
           className="d-flex justify-content-between p-4"
@@ -52,7 +52,7 @@ function Footer(props) {
               {/* <!-- Grid column --> */}
               <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
                 {/* <!-- Content --> */}
-                <h6 class="text-uppercase fw-bold">ANIMALL</h6>
+                <h6 className="text-uppercase fw-bold">ANIMALL</h6>
                 <hr
                   className="mb-4 mt-0 d-inline-block mx-auto"
                   style={{
@@ -62,7 +62,8 @@ function Footer(props) {
                   }}
                 />
                 <p>
-                  Hãy cùng chúng tôi khám phá và yêu thương hành tinh chúng ta cùng những người bạn động vật tại AniMall!
+                  Hãy cùng chúng tôi khám phá và yêu thương hành tinh chúng ta
+                  cùng những người bạn động vật tại AniMall!
                 </p>
               </div>
               {/* <!-- Grid column --> */}
@@ -174,8 +175,8 @@ function Footer(props) {
           className="text-center p-3"
           style={{ backgroundColor: "rgba(0, 0, 0, 0.2)" }}
         >
-          © 2020 Copyright: 
-          <a class="text-white" href="https://mdbootstrap.com/">
+          © 2020 Copyright:
+          <a className="text-white" href="https://mdbootstrap.com/">
             Nguyễn Văn Hiệp !!!!!!!
           </a>
         </div>
