@@ -23,15 +23,19 @@ import '../styles/PaymentStatus.css';
 import CancelPayment from "./OrderManageDialog/CancelPayment";
 import CancelAlert from "./OrderManageDialog/CancelAlert";
 import ErrorAlert from "./OrderManageDialog/ErrorAlert";
+import UseBill from "./OrderManageDialog/UseBill";
+import UseBillAlert from "./OrderManageDialog/UseBillAlert";
 
 function PaymentStatus(props) {
     const [searchValue, setSearchValue] = useState("");
     const [orderData, setOrderData] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const [useDialogOpen, setUseDialogOpen] = useState(false);
     const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
     const [filteredOrderData, setFilteredOrderData] = useState([]);
     const [confirmSuccess, setConfirmSuccess] = useState(false);
+    const [useSuccess, setUseSuccess] = useState(false);
     const [cancelSuccess, setCancelSuccess] = useState(false);
     const [updateFail, setUpdateFail] = useState(false);
     const [perPage, setPerPage] = useState(10); // Số lượng dữ liệu trên mỗi trang
@@ -44,11 +48,53 @@ function PaymentStatus(props) {
         status: "true"
     });
 
+     //Use Bill Data
+     const [useData, setUseData] = useState({
+        paymentStatus: "Used",
+        status: "true"
+    });
+
     //Cancel Data
     const [cancelData, setCancelData] = useState({
         paymentStatus: "Canceled",
         status: "true"
     });
+
+    //Handle use bill
+    const handleUseBill = async () => {
+        try {
+            console.log(useData)
+            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/bills/${selectedOrder.idBill}`, useData);
+            console.log("Use success", response.data.data);
+            handelCloseUseDialog();
+            setUseSuccess(true);
+            setTimeout(() => {
+                setUseSuccess(false);
+            }, 3000);
+            fetchData(currentPage);
+        } catch (error) {
+            console.error(error);
+            setUpdateFail(true);
+            setTimeout(() => {
+                setUpdateFail(true);
+            }, 3000);
+        }
+    };
+
+    //Use Dialog
+    const handleOpenUseDialog = (order) => {
+        setSelectedOrder(order);
+        console.log("select order", selectedOrder)
+        setUseData({
+            paymentStatus: "Used",
+            status: "true",
+        });
+        setUseDialogOpen(true);
+    };
+
+    const handelCloseUseDialog = () => {
+        setUseDialogOpen(false);
+    }
 
     //Confirm Handle
     const handleConfirmOrder = async () => {
@@ -127,7 +173,7 @@ function PaymentStatus(props) {
         try {
             const response = await axios.get(`http://animall-400708.et.r.appspot.com/api/v1/bills/`);
             const data = response.data.data;
-            const paymentStatusesToFetch = ["Paid", "Pending"];
+            const paymentStatusesToFetch = ["Paid", "Pending", "Used"];
             const getPaymentStatuses = data.filter(
                 (bill) =>
                     bill.paymentStatus &&
@@ -155,7 +201,7 @@ function PaymentStatus(props) {
 
     //Handle Page
     function handlePageChange(event, newPage) {
-        setCurrentPage(newPage); 
+        setCurrentPage(newPage);
         fetchData(newPage);
     }
 
@@ -182,8 +228,10 @@ function PaymentStatus(props) {
     const getStatusBackgroundColor = (status) => {
         if (status === "Paid") {
             return { backgroundColor: "green", color: "white" };
-        } else {
+        } else if (status === "Pending") {
             return { backgroundColor: "orange", color: "white" };
+        } else {
+            return { backgroundColor: "white", color: "green", };
         }
         return {};
         // if (status === "Pending")
@@ -260,38 +308,52 @@ function PaymentStatus(props) {
                                             </button>
                                         </TableCell>
                                         <TableCell align="left">
-                                            <div>
-                                                <button className="status-but"
-                                                    style={getStatusBackgroundColor(order.paymentStatus)}>
-                                                    {order.paymentStatus}
-                                                </button>
-                                            </div>
+
+                                            <button className="status-but"
+                                                style={getStatusBackgroundColor(order.paymentStatus)}>
+                                                {order.paymentStatus}
+                                            </button>
+
                                         </TableCell>
                                         <TableCell align="center" sx={{ display: 'flex', gap: '8px' }}>
 
                                             {/* Confirm Button */}
-                                            {order.paymentStatus === "Paid" ? (
+                                            {order.paymentStatus === "Used" ? (
                                                 <Button
                                                     variant="contained"
                                                     size="small"
-                                                    color="success"
                                                     disabled
                                                 >
-                                                    Confirm
+                                                    Use Bill
                                                 </Button>
+
                                             ) : (
-                                                <Button
-                                                    variant="contained"
-                                                    size="small"
-                                                    color="success"
-                                                    onClick={() => handleOpenConfirmDialog(order)}
-                                                >
-                                                    Confirm
-                                                </Button>
+
+
+                                                order.paymentStatus === "Paid" ? (
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        onClick={() => handleOpenUseDialog(order)}
+                                                    >
+                                                        Use bill
+                                                    </Button>
+                                                ) : (
+
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        color="success"
+                                                        onClick={() => handleOpenConfirmDialog(order)}
+                                                    >
+                                                        Confirm
+                                                    </Button>
+                                                )
+
                                             )}
 
                                             {/* Cancel button */}
-                                            {order.paymentStatus === "Paid" ? (
+                                            {order.paymentStatus === "Used" ? (
                                                 <Button
                                                     variant="outlined"
                                                     size="small"
@@ -325,6 +387,11 @@ function PaymentStatus(props) {
                             <ConfirmAlert />
                         )}
 
+                        {/* Use Bill Alert */}
+                        {useSuccess && (
+                            <UseBillAlert />
+                        )}
+
                         {/* Cancel alert */}
                         {cancelSuccess && (
                             <CancelAlert />
@@ -345,6 +412,14 @@ function PaymentStatus(props) {
                     />
                 </Dialog>
 
+                {/* Use Bill Dialog */}
+                <Dialog open={useDialogOpen} onClose={handelCloseUseDialog}>
+                    <UseBill
+                        handelCloseUseDialog={handelCloseUseDialog}
+                        handleUseBill={handleUseBill}
+                    />
+                </Dialog>
+
                 {/* Cancel Dialog */}
                 <Dialog open={cancelDialogOpen} onClose={handelCloseCancelDialog}>
                     <CancelPayment
@@ -362,7 +437,7 @@ function PaymentStatus(props) {
                     />
                 </div>
             </Grid>
-        </div>
+        </div >
     );
 }
 

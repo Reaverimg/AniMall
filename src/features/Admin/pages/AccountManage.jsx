@@ -29,6 +29,8 @@ import UpdateAlert from "./AdminDialog/UpdateAlert";
 import DeleteAler from "./AdminDialog/DeleteAlert";
 import RegistrationAlert from "./AdminDialog/RegistrationAlert";
 import ErrorAlert from "./AdminDialog/ErrorAlert";
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
+import { Link } from 'react-router-dom';
 
 function AccountManage(props) {
     const [searchValue, setSearchValue] = useState("");
@@ -282,6 +284,17 @@ function AccountManage(props) {
                     onClick={handleOpenCreateialog}>
                     Create Account
                 </Button>
+
+<Link to='/admin/setting'>
+                <Button
+                    variant="outlined"
+                    color="success"
+                    sx={{fontSize:'30px'}}
+                >   
+                   <SettingsSuggestIcon  />
+                </Button>
+                </Link>
+
                 <Dialog open={createDialogOpen} onClose={handleCloseCreateDialog}>
                     <DialogTitle>
                         Create New Account
