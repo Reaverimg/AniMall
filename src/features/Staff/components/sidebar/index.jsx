@@ -67,7 +67,7 @@ function StaffSideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/trainer/"
+                      to="/staff/"
                       activeClassName="active"
                     >
                       <ListItemText
