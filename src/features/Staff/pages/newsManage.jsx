@@ -22,7 +22,7 @@ function NewsManage() {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchValue, setSearchValue] = useState("");
-  const url = "http://animall-400708.et.r.appspot.com/api/v1";
+  const url = "https://animall-400708.et.r.appspot.com/api/v1";
   const fetchAllNewsList = async (id) => {
     try {
       console.log(1);
