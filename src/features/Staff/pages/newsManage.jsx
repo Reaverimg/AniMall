@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import CreateDialog from "./Dialog/NewsDialog/CreateDialog";
+// import CreateDialog from "./Dialog/NewsDialog/CreateDialog";
 import "./NewsManage.css";
 function NewsManage() {
   const [listNews, setlistNews] = useState([]);
@@ -196,12 +196,12 @@ function NewsManage() {
         </Grid>
       </Grid>
       {/* Create news */}
-      <Dialog open={createDialogOpen} onClose={handleCloseCreateDialog}>
+      {/* <Dialog open={createDialogOpen} onClose={handleCloseCreateDialog}>
         <CreateDialog
           fetchAllNewsList={fetchAllNewsList}
           handleCloseCreateDialog={handleCloseCreateDialog}
         ></CreateDialog>
-      </Dialog>
+      </Dialog> */}
     </Container>
   );
 }
