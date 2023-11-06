@@ -12,6 +12,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import React from "react";
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { NavLink } from "react-router-dom/cjs/react-router-dom";
 
 const drawserStyle = {
@@ -67,12 +68,12 @@ function AdminSideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/trainer/"
+                      to="/admin/account"
                       activeClassName="active"
                     >
                       <ListItemText
                         style={{ color: "#5B6253" }}
-                        primary="Experience"
+                        primary="Account Manage"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>
@@ -87,12 +88,12 @@ function AdminSideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/trainer/speciesManage"
+                      to="/admin/ticket"
                       activeClassName="active"
                     >
                       <ListItemText
                         style={{ color: "#5B6253" }}
-                        primary="Species Manage"
+                        primary="Ticket Manage"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>
@@ -103,16 +104,16 @@ function AdminSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <InboxIcon />
+                    <SettingsSuggestIcon  />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/trainer/animalManage"
+                      to="/admin/setting"
                       activeClassName="active"
                     >
                       <ListItemText
                         style={{ color: "#5B6253" }}
-                        primary="Animals Manage"
+                        primary="Setting"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>

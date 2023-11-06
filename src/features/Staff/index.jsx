@@ -7,6 +7,7 @@ import newsManage from "./pages/newsManage";
 import TrainerManage from "./pages/TrainerManage";
 import AreaManage from "./pages/areaManage";
 import OrderManage from "./pages/OrderManage/OrderManage";
+import AnimalManage from "./pages/AnimalManage";
 
 StaffFeature.propTypes = {};
 // Note
@@ -19,6 +20,7 @@ function StaffFeature(props) {
         <Route path={`${match.path}/news`} component={newsManage}></Route>
         <Route path={`${match.path}/trainer-manage`} component={TrainerManage}></Route>
         <Route path={`${match.path}/order-manage`} component={OrderManage}></Route>
+        <Route path={`${match.path}/animal-manage`} component={AnimalManage}></Route>
       </Switch>
     </div>
   );
