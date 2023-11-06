@@ -1,5 +1,5 @@
 import { FormControl, MenuItem } from "@mui/base";
-import { Button, DialogContent, Grid, List, ListItem, ListItemText, Menu, Select, TextField, Typography } from "@mui/material";
+import { Button, DialogContent, Grid, List, ListItem, ListItemText, Menu, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { React, useEffect, useState } from "react";
 
 
@@ -49,14 +49,52 @@ function UpdateDialog({ handleUpdateArea, setFormData, handleCloseUpdateDialog, 
     const handleDeleteItem = ({ idCage, idArea }) => {
         handleDeleteCageInArea({ idCage, idArea });
     }
-    const handleCheckboxChange = (id) => {
+    const handleAddCage = async (id) => {
         console.log(id);
-        setCheckedItems((prevCheckedItems) => ({
-            ...prevCheckedItems,
-            [id]: !prevCheckedItems[id],
-        }));
-        console.log(checkedItems);
-    };
+        try {
+            if (id) {
+                console.log('formData.idArea', formData.idArea)
+                console.log('id', id);
+                // Hiển thị cửa sổ xác nhận
+                const confirmed = window.confirm("Bạn có chắc muốn thêm lồng này?");
+                if (confirmed) {
+                    // Thực hiện yêu cầu API khi người dùng xác nhận
+                    const response = await fetch(`${apiUrl}/areas/cta`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            idArea: formData.idArea,
+                            idCage: id,
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+                    if (response.ok) {
+                        // Xử lý thành công
+                        console.log("Thêm lồng thành công!");
+                    } else {
+                        // Xử lý lỗi nếu cần
+                        console.log("Lỗi khi thêm lồng!");
+                        console.log("Message", response.message);
+                    }
+                } else {
+                    // Người dùng không xác nhận, không có hành động gì
+                    console.log("Người dùng đã hủy bỏ thao tác.");
+                }
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    // const handleCheckboxChange = (id) => {
+    //     console.log(id);
+    //     setCheckedItems((prevCheckedItems) => ({
+    //         ...prevCheckedItems,
+    //         [id]: !prevCheckedItems[id],
+    //     }));
+    //     console.log(checkedItems);
+    // };
 
 
     return (
@@ -95,19 +133,32 @@ function UpdateDialog({ handleUpdateArea, setFormData, handleCloseUpdateDialog, 
                             <Typography>Add New Cage Into This Area</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            {cageNoArea && cageNoArea.map((item) => (
-                                <div key={item.idCage}>
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={checkedItems[item.idCage] || false}
-                                            onChange={() => handleCheckboxChange(item.idCage)}
-                                            style={{ justifyItems: 'space-between' }}
-                                        />
-                                        {item.cageName}
-                                    </label>
-                                </div>
-                            ))}
+
+                            <TableContainer>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell>
+                                                Tên chuồng
+                                            </TableCell>
+                                            <TableCell>
+                                                Hành động
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                        {cageNoArea && cageNoArea.map((item) => (
+                                            <TableRow key={item.idCage}>
+                                                <TableCell>{item.cageName}</TableCell>
+                                                <TableCell>
+                                                    <Button onClick={() => { handleAddCage(item.idCage) }} variant="contained">Thêm chuồng</Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+
                         </Grid>
                         <Grid item xs={12}>
                             <Button

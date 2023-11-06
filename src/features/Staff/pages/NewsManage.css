@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sidebar {
+    flex: 1;
+    max-width: 80%;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+}
+
+.main-content {
+    flex: 10;
+    max-width: 100%;
+    padding: 2px;
+}

@@ -170,9 +170,6 @@ function AreaManage() {
             console.error('Error deleting cage:', error);
         }
     }
-
-
-
     return (
         <Container>
             <Grid style={{ margin: '20px auto', display: 'flex' }}>
