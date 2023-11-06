@@ -10,7 +10,7 @@ import StaffFeature from "./features/Staff";
 import UserProfileFeature  from "./features/User/pages/UserProfile";
 import BuyTicketPage from "./features/Buyer/pages/BuyTicketPage";
 import PaymentPage from "./features/Buyer/pages/PaymentPage";
-import ResetPassword from "./features/Auth/forms/ResetPassForm/ResetPassForm";
+import ResetPassword from "./features/User/forms/ResetPassForm";
 import OrderHistory from "./features/Buyer/pages/OrderHistory";
 import OrderDetail from "./features/Buyer/pages/OrderDetail";
 import { Box } from "@mui/material";
@@ -32,9 +32,9 @@ function App() {
         <Route path="/staff" component={StaffFeature}></Route>
         <Route path="/admin" component={AdminFeature}></Route>
         <Route path="/user/profile" component={UserProfileFeature}></Route>
-        <Route path="/resetPassword" component={ResetPassword}></Route>
         <Route path="/buyer/orderHistory" component={OrderHistory}></Route>
         <Route path="/buyer/orderDetail/:idOrder" component={OrderDetail}></Route>
+        <Route path="/account/resetpassword/:token" component={ResetPassword}></Route>
       </Switch>
 
       <Footer></Footer>

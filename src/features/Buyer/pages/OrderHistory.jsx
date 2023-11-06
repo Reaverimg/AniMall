@@ -86,7 +86,7 @@ function OrderHistory() {
             idAccount = (parsedAccountLogged.idAccount);
         }
 
-        const apiUrl = `http://animall-400708.et.r.appspot.com/api/v1/bills/account/${idAccount}`;
+        const apiUrl = `https://animall-400708.et.r.appspot.com/api/v1/bills/account/${idAccount}`;
         fetch(apiUrl)
             .then((response) => response.json())
             .then((result) => {
@@ -98,15 +98,13 @@ function OrderHistory() {
     }, []);
 
     const handleRowClick = (record) => {
-        // Trích xuất idOrder từ record hoặc dữ liệu khác cần thiết
         const orderId = record.orderId;
         const billId = record.idBill;
         const paymentStatus = record.paymentStatus;
-        console.log("billId ne ", billId)
-        // Chuyển hướng đến trang `/buyer/orderDetail/idOrder`
+        const timeCreated = record.timeCreate;
         history.push({
             pathname: `/buyer/orderDetail/${orderId}`,
-            state: { billId: billId, paymentStatus: paymentStatus}
+            state: { billId: billId, paymentStatus: paymentStatus, timeCreated: timeCreated}
         });
     };
 

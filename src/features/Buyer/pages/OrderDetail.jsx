@@ -10,10 +10,7 @@ function OrderDetail() {
     const { idOrder } = useParams();
     const [ticketCounts, setTicketCounts] = useState(new Map());
     const location = useLocation();
-    const { billId, paymentStatus } = location.state;
-    console.log("billId ne ", billId)
-    // Trích xuất dữ liệu từ props location
-
+    const { billId, paymentStatus } = location.state;// Trích xuất dữ liệu từ props location
 
     useEffect(() => {
 
@@ -23,7 +20,7 @@ function OrderDetail() {
             idAccount = (parsedAccountLogged.idAccount);
         }
 
-        const apiUrl = `http://animall-400708.et.r.appspot.com/api/v1/orders/${idOrder}`;
+        const apiUrl = `https://animall-400708.et.r.appspot.com/api/v1/orders/${idOrder}`;
         fetch(apiUrl)
             .then((response) => response.json())
             .then((result) => {
@@ -44,6 +41,33 @@ function OrderDetail() {
                 console.error('There was a problem with the API request:', error);
             });
     }, []);
+
+    const apiCancelOrder = async () => {
+
+        const apiData = {
+            paymentStatus : "Request refund"
+        };
+    
+        let json = {
+          method: 'POST',
+          body: JSON.stringify(apiData),
+          headers: new Headers({
+            'Content-Type': 'application/json; charset=UTF-8',
+          })
+        }
+        const response = await fetch(`https://animall-400708.et.r.appspot.com/api/v1/accounts/password/reset`, json)
+          .then((res) => res.json())
+          .catch((error) => { console.log(error) })
+        console.log(response)
+        if (response.message == "OPERATION SUCCESSFUL") {
+          console.log("reset password Success!")
+          // history.push(`/payment?orderId=${response.data[0].idOrder}`);
+        }
+        else {
+          console.log("reset password UnSuccess!")
+        }
+    
+      };
 
     return (
         <>

@@ -6,7 +6,7 @@ import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CheckoutModal from "./CheckoutModal";
-import './BuyTicketPageStyle.css'
+import '../style/BuyTicketPageStyle.css'
 
 function BuyerPage() {
     const [ticketList, setTicketList] = useState([]);
@@ -51,7 +51,7 @@ function BuyerPage() {
 
     //API call all tickets => add reponse in a list
     useEffect(() => {
-        const apiUrl = 'http://animall-400708.et.r.appspot.com/api/v1/tickets/';
+        const apiUrl = 'https://animall-400708.et.r.appspot.com/api/v1/tickets/';
 
         // Gọi API bằng phương thức GET sử dụng fetch
         fetch(apiUrl)

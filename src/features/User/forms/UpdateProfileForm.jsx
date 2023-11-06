@@ -96,7 +96,7 @@ function UpdateProfileForm({ onClose }) {
                 'Content-Type': 'application/json; charset=UTF-8',
             })
         }
-        const response = await fetch(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, json)
+        const response = await fetch(`https://animall-400708.et.r.appspot.com/api/v1/accounts`, json)
             .then((res) => res.json())
             .catch((error) => { console.log(error) })
         console.log(response)

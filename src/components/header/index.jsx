@@ -161,7 +161,7 @@ function Header(props) {
                   <Button color="inherit">
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/"
+                      to="/buyTicket"
                       activeClassName="active"
                     >
                       Buy Ticket
@@ -235,7 +235,7 @@ function Header(props) {
               <Button color="inherit">
                 <NavLink
                   style={{ color: "white", textDecoration: "none" }}
-                  to="/"
+                  to="/buyTicket"
                   activeClassName="active"
                 >
                   Buy Ticket
