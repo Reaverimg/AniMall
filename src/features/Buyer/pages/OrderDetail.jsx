@@ -10,7 +10,7 @@ function OrderDetail() {
     const { idOrder } = useParams();
     const [ticketCounts, setTicketCounts] = useState(new Map());
     const location = useLocation();
-    const { billId, paymentStatus } = location.state;// Trích xuất dữ liệu từ props location
+    const { billId, paymentStatus, timeCreated } = location.state;// Trích xuất dữ liệu từ props location
 
     useEffect(() => {
 
@@ -45,7 +45,10 @@ function OrderDetail() {
     const apiCancelOrder = async () => {
 
         const apiData = {
-            paymentStatus : "Request refund"
+            paymentStatus : "Request refund",
+            status: 1,
+            timeCreate: timeCreated,
+            qrCode: ""
         };
     
         let json = {

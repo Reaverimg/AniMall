@@ -76,7 +76,6 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
       .then((response) => response.json())
       .then((result) => {
         setAccounts(result.data);
-        console.log("accs", accounts)
       })
       .catch((error) => {
         console.error('There was a problem with the API request:', error);
@@ -116,6 +115,8 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
           // history.push(`/resetPassword`);// điều hướng sang resetpassword page nếu trùng pass && isGuest
           setMessContent("Please check your email and reset your password before continuing to order!")
           setOpenMess(true);
+          localStorage.setItem("EMAIL__RESET", values.email);
+          
           apiResetPassword(matchingAccount.email)
         } else {// bật login nếu trùng mail && isNotGuest
           // history.push(`/`);

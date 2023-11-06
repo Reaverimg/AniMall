@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { Modal, Button, TextField, Typography, Snackbar, Alert } from "@mui/material";
+import { Button, TextField, Typography, Snackbar, Alert } from "@mui/material";
 import { useHistory } from 'react-router-dom';
-import { useParams, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import "../styles/ResetPassFormStyle.css";
 import LockIcon from '@mui/icons-material/Lock';
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
 
 function ResetPassForm() {
-  const [accounts, setAccounts] = useState([]);
-
   const history = useHistory();
   const { token } = useParams();
-
   const [showPassword, setShowPassword] = React.useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openFailure, setOpenFailure] = useState("");
 
+  const [emailValue, setEmailValue] = useState(
+    localStorage.getItem("EMAIL__RESET") ? localStorage.getItem("EMAIL__RESET").replace(/"/g, '') : localStorage.getItem("EMAIL__RESET")
+  );
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-
 
   useEffect(() => {
     const apiUrl = 'http://animall-400708.et.r.appspot.com/api/v1/accounts';
@@ -34,7 +34,6 @@ function ResetPassForm() {
       .then((response) => response.json())
       .then((result) => {
         console.log("accountlist", result.data);
-        setAccounts(result.data);
       })
       .catch((error) => {
         console.error('There was a problem with the API request:', error);
@@ -45,7 +44,6 @@ function ResetPassForm() {
     initialValues: {
       password: "",
       confirmPass: ""
-
     },
     validationSchema: yup.object({
       password: yup
@@ -58,7 +56,7 @@ function ResetPassForm() {
       confirmPass: yup
         .string()
         .oneOf([yup.ref('password'), null], 'Confirm password must match with new password')
-        .required('Please confirm password!'),
+        .required('Please enter confirm password!'),
 
     }),
     onSubmit: (values) => {
@@ -69,7 +67,7 @@ function ResetPassForm() {
   const handleSubmit = async (values) => {
     // neu khong dang nhap => gọi API đăng ký guest
     const apiData = {
-      email: values.password,
+      email: emailValue,
       newPassword: values.password,
       resetToken: token
     };
@@ -86,12 +84,22 @@ function ResetPassForm() {
       .catch((error) => { console.log(error) })
     console.log(response)
     if (response.message == "OPERATION SUCCESSFUL") {
+      localStorage.removeItem("EMAIL__RESET");
+      setOpenSuccess(true);
       history.push(`/buyTicket`);
     }
     else {
       console.log(response.message)
+      setOpenFailure(true);
     }
+  }
 
+  const handleCloseMess = (event, reason) =>{
+    if(reason === 'clickaway'){
+      return;
+    }
+      setOpenFailure(false);
+    setOpenSuccess(false);
   }
 
 
@@ -170,18 +178,18 @@ function ResetPassForm() {
             </Typography>
           ) : null}
 
-          <div className="passRequirement mt-4">
+          <div className="passRequirement mt-4 ml-30px">
             <p className="mb-1" >
-              * Password must be 6 characters or more in length
+              At least 6 characters
             </p>
             <p className="mb-1" >
-              * Password must contain at least 1 uppercase letter
+              Contain at least 1 uppercase letter
             </p>
             <p className="mb-1" >
-              * Password must contain at least 1 lowercase letter
+              Contain at least 1 lowercase letter
             </p>
             <p className="mb-1" >
-              * Password must contain at least 1 special letter
+              Contain at least 1 special letter
             </p>
 
           </div>
@@ -194,6 +202,41 @@ function ResetPassForm() {
           </div>
         </form>
       </div>
+
+      <Snackbar 
+      open = {openFailure}
+      autoHideDuration={5000}
+      onClose={handleCloseMess}
+      anchorOrigin={
+        {
+          vertical: 'bottom',
+          horizontal: 'right'
+        }
+      }
+      >
+        <Alert onClose={handleCloseMess} severity="error" sx={{width: '100%'}}>
+          Reset password unsucessfully. Please try again later!
+        </Alert>
+
+      </Snackbar>
+
+      <Snackbar 
+      open = {openSuccess}
+      autoHideDuration={5000}
+      onClose={handleCloseMess}
+      anchorOrigin={
+        {
+          vertical: 'bottom',
+          horizontal: 'right'
+        }
+      }
+      >
+        <Alert onClose={handleCloseMess} severity="success" sx={{width: '100%'}}>
+         Reset password successfully. Now you can login with new password.
+        </Alert>
+
+      </Snackbar>
+
     </>
   );
 }
