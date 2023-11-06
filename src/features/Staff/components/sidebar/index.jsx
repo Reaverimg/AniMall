@@ -87,7 +87,7 @@ function StaffSideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/staff/"
+                      to="/staff/cages"
                       activeClassName="active"
                     >
                       <ListItemText
@@ -107,7 +107,7 @@ function StaffSideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/staff/"
+                      to="/staff/trainer-manage"
                       activeClassName="active"
                     >
                       <ListItemText
@@ -127,7 +127,7 @@ function StaffSideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/staff/"
+                      to="/staff/news"
                       activeClassName="active"
                     >
                       <ListItemText

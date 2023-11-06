@@ -43,6 +43,7 @@ function App() {
         <Route path="/account/resetpassword" component={ResetPassword}></Route>
         <Route path="/news" exact component={News}></Route>
         <Route path="/news/:idNews" component={NewsDetail}></Route>
+      
       </Switch>
 
       {/* //Neu check role id la guest thi se hien footer cua Landing page

@@ -8,7 +8,7 @@ News.propTypes = {};
 function News(props) {
   const history = useHistory();
   const [listNews, setlistNews] = useState([]);
-  const url = "http://animall-400708.et.r.appspot.com/api/v1";
+  const url = "https://animall-400708.et.r.appspot.com/api/v1";
   const fetchAllNewsList = async (id) => {
     try {
       if (!id) {
