@@ -7,7 +7,7 @@ import DeliveryMeals from "../asset/delivery-image.png";
 const Work = () => {
   const [listNews, setlistNews] = useState([]);
   const history = useHistory();
-  const url = "http://animall-400708.et.r.appspot.com/api/v1";
+  const url = "https://animall-400708.et.r.appspot.com/api/v1";
   const fetchAllNewsList = async (id) => {
     try {
       console.log(1);
@@ -64,6 +64,14 @@ const Work = () => {
   // const toNewsPage = () => {
   //   history.pushState()
   // }
+  const limitTextToWords = (text, wordCount) => {
+    const words = text.split(" ");
+    if (words.length <= wordCount) {
+      return text;
+    }
+    const limitedText = words.slice(0, wordCount).join(" ");
+    return limitedText + " ...";
+  };
   return (
     <section className="work-section-wrapper">
       <section className="work-section-top">
@@ -80,8 +88,10 @@ const Work = () => {
             <section className="info-boxes-image-container">
               <img src={data.images[0].url} alt="" />
             </section>
-            <h2>{data.title}</h2>
-            <p>{data.content}</p>
+            <div className="content-news">
+              <h2>{data.title}</h2>
+              <p>{limitTextToWords(data.content, 10)}</p>
+            </div>
           </section>
         ))}
       </section>
