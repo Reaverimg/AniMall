@@ -91,6 +91,7 @@ function Header(props) {
 
   const handleLoggedAccount = () => {
     localStorage.removeItem("ACCOUNT__LOGGED");
+    handleCloseMenu();
     history.push("/");
     setAccountLogged(localStorage.getItem("ACCOUNT__LOGGED"));
     // localStorageValue = null;
@@ -160,7 +161,7 @@ function Header(props) {
                   <Button color="inherit">
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/"
+                      to="/buyTicket"
                       activeClassName="active"
                     >
                       Buy Ticket
@@ -234,7 +235,7 @@ function Header(props) {
               <Button color="inherit">
                 <NavLink
                   style={{ color: "white", textDecoration: "none" }}
-                  to="/"
+                  to="/buyTicket"
                   activeClassName="active"
                 >
                   Buy Ticket
@@ -301,10 +302,8 @@ function Header(props) {
             horizontal: "left",
           }}
         >
-          <MenuItem component={Link} to="/user/profile">
-            MY ACCOUNT
-          </MenuItem>
-          <MenuItem onClick={handleCloseMenu}>MY ORDER HISTORY</MenuItem>
+          <MenuItem component={Link} to="/user/profile">MY ACCOUNT</MenuItem>
+          <MenuItem component={Link} to="/buyer/orderHistory"> MY ORDER HISTORY</MenuItem>
           <MenuItem onClick={handleLoggedAccount}>SIGN OUT</MenuItem>
         </Menu>
         {/* Dialog login registrer */}

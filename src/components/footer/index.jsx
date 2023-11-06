@@ -4,7 +4,7 @@ Footer.propTypes = {};
 
 function Footer(props) {
   return (
-    <div className="my-5">
+    <div>
       <footer
         className="text-center text-xl-start text-white"
         style={{ backgroundColor: "#435334", width: "100vw", height: "100%" }}
