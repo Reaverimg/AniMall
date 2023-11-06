@@ -6,8 +6,10 @@ import StaffCms from "./pages/StaffCms";
 import TrainerManage from "./pages/TrainerManage";
 import AreaManage from "./pages/areaManage";
 import OrderManage from "./pages/OrderManage/OrderManage";
+import AnimalManage from "./pages/AnimalManage";
 import NewsManage from "./pages/newsManage";
 import { CageManage } from "./pages/cageManage";
+
 
 StaffFeature.propTypes = {};
 // Note
@@ -20,6 +22,7 @@ function StaffFeature(props) {
         <Route path={`${match.path}/news`} component={NewsManage}></Route>
         <Route path={`${match.path}/trainer-manage`} component={TrainerManage}></Route>
         <Route path={`${match.path}/order-manage`} component={OrderManage}></Route>
+        <Route path={`${match.path}/animal-manage`} component={AnimalManage}></Route>
         <Route path={`${match.path}/cages`} component={CageManage}></Route>
       </Switch>
     </div>
