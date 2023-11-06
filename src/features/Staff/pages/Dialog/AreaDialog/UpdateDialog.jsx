@@ -34,7 +34,7 @@ function UpdateDialog({
   const [cageNoArea, setCageNoArea] = useState([]);
   const [selectedCage, setSelectedCage] = useState("");
   const [checkedItems, setCheckedItems] = useState({});
-  const apiurl = "https://animall-400708.et.r.appspot.com/api/v1";
+  const apiUrl = "https://animall-400708.et.r.appspot.com/api/v1";
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
