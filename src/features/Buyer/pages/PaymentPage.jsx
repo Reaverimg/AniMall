@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "@mui/material";
-import './PaymentPageStyle.css'
+import '../style/PaymentPageStyle.css'
 import { useHistory, useLocation } from 'react-router-dom';
 
 function PaymentPage() {
@@ -47,8 +47,10 @@ function PaymentPage() {
     const apiData = {
       orderId: orderId,
       paymentStatus: "Pending",
+      // timeCreate: new Date(),
       status: true
     };
+    console.log("timeCreate",  apiData.timeCreate)
 
     let json = {
       method: 'POST',
@@ -57,7 +59,7 @@ function PaymentPage() {
         'Content-Type': 'application/json; charset=UTF-8',
       })
     }
-    const response = await fetch(`http://animall-400708.et.r.appspot.com/api/v1/bills/`, json)
+    const response = await fetch(`https://animall-400708.et.r.appspot.com/api/v1/bills/`, json)
       .then((res) => res.json())
       .catch((error) => { console.log(error) })
     console.log(response)
@@ -77,7 +79,7 @@ function PaymentPage() {
         'Content-Type': 'application/json; charset=UTF-8',
       })
     }
-    const response = await fetch(`http://animall-400708.et.r.appspot.com/api/v1/orders/${orderId}`, json)
+    const response = await fetch(`https://animall-400708.et.r.appspot.com/api/v1/orders/${orderId}`, json)
       .then((res) => res.json())
       .catch((error) => { console.log(error) })
     console.log(response)

@@ -32,7 +32,6 @@ function UpdateProfileForm({ onClose }) {
             const parsedAccountLogged = JSON.parse(localStorageValue);
             setLoginedUser(parsedAccountLogged);
 
-            
         formik.setValues({
             name: parsedAccountLogged.name,
             email: parsedAccountLogged.email,
@@ -97,7 +96,7 @@ function UpdateProfileForm({ onClose }) {
                 'Content-Type': 'application/json; charset=UTF-8',
             })
         }
-        const response = await fetch(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, json)
+        const response = await fetch(`https://animall-400708.et.r.appspot.com/api/v1/accounts`, json)
             .then((res) => res.json())
             .catch((error) => { console.log(error) })
         console.log(response)
@@ -172,6 +171,9 @@ function UpdateProfileForm({ onClose }) {
                         type="email"
                         value={formik.values.email}
                         onChange={formik.handleChange}
+                        InputProps={{
+                            readOnly: true,
+                        }}
                     />
 
                     {formik.touched.email && formik.errors.email ? (

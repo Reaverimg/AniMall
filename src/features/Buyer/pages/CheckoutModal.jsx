@@ -1,16 +1,17 @@
-import React , { useEffect, useState } from "react";
-import { Modal, Button, TextField, Typography } from "@mui/material";
-import './CheckoutModalStyle.css'
+import React, { useEffect, useState } from "react";
+import { Modal, Button, TextField, Typography, Snackbar, Alert } from "@mui/material";
+import "../style/CheckoutModalStyle.css"
 import { useHistory } from 'react-router-dom';
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { Email } from "@mui/icons-material";
 
 function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTicketIds }) {
   const selectedTickets = ticketList.filter((ticket) => ticketQuantities[ticket.ticketName] > 0);
-  const [accounts, setAccounts] =  useState([]);
-
-  //state login/register dialog
-  const [openLogin, setOpenLogin] = useState(false);
+  const [accounts, setAccounts] = useState([]);
+  const [loginedUser, setLoginedUser] = useState({});
+  const [openMess, setOpenMess] = useState(false);
+  const [messContent, setMessContent] = useState("");
 
   const history = useHistory();
 
@@ -26,9 +27,9 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
   const phoneRegExp = /^[0-9]{10,15}$/;
   const formik = useFormik({
     initialValues: {
-      name: "",
-      email: "",
-      phoneNumber: "",
+      name: loginedUser ? loginedUser.name : "",
+      email: loginedUser ? loginedUser.email : "",
+      phoneNumber: loginedUser ? loginedUser.phoneNumber : "",
 
     },
     validationSchema: yup.object({
@@ -56,7 +57,21 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
   });
 
   useEffect(() => {
-    const apiUrl = 'http://animall-400708.et.r.appspot.com/api/v1/accounts';
+
+    const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
+    if (localStorageValue) {
+      const parsedAccountLogged = JSON.parse(localStorageValue);
+      setLoginedUser(parsedAccountLogged);
+
+      formik.setValues({
+        name: parsedAccountLogged.name,
+        email: parsedAccountLogged.email,
+        phoneNumber: parsedAccountLogged.phoneNumber,
+      });
+
+    }
+
+    const apiUrl = 'https://animall-400708.et.r.appspot.com/api/v1/accounts';
     fetch(apiUrl)
       .then((response) => response.json())
       .then((result) => {
@@ -70,7 +85,7 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
   const handleSubmit = async (values) => {
     //kiem tra nguoi mua co dang dang nhap khong
     const localStorageValue = localStorage.getItem("ACCOUNT__LOGGED");
-    console.log("localStorageValue ne", typeof (localStorageValue))
+
     if (localStorageValue == null) { // neu khong dang nhap => gọi API đăng ký guest
       const apiData = {
         name: values.name,
@@ -86,7 +101,7 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
           'Content-Type': 'application/json; charset=UTF-8',
         })
       }
-      const response = await fetch(`http://animall-400708.et.r.appspot.com/api/v1/guest/register`, json)
+      const response = await fetch(`https://animall-400708.et.r.appspot.com/api/v1/guest/register`, json)
         .then((res) => res.json())
         .catch((error) => { console.log(error) })
       console.log(response)
@@ -94,22 +109,33 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
         const guestAccount = { idAccount: response.data.idAccount, email: response.data.email };
         //gọi Tiếp API create order
         apiCreateOrder(guestAccount.idAccount, guestAccount.email)
-      }else if(response.message == "Email is already in use"){
-          const matchingAccount = accounts.find((account) => account.email === values.email);
-         
-          if(matchingAccount.role.roleDesc === "GUEST"){
-            history.push(`/resetPassword`);// điều hướng sang resetpassword page nếu trùng pass && isGuest
-          }else{
-            history.push(`/`);// điều hướng sang homepage nếu trùng pass && isNotGuest
-
-          }
+      } else if (response.message == "Email is already in use") {
+        const matchingAccount = accounts.find((account) => account.email === values.email);
+        if (matchingAccount.role.roleDesc === "GUEST") {
+          // history.push(`/resetPassword`);// điều hướng sang resetpassword page nếu trùng pass && isGuest
+          setMessContent("Please check your email and reset your password before continuing to order!")
+          setOpenMess(true);
+          localStorage.setItem("EMAIL__RESET", values.email);
+          
+          apiResetPassword(matchingAccount.email)
+        } else {// bật login nếu trùng mail && isNotGuest
+          // history.push(`/`);
+          setMessContent("Please login before continuing to order!")
+          setOpenMess(true);
+        }
       }
       else {
-        console.log("Email is already in use!")
+        console.log(response.message)
       }
     }
-    else {
+    else { //nếu có đăng nhập
       const parsedAccountLogged = JSON.parse(localStorageValue);
+
+      formik.setValues({
+        name: parsedAccountLogged.name,
+        email: parsedAccountLogged.email,
+        phoneNumber: parsedAccountLogged.phoneNumber,
+      });
       //gọi truc tiep api create order truyền localStorageValue.idAccount vào
       apiCreateOrder(parsedAccountLogged.idAccount, parsedAccountLogged.email)
     }
@@ -131,7 +157,7 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
         'Content-Type': 'application/json; charset=UTF-8',
       })
     }
-    const response = await fetch(`http://animall-400708.et.r.appspot.com/api/v1/orders/`, json)
+    const response = await fetch(`https://animall-400708.et.r.appspot.com/api/v1/orders/`, json)
       .then((res) => res.json())
       .catch((error) => { console.log(error) })
     console.log(response)
@@ -143,6 +169,40 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
     }
     else {
       console.log("create order UnSuccess!")
+    }
+
+  };
+
+  const handleCloseMess = (event, reason) =>{
+    if(reason === 'clickaway'){
+      return;
+    }
+    setOpenMess(false);
+  }
+
+  const apiResetPassword = async ( email) => {
+
+    const apiData = {
+      email: email
+    };
+
+    let json = {
+      method: 'POST',
+      body: JSON.stringify(apiData),
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=UTF-8',
+      })
+    }
+    const response = await fetch(`https://animall-400708.et.r.appspot.com/api/v1/accounts/password/reset`, json)
+      .then((res) => res.json())
+      .catch((error) => { console.log(error) })
+    console.log(response)
+    if (response.message == "OPERATION SUCCESSFUL") {
+      console.log("reset password Success!")
+      // history.push(`/payment?orderId=${response.data[0].idOrder}`);
+    }
+    else {
+      console.log("reset password UnSuccess!")
     }
 
   };
@@ -190,66 +250,152 @@ function PaymentModal({ open, onClose, ticketList, ticketQuantities, selectedTic
               </p>
             </div>
 
-            <div className="col-md-5 contact-info border p-4 mx-auto ">
-              <h3 className="text-center"> Contact Information  </h3>
+            {loginedUser.email ? (
+              // Nếu loginedUser có giá trị
+              <div className="col-md-5 contact-info border p-4 mx-auto ">
+                <h3 className="text-center"> Contact Information  </h3>
+                <form onSubmit={formik.handleSubmit}>
+                  <TextField id="name" fullWidth
+                    label="Full name *"
+                    name="name"
+                    type="name"
+                    value={formik.values.name}
+                    InputProps={{
+                      readOnly: true,
+                    }}
 
-              <form onSubmit={formik.handleSubmit}>
-                <TextField id="name"
-                  label="Full name *"
-                  name="name"
-                  type="name"
-                  value={formik.values.name}
-                  onChange={formik.handleChange} fullWidth
-                />
-                {formik.touched.name && formik.errors.name ? (
-                  <Typography variant="caption" color="red" >
-                    {formik.errors.name}
-                  </Typography>
-                ) : null}
+                  />
+                  {formik.touched.name && formik.errors.name ? (
+                    <Typography variant="caption" color="red" >
+                      {formik.errors.name}
+                    </Typography>
+                  ) : null}
 
-                <TextField fullWidth
-                  id="email"
-                  label="Email *"
-                  name="email"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  className="mt-3" />
-                {formik.touched.email && formik.errors.email ? (
-                  <Typography variant="caption" color="red">
-                    {formik.errors.email}
-                  </Typography>
-                ) : null}
+                  <TextField fullWidth
+                    id="email"
+                    label="Email *"
+                    name="email"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    className="mt-3"
+                    InputProps={{
+                      readOnly: true,
+                    }}
 
-                <TextField
-                  fullWidth
-                  className="mt-3"
-                  id="phoneNumber"
-                  label="Phone Number *"
-                  name="phoneNumber"
-                  type="phone"
-                  value={formik.values.phoneNumber}
-                  onChange={formik.handleChange}
-                />
+                  />
+                  {formik.touched.email && formik.errors.email ? (
+                    <Typography variant="caption" color="red">
+                      {formik.errors.email}
+                    </Typography>
+                  ) : null}
 
-                {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-                  <Typography variant="caption" color="red">
-                    {formik.errors.phoneNumber}
-                  </Typography>
-                ) : null}
+                  <TextField
+                    fullWidth
+                    className="mt-3"
+                    id="phoneNumber"
+                    label="Phone Number *"
+                    name="phoneNumber"
+                    type="phone"
+                    value={formik.values.phoneNumber}
+                    onChange={formik.handleChange}
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                  />
 
-                <div className=" my-3 text-center">
-                  <Button variant="contained" type="submit" className="btn-confirm">
-                    Confirm Payment
-                  </Button>
-                </div>
-              </form>
-            </div>
+                  {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+                    <Typography variant="caption" color="red">
+                      {formik.errors.phoneNumber}
+                    </Typography>
+                  ) : null}
+
+                  <div className=" my-3 text-center">
+                    <Button variant="contained" type="submit" className="btn-confirm">
+                      Confirm Payment
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            ) : ( // Nếu loginedUser KO có giá trị
+              <div className="col-md-5 contact-info border p-4 mx-auto ">
+                <h3 className="text-center"> Contact Information  </h3>
+                <form onSubmit={formik.handleSubmit}>
+                  <TextField id="name" fullWidth
+                    label="Full name *"
+                    name="name"
+                    type="name"
+                    value={formik.values.name}
+                    onChange={formik.handleChange}
+
+                  />
+                  {formik.touched.name && formik.errors.name ? (
+                    <Typography variant="caption" color="red" >
+                      {formik.errors.name}
+                    </Typography>
+                  ) : null}
+
+                  <TextField fullWidth
+                    id="email"
+                    label="Email *"
+                    name="email"
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    className="mt-3"
+                  />
+                  {formik.touched.email && formik.errors.email ? (
+                    <Typography variant="caption" color="red">
+                      {formik.errors.email}
+                    </Typography>
+                  ) : null}
+
+                  <TextField
+                    fullWidth
+                    className="mt-3"
+                    id="phoneNumber"
+                    label="Phone Number *"
+                    name="phoneNumber"
+                    type="phone"
+                    value={formik.values.phoneNumber}
+                    onChange={formik.handleChange}
+                  />
+
+                  {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
+                    <Typography variant="caption" color="red">
+                      {formik.errors.phoneNumber}
+                    </Typography>
+                  ) : null}
+
+                  <div className=" my-3 text-center">
+                    <Button variant="contained" type="submit" className="btn-confirm">
+                      Confirm Payment
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
 
           </div>
 
         </div>
       </Modal>
-     
+
+      <Snackbar 
+      open = {openMess}
+      autoHideDuration={5000}
+      onClose={handleCloseMess}
+      anchorOrigin={
+        {
+          vertical: 'bottom',
+          horizontal: 'right'
+        }
+      }
+      >
+        <Alert onClose={handleCloseMess} severity="error" sx={{width: '100%'}}>
+          {messContent}
+        </Alert>
+
+      </Snackbar>
+
 
     </>
 
