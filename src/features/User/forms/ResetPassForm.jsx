@@ -11,6 +11,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import IconButton from '@mui/material/IconButton';
+import { useSnackbar } from "notistack";
 
 function ResetPassForm() {
   const history = useHistory();
@@ -18,6 +19,7 @@ function ResetPassForm() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openFailure, setOpenFailure] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
   const [emailValue, setEmailValue] = useState(
     localStorage.getItem("EMAIL__RESET") ? localStorage.getItem("EMAIL__RESET").replace(/"/g, '') : localStorage.getItem("EMAIL__RESET")
@@ -82,10 +84,15 @@ function ResetPassForm() {
     const response = await fetch(`https://animall-400708.et.r.appspot.com/api/v1/accounts/password/confirm`, json)
       .then((res) => res.json())
       .catch((error) => { console.log(error) })
-    console.log(response)
     if (response.message == "OPERATION SUCCESSFUL") {
       localStorage.removeItem("EMAIL__RESET");
-      setOpenSuccess(true);
+      enqueueSnackbar("Reset pasword successfully", {
+        variant: "success",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "top",
+        },
+      });
       history.push(`/buyTicket`);
     }
     else {
@@ -220,7 +227,7 @@ function ResetPassForm() {
 
       </Snackbar>
 
-      <Snackbar 
+      {/* <Snackbar 
       open = {openSuccess}
       autoHideDuration={5000}
       onClose={handleCloseMess}
@@ -235,7 +242,8 @@ function ResetPassForm() {
          Reset password successfully. Now you can login with new password.
         </Alert>
 
-      </Snackbar>
+      </Snackbar> */}
+      
 
     </>
   );
