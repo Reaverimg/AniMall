@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import CageDetail from "./CageDetail";
 import CreateDialog from "./Dialog/CageDialog/CreateDialog";
-export const CageManage = () => {
+function cageManage() {
   const [cageList, setCageList] = useState([]);
   const [selectId, setSelectId] = useState(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -97,10 +97,10 @@ export const CageManage = () => {
                       >
                         <Card>
                           {/* <CardMedia
-                            sx={{ height: 140 }}
-                            image="/static/images/cards/contemplative-reptile.jpg"
-                            title="green iguana"
-                          /> */}
+                              sx={{ height: 140 }}
+                              image="/static/images/cards/contemplative-reptile.jpg"
+                              title="green iguana"
+                            /> */}
                           <CardContent>
                             <Typography
                               gutterBottom
@@ -150,4 +150,6 @@ export const CageManage = () => {
       </div>
     </Container>
   );
-};
+}
+
+export default cageManage;
