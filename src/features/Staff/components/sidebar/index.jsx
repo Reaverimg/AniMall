@@ -13,14 +13,14 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 import { NavLink } from "react-router-dom/cjs/react-router-dom";
-import NewspaperIcon from '@mui/icons-material/Newspaper';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import PetsIcon from '@mui/icons-material/Pets';
-import GiteIcon from '@mui/icons-material/Gite';
-import GpsNotFixedIcon from '@mui/icons-material/GpsNotFixed';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
-import LocalActivityIcon from '@mui/icons-material/LocalActivity';
-import SetMealIcon from '@mui/icons-material/SetMeal';
+import NewspaperIcon from "@mui/icons-material/Newspaper";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import PetsIcon from "@mui/icons-material/Pets";
+import GiteIcon from "@mui/icons-material/Gite";
+import GpsNotFixedIcon from "@mui/icons-material/GpsNotFixed";
+import EqualizerIcon from "@mui/icons-material/Equalizer";
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import SetMealIcon from "@mui/icons-material/SetMeal";
 
 const drawserStyle = {
   backgroundColor: "#CEDEBD",
@@ -141,6 +141,25 @@ function StaffSideBar(props) {
                       <ListItemText
                         style={{ color: "#5B6253" }}
                         primary="Manage News"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <NewspaperIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/staff/species"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="Manage Species"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>

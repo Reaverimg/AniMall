@@ -2,6 +2,7 @@ import {
   Avatar,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   CardMedia,
@@ -14,18 +15,23 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-// import CreateDialog from "./Dialog/NewsDialog/CreateDialog";
+import CreateDialog from "./Dialog/NewsDialog/CreateDialog";
+import { enqueueSnackbar, useSnackbar } from "notistack";
 import "./NewsManage.css";
+import UpdateDialog from "./Dialog/NewsDialog/UpdateDialog";
 function NewsManage() {
+  const { enqueueSnackbar } = useSnackbar();
   const [listNews, setlistNews] = useState([]);
+  const [idSelectNews, setIdSelectNews] = useState(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const url = "https://animall-400708.et.r.appspot.com/api/v1";
   const fetchAllNewsList = async (id) => {
+    console.log(id);
     try {
-      console.log(1);
       if (!id) {
         const response = await fetch(`${url}/news`, {
           method: "GET",
@@ -37,6 +43,7 @@ function NewsManage() {
           const rpData = await response.json();
           if (rpData.message === "OPERATION SUCCESSFUL" && rpData.data) {
             setlistNews(rpData.data);
+            console.log(rpData.data);
           }
         }
       } else {
@@ -50,6 +57,7 @@ function NewsManage() {
           const rpData = await response.json();
           if (rpData.message === "OPERATION SUCCESSFUL" && rpData.data) {
             setlistNews(rpData.data.newsList);
+            console.log(rpData.data.newsList);
           }
         }
       }
@@ -80,18 +88,26 @@ function NewsManage() {
   };
   useEffect(() => {
     fetchAllNewsList(selectedCategory);
-  }, []);
+  }, [selectedCategory]);
 
   useEffect(() => {
     fetchAllCategories();
   }, []);
 
+  const handleSelectNews = (id) => {
+    setIdSelectNews(id);
+    setUpdateDialogOpen(true);
+  };
+
+  const handleCloseUpdateDialog = () => {
+    setUpdateDialogOpen(false);
+  };
   const handleOpenCreateDialog = () => {
     setCreateDialogOpen(true);
   };
   function handleCloseCreateDialog() {
     setCreateDialogOpen(false);
-  };
+  }
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
   };
@@ -149,12 +165,12 @@ function NewsManage() {
                   !selectedCategory || item.category.id === selectedCategory.id
               )
               .map((item) => (
-                <Grid item xs={12} sm={5} md={4} lg={4} key={item.idNews}>
+                <Grid item xs={12} sm={6} md={5} lg={5} key={item.idNews}>
                   <Card
                     sx={{
                       width: "100%",
-                      display: "flex",
-                      flexDirection: "column",
+                      // display: "flex",
+                      // flexDirection: "column",
                     }}
                   >
                     <CardHeader
@@ -169,7 +185,7 @@ function NewsManage() {
                             maxWidth: "100%",
                           }}
                         >
-                          {item.category.categoryName}
+                          {item.category && item.category.categoryName}
                         </div>
                       }
                     />
@@ -183,6 +199,15 @@ function NewsManage() {
                         {limitTextToWords(item.content, 10)}
                       </Typography>
                     </CardContent>
+                    <CardActions>
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => handleSelectNews(item.idNews)}
+                      >
+                        Detail
+                      </Button>
+                    </CardActions>
                   </Card>
                 </Grid>
               ))
@@ -196,12 +221,16 @@ function NewsManage() {
         </Grid>
       </Grid>
       {/* Create news */}
-      {/* <Dialog open={createDialogOpen} onClose={handleCloseCreateDialog}>
+      <Dialog open={createDialogOpen} onClose={handleCloseCreateDialog}>
         <CreateDialog
           fetchAllNewsList={fetchAllNewsList}
           handleCloseCreateDialog={handleCloseCreateDialog}
         ></CreateDialog>
-      </Dialog> */}
+      </Dialog>
+      {/* Update news */}
+      <Dialog open={updateDialogOpen} onClose={handleCloseUpdateDialog}>
+        <UpdateDialog idSelectNews={idSelectNews}></UpdateDialog>
+      </Dialog>
     </Container>
   );
 }
