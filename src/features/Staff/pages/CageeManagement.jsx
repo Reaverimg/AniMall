@@ -15,7 +15,10 @@ import {
 } from "@mui/material";
 import CageDetail from "./CageDetail";
 import CreateDialog from "./Dialog/CageDialog/CreateDialog";
-function cageManage() {
+
+CageeManagement.propTypes = {};
+
+function CageeManagement(props) {
   const [cageList, setCageList] = useState([]);
   const [selectId, setSelectId] = useState(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -152,4 +155,4 @@ function cageManage() {
   );
 }
 
-export default cageManage;
+export default CageeManagement;

@@ -10,7 +10,7 @@ import AnimalManage from "./pages/AnimalManage";
 import NewsManage from "./pages/newsManage";
 import SpeciesManage from "../Trainer/pages/SpeciesManage";
 import SpeciesDetail from "../Trainer/pages/SpecieDetailPage";
-import cageManage from "./pages/cageManage";
+import CageeManagement from "./pages/CageeManagement";
 // import OrderManage from "./pages/OrderManage/OrderManage";
 
 StaffFeature.propTypes = {};
@@ -34,7 +34,7 @@ function StaffFeature(props) {
           path={`${match.path}/animal-manage`}
           component={AnimalManage}
         ></Route>
-        <Route path={`${match.path}/cages`} component={cageManage}></Route>
+        <Route path={`${match.path}/cages`} component={CageeManagement}></Route>
         <Route
           path={`${match.path}/species`}
           exact
