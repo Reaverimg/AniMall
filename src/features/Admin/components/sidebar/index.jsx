@@ -4,7 +4,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -14,6 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { NavLink } from "react-router-dom/cjs/react-router-dom";
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 
 const drawserStyle = {
   backgroundColor: "#CEDEBD",
@@ -64,7 +65,7 @@ function AdminSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <InboxIcon />
+                      <ManageAccountsIcon />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
@@ -84,7 +85,7 @@ function AdminSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <MailIcon />
+                      <LocalActivityIcon />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
@@ -121,7 +122,7 @@ function AdminSideBar(props) {
               </List>
 
               {/* Button */}
-              <List>
+              {/* <List>
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
@@ -139,7 +140,7 @@ function AdminSideBar(props) {
                     </NavLink>
                   </ListItemButton>
                 </ListItem>
-              </List>
+              </List> */}
             </Box>
           </Drawer>
         </React.Fragment>

@@ -20,11 +20,11 @@
 .status-but {
     border-radius: 5px;
     border: none;
+    width: 50px;
 }
 
 .price-but {
     border-radius: 5px;
     border: none;
     background-color: rgb(223, 218, 222);
-    
 }
