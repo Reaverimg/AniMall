@@ -31,6 +31,7 @@ import RegistrationAlert from "./AdminDialog/RegistrationAlert";
 import ErrorAlert from "./AdminDialog/ErrorAlert";
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import { Link } from 'react-router-dom';
+import { GET_ALL_ACCOUNT, PUT_ACCOUNT } from "../../../api/SwaggerAPI";
 
 function AccountManage(props) {
     const [searchValue, setSearchValue] = useState("");
@@ -109,7 +110,7 @@ function AccountManage(props) {
             return;
         }
         try {
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, formData);
+            const response = await axios.put(PUT_ACCOUNT, formData);
             console.log("Account updated successfully:", response.data);
             handleCloseUpdateDialog();
             setUpdateSuccess(true)
@@ -145,7 +146,7 @@ function AccountManage(props) {
     const handleDeleteAccount = async () => {
         try {
 
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, deleteData);
+            const response = await axios.put(PUT_ACCOUNT, deleteData);
             console.log("Account delete successfully:", response.data);
             setDeleteSuccess(true);
             setTimeout(() => {
@@ -189,7 +190,7 @@ function AccountManage(props) {
         });
 
         try {
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/accounts`, unbanData);
+            const response = await axios.put(PUT_ACCOUNT, unbanData);
             console.log("Account unban successfully:", response.data);
             fetchData(currentPage);
             setUpdateSuccess(true);
@@ -209,7 +210,7 @@ function AccountManage(props) {
     async function fetchData(page) {
         try {
             const response = await axios.get(
-                `http://animall-400708.et.r.appspot.com/api/v1/accounts`
+                GET_ALL_ACCOUNT
             );
             const data = response.data.data;
             const rolesToFetch = ["TRAINER", "ADMIN", "USER", "STAFF"];
@@ -284,16 +285,6 @@ function AccountManage(props) {
                     onClick={handleOpenCreateialog}>
                     Create Account
                 </Button>
-
-<Link to='/admin/setting'>
-                <Button
-                    variant="outlined"
-                    color="success"
-                    sx={{fontSize:'30px'}}
-                >   
-                   <SettingsSuggestIcon  />
-                </Button>
-                </Link>
 
                 <Dialog open={createDialogOpen} onClose={handleCloseCreateDialog}>
                     <DialogTitle>
