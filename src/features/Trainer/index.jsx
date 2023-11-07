@@ -6,6 +6,7 @@ import AnimalManage from "./pages/AnimalManage";
 import FeedingSchedule from "./pages/FeedingSchedule";
 import SpecieDetailPage from "./pages/SpecieDetailPage";
 import SpeciesManage from "./pages/SpeciesManage";
+import ExperiencePage from "./pages/ExperiencePage";
 
 TrainerFeature.propTypes = {};
 
@@ -38,7 +39,7 @@ function TrainerFeature(props) {
         ></Route>
         <Route
           path={`${match.path}/experience`}
-          component={FeedingSchedule}
+          component={ExperiencePage}
         ></Route>
       </Switch>
     </div>

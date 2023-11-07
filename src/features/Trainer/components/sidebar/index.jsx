@@ -67,7 +67,7 @@ function TrainerSideBar(props) {
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/trainer/"
+                      to="/trainer/experience"
                       activeClassName="active"
                     >
                       <ListItemText

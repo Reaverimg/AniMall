@@ -1,9 +1,18 @@
-import { Box, Button, TextField, Typography, createTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+  createTheme,
+} from "@mui/material";
 import { useFormik } from "formik";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import * as yup from "yup";
 import { enqueueSnackbar, useSnackbar } from "notistack";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 RegisterForm.propTypes = {
   onSubmit: PropTypes.func,
 };
@@ -56,8 +65,23 @@ function RegisterForm(props) {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const [showRetypePassword, setShowRetypePassword] = useState(false);
+
   const toggleShowPassword = () => {
     setShowPassword((x) => !x);
+  };
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
+  const handleClickShowRetypePassword = () =>
+    setShowRetypePassword((show) => !show);
+
+  const handleMouseDownRetypePassword = (e) => {
+    e.preventDefault();
   };
 
   const formik = useFormik({
@@ -85,8 +109,15 @@ function RegisterForm(props) {
         .email("Invalid email (ABC@gmail.com)"),
       password: yup
         .string()
-        .required("Please enter your password")
-        .min(3, "Password too short"),
+        .min(6, "Mật khẩu phải chứa ít nhất 6 ký tự")
+        .matches(/[A-Z]/, "Mật khẩu phải chứa ít nhất 1 chữ hoa")
+        .matches(/[a-z]/, "Mật khẩu phải chứa ít nhất 1 chữ thường")
+        .matches(/[0-9]/, "Mật khẩu phải chứa ít nhất 1 số")
+        .matches(
+          /[!@#$%^&*(),.?":{}|<>]/,
+          "Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt"
+        )
+        .required("Vui lòng nhập mật khẩu"),
       retypePassword: yup
         .string()
         .required("Please retype your password")
@@ -162,40 +193,6 @@ function RegisterForm(props) {
     },
   });
 
-  // const postRegister = async () => {
-  //   try {
-  //     const newAccount = {
-  //       name: `${formik.values.name}`,
-  //       phone: `${formik.values.phone}`,
-  //       email: `${formik.values.email}`,
-  //       password: `${formik.values.password}`,
-  //       roleId: 4,
-  //     };
-  //     const response = await fetch(
-  //       "http://animall-400708.et.r.appspot.com/api/v1/accounts/register",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(newAccount),
-  //       }
-  //     );
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       console.log("Registration successful:", data);
-  //       // Handle successful registration, such as redirecting to login page
-  //     } else {
-  //       console.error("Registration failed");
-  //       // Handle failed registration, show error message, etc.
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during registration:", error);
-  //     // Handle error, show error message, etc.
-  //   }
-  // };
-
   return (
     <Box>
       <Typography style={classes.title} component="h3" variant="h5">
@@ -258,9 +255,22 @@ function RegisterForm(props) {
           id="password"
           label="Password"
           name="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={formik.values.password}
           onChange={formik.handleChange}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         {formik.touched.password && formik.errors.password ? (
           <Typography variant="caption" color="red">
@@ -275,9 +285,22 @@ function RegisterForm(props) {
           id="retypePassword"
           label="Retype Password"
           name="retypePassword"
-          type="password"
+          type={showRetypePassword ? "text" : "password"}
           value={formik.values.retypePassword}
           onChange={formik.handleChange}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowRetypePassword}
+                  onMouseDown={handleMouseDownRetypePassword}
+                  edge="end"
+                >
+                  {showRetypePassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         {formik.touched.retypePassword && formik.errors.retypePassword ? (
           <Typography variant="caption" color="red">

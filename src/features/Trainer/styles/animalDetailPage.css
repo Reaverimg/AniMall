@@ -1,0 +1,39 @@
+.animal-detail {
+    padding: 2%;
+}
+
+.text-name {
+    color: #175e1a;
+}
+
+.img-fluid {
+    border-radius: 15px;
+    width: 90%;
+    height: 220px;
+}
+
+.text-live {
+    margin: 0 0 0 1%;
+    background-color: #2E7D32;
+    color: whitesmoke;
+    padding: 0.5% 2%;
+    border-radius: 6px;
+}
+
+.text-characteristic {
+    display: flex;
+    word-wrap: break-word;
+}
+
+.table-title {
+    font-weight: 600;
+}
+
+.btn-add {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.title {
+    margin-left: 10%;
+}

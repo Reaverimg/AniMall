@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
-const thumbnailUrl = "https://via.placeholder.com/690x366";
+const thumbnailUrl = "https://shorturl.at/atQTY";
 
 AnimalDetail.propTypes = {
   animal: PropTypes.object.isRequired,
@@ -20,36 +20,83 @@ AnimalDetail.propTypes = {
 function AnimalDetail({ animal }) {
   const history = useHistory();
 
+  const styles = {
+    card: {
+      maxWidth: 350,
+      maxHeight: 500,
+      boxShadow: "5px 5px 10px rgba(0, 0, 0, 0.5)", // Change the last parameter for the opacity level
+    },
+    cardMedia: {
+      height: 180,
+      borderRadius: "0 0 4% 4%",
+    },
+    btnInfor: {
+      border: "1px solid green",
+      padding: "1% 2%",
+      color: "#006B3E",
+      borderRadius: "6px",
+    },
+  };
+
   //   const thumbnailUrl = animal.thumbnail;
   const handleClick = () => {
     const cleanedIdAnimal = encodeURIComponent(animal.idAnimal);
     history.push(`/trainer/animalManage/${cleanedIdAnimal}`);
     console.log(history);
   };
+
   return (
     <Box padding={1}>
-      <Card sx={{ maxWidth: 400, maxHeight: 500 }}>
+      <Card sx={styles.card}>
         <CardMedia
-          sx={{ height: 140 }}
+          sx={styles.cardMedia}
           image={thumbnailUrl}
           title="green iguana"
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            Name :{animal.name}
+
+        <CardContent
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography gutterBottom variant="h6" component="div">
+            {animal.name}
           </Typography>
           {/* <Typography gutterBottom variant="h5" component="div">
             Cage : {animal.cage.cageName}
           </Typography> */}
-          <Typography variant="body2" color="text.secondary">
-            Sex : {animal.sex ? "male" : "female"}
+          <Typography
+            sx={{
+              backgroundColor: "#006B3E",
+              padding: "1% 2%",
+              color: "white",
+              borderRadius: "6px",
+            }}
+            variant="body2"
+            color="text.secondary"
+          >
+            {animal.sex ? "Male" : "Female"}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="small" onClick={handleClick}>
+
+        <CardActions sx={{ margin: 1 }}>
+          <Button
+            sx={{
+              padding: "1% 2%",
+              color: "white",
+              borderRadius: "6px",
+              backgroundColor: "#006B3E",
+            }}
+            size="small"
+            onClick={handleClick}
+          >
             Take care
           </Button>
-          <Button size="small">Species Info</Button>
+          <Button sx={styles.btnInfor} size="small">
+            Species Info
+          </Button>
         </CardActions>
       </Card>
     </Box>

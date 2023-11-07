@@ -60,7 +60,11 @@ function AdminHeader({ loggout }) {
 
             {accountLogged != null && (
               <IconButton
-                style={{ color: "white", textDecoration: "none" }}
+                style={{
+                  color: "white",
+                  textDecoration: "none",
+                  marginLeft: "auto",
+                }}
                 onClick={handleUserClick}
               >
                 <AccountCircle color="inherit"></AccountCircle>
