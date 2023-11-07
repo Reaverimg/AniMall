@@ -13,6 +13,14 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import React from "react";
 import { NavLink } from "react-router-dom/cjs/react-router-dom";
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import PetsIcon from '@mui/icons-material/Pets';
+import GiteIcon from '@mui/icons-material/Gite';
+import GpsNotFixedIcon from '@mui/icons-material/GpsNotFixed';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+import SetMealIcon from '@mui/icons-material/SetMeal';
 
 const drawserStyle = {
   backgroundColor: "#CEDEBD",
@@ -63,7 +71,7 @@ function StaffSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <InboxIcon />
+                      <GpsNotFixedIcon />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
@@ -83,7 +91,7 @@ function StaffSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <MailIcon />
+                      <GiteIcon />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
@@ -103,7 +111,7 @@ function StaffSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <InboxIcon />
+                      <AccountCircleIcon />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
@@ -123,7 +131,7 @@ function StaffSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <InboxIcon />
+                      <NewspaperIcon />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
@@ -143,7 +151,7 @@ function StaffSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <MailIcon />
+                      <EqualizerIcon />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
@@ -163,11 +171,11 @@ function StaffSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <MailIcon />
+                      <LocalActivityIcon />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
-                      to="/staff/"
+                      to="/staff/order-manage"
                       activeClassName="active"
                     >
                       <ListItemText
@@ -183,7 +191,7 @@ function StaffSideBar(props) {
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
-                      <MailIcon />
+                      <SetMealIcon />
                     </ListItemIcon>
                     <NavLink
                       style={{ color: "white", textDecoration: "none" }}
@@ -193,6 +201,27 @@ function StaffSideBar(props) {
                       <ListItemText
                         style={{ color: "#5B6253" }}
                         primary="Manage Foods"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+
+              {/* Button */}
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <PetsIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/staff/animal-manage"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="Manage Animal"
                       ></ListItemText>
                     </NavLink>
                   </ListItemButton>

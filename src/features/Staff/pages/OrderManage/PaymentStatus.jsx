@@ -299,23 +299,23 @@ function PaymentStatus(props) {
                                     <TableRow key={order.idBill}>
                                         <TableCell align="left">{order.idBill}</TableCell>
                                         <TableCell align="center">
-                                            <button className="price-but">
+                                            <button className="quantity-but">
                                                 {order.quantity}
                                             </button>
                                         </TableCell>
                                         <TableCell align="center">{order.totalPrice}VND</TableCell>
                                         <TableCell align="center">
-                                            <button className="status-but">
+                                            <button className="time-but">
                                                 {format(new Date(order.timeCreate), 'dd/MM/yyyy')}
                                             </button>
-                                            <button className="status-but"
+                                            <button className="time-but"
                                                 style={{ marginLeft: '10px' }}>
                                                 {format(new Date(order.timeCreate), 'hh:mm a')}
                                             </button>
                                         </TableCell>
                                         <TableCell align="left">
 
-                                            <button className="status-but"
+                                            <button className="payment-status-but"
                                                 style={getStatusBackgroundColor(order.paymentStatus)}>
                                                 {order.paymentStatus}
                                             </button>

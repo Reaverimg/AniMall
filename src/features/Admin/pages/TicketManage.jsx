@@ -338,13 +338,13 @@ function TicketManage(props) {
                                         <TableCell align="left">{ticket.ticketName}</TableCell>
 
                                         <TableCell align="left">
-                                            <button className="price-but">
+                                            <button className="price-but" style={{width:'60px'}}>
                                                 {ticket.ticketPrice}
                                             </button>VND</TableCell>
                                         <TableCell align="left">{ticket.ticketType}</TableCell>
                                         <TableCell align="left">
                                             <div>
-                                                <button className="status-but"
+                                                <button className="status-but" 
                                                     style={getStatusBackgroundColor(ticket.status.toString())}>
                                                     {ticket.status ? "Active" : "Disable"}
                                                 </button>
