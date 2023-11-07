@@ -23,6 +23,9 @@ jobs:
       
     - name: Install antd
       run: npm install antd
+      
+    - name: Install barbel
+      run: npm install @babel/core @babel/preset-env @babel/plugin-transform-runtime --save-dev
 
     - name: Build
       run: npm run build
