@@ -1,8 +1,14 @@
 @import url('../../../index.css');
 
 .order-detail-container{
-    width: 50%;
+    width: 40%;
     margin: 30px auto;
     box-shadow: var(--shadow-01) ;
     border-radius: 8px;
+}
+
+.text-ellipsis {
+    white-space: nowrap;      /* Ngăn văn bản xuống dòng */
+    overflow: hidden;        /* Ẩn văn bản bị tràn */
+    text-overflow: ellipsis; /* Hiển thị dấu "..." khi văn bản tràn ra ngoài */
 }

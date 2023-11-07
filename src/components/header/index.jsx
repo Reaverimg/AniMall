@@ -94,7 +94,6 @@ function Header(props) {
     handleCloseMenu();
     history.push("/");
     setAccountLogged(localStorage.getItem("ACCOUNT__LOGGED"));
-    // localStorageValue = null;
     setRoleId(null);
     enqueueSnackbar("Sign out successfully", {
       variant: "success",
