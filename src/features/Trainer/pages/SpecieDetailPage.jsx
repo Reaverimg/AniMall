@@ -15,13 +15,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import SettingsRoundedIcon from "@mui/icons-material/Settings";
+import SpecieAnimalsList from "../../Trainer/components/SpecieAnimalsList";
 import { useFormik } from "formik";
 import axios from "axios";
 import { enqueueSnackbar, useSnackbar } from "notistack";
 import * as Yup from "yup";
-import SpeciesAnimalsList from "../components/SpeciesAnimalsList";
-
-
 
 SpecieDetailPage.propTypes = {};
 
@@ -44,14 +42,15 @@ function SpecieDetailPage(props) {
 
   const [updateSpecie, setUpdateSpecie] = useState({
     idSpecie: `${idSpecie}`,
-    speciesName: "",
+    specieName: "",
     origin: "",
     description: "",
+    status: true,
   });
 
   const handleEditDialogOpen = (specie) => {
     setFormData({
-      speciesName: specie.speciesName,
+      specieName: specie.specieName,
       origin: specie.origin,
       description: specie.description,
     });
@@ -86,12 +85,12 @@ function SpecieDetailPage(props) {
   const formik = useFormik({
     initialValues: {
       idSpecie: `${idSpecie}`,
-      speciesName: "",
+      specieName: "",
       origin: "",
       description: "",
     },
     validationSchema: Yup.object({
-      speciesName: Yup.string()
+      specieName: Yup.string()
         .matches(/^[a-zA-ZÀ-ỹ]+$/, "Name must contain only letters")
         .required("Please enter name")
         .min(2, "Species name must be at least 2 characters"),
@@ -104,42 +103,40 @@ function SpecieDetailPage(props) {
         .required("Please enter description")
         .min(5, "Description must be at least 5 characters"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const data = {
         ...updateSpecie,
-        speciesName: values.speciesName,
+        specieName: values.specieName,
         origin: values.origin,
         description: values.description,
       };
       console.log("values :", data);
-      setEditDialogOpen(false);
-      // async (values) => {
-      //   try {
-      //     const response = await axios.put(
-      //       "http://animall-400708.et.r.appspot.com/api/v1/species/",
-      //       values
-      //     );
-      //     if (response.ok) {
-      //       enqueueSnackbar("Update succesfully", {
-      //         variant: "success",
-      //         anchorOrigin: {
-      //           horizontal: "right",
-      //           vertical: "top",
-      //         },
-      //       });
-      //       handleEditDialogClose();
-      //     } else {
-      //       enqueueSnackbar("Update failed", {
-      //         variant: "error",
-      //         anchorOrigin: {
-      //           horizontal: "right",
-      //           vertical: "top",
-      //         },
-      //       });
-      //     }
-      //   } catch (error) {
-      //     console.error("Error making PUT request", error);
-      //   }
+      try {
+        const response = await axios.put(
+          "http://animall-400708.et.r.appspot.com/api/v1/species/",
+          values
+        );
+        if (response.ok) {
+          enqueueSnackbar("Update succesfully", {
+            variant: "success",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "top",
+            },
+          });
+          handleEditDialogClose();
+        } else {
+          enqueueSnackbar("Update failed", {
+            variant: "error",
+            anchorOrigin: {
+              horizontal: "right",
+              vertical: "top",
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Error making PUT request", error);
+      }
     },
   });
 
@@ -167,7 +164,7 @@ function SpecieDetailPage(props) {
                   </Button>
                 </Grid>
                 <Grid container justifyContent="flex-start">
-                  <h5 className="card-title">Loài : {specie.speciesName} </h5>
+                  <h5 className="card-title">Loài : {specie.specieName} </h5>
                 </Grid>
                 <p className="card-text">Nguồn gốc : {specie.origin}</p>
                 <p className="card-text">
@@ -181,10 +178,10 @@ function SpecieDetailPage(props) {
 
       {/* Table row */}
       <Grid item xs={12}>
-        <Grid container justifyContent="center">
+        <Grid container justifyContent="center" spacing={5}>
           {specieAnimals.map((animal) => (
             <Grid item key={animal.idAnimal}>
-              <SpeciesAnimalsList animal={animal}></SpeciesAnimalsList>
+              <SpecieAnimalsList animal={animal} />
             </Grid>
           ))}
         </Grid>
@@ -200,16 +197,18 @@ function SpecieDetailPage(props) {
               <Grid item xs={12}>
                 <TextField
                   label="Tên loài"
-                  name="speciesName"
+                  name="specieName"
                   variant="outlined"
-                  value={formik.values.speciesName}
-                  // value={formData.speciesName}
+                  value={formik.values.specieName}
+                  defaultValue={formData.specieName}
                   onChange={formik.handleChange}
                   fullWidth
-                ></TextField>
-                {formik.touched.speciesName && formik.errors.speciesName ? (
+                >
+                  {formData.specieName}
+                </TextField>
+                {formik.touched.specieName && formik.errors.specieName ? (
                   <Typography variant="caption" color="red">
-                    {formik.errors.speciesName}
+                    {formik.errors.specieName}
                   </Typography>
                 ) : null}
               </Grid>
@@ -221,7 +220,7 @@ function SpecieDetailPage(props) {
                   name="origin"
                   variant="outlined"
                   value={formik.values.origin}
-                  // value={formData.origin}
+                  defaultValue={formData.origin}
                   onChange={formik.handleChange}
                   fullWidth
                 ></TextField>

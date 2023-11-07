@@ -11,6 +11,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import React from "react";
+import { NavLink } from "react-router-dom/cjs/react-router-dom";
 
 const drawserStyle = {
   backgroundColor: "#CEDEBD",
@@ -35,41 +36,6 @@ function SideBar(props) {
     setState({ ...state, [anchor]: open });
   };
 
-  const list = (anchor) => (
-    <Box
-      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-      style={drawserStyle}
-    >
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {["All mail", "Trash", "Spam"].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
   return (
     <Box>
       {["left"].map((anchor) => (
@@ -82,7 +48,76 @@ function SideBar(props) {
             open={state[anchor]}
             onClose={toggleDrawer(anchor, false)}
           >
-            {list(anchor)}
+            <Box
+              sx={{
+                width: anchor === "top" || anchor === "bottom" ? "auto" : 250,
+              }}
+              role="presentation"
+              onClick={toggleDrawer(anchor, false)}
+              onKeyDown={toggleDrawer(anchor, false)}
+              style={drawserStyle}
+            >
+              {/* Button */}
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="My account"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+              {/* Button */}
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <MailIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="My account"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+              {/* Button */}
+              <List>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <NavLink
+                      style={{ color: "white", textDecoration: "none" }}
+                      to="/"
+                      activeClassName="active"
+                    >
+                      <ListItemText
+                        style={{ color: "#5B6253" }}
+                        primary="My account"
+                      ></ListItemText>
+                    </NavLink>
+                  </ListItemButton>
+                </ListItem>
+              </List>
+            </Box>
           </Drawer>
         </React.Fragment>
       ))}

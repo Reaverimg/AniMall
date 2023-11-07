@@ -1,3 +1,41 @@
-.Trainer_AM_container{
+.Trainer_AM_container {
     display: flex;
+}
+
+.title {
+    display: flex;
+}
+
+.title-shape {
+    width: 15px;
+    height: 30px;
+    background-color: rgb(0, 107, 62);
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+.table-title {
+    font-weight: 600;
+}
+
+.sub-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3%;
+}
+
+.sub-header {
+    display: flex;
+    width: 98%;
+    align-items: center;
+}
+
+.header-title {
+    width: 20%;
 }

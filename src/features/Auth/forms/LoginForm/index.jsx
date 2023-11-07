@@ -13,6 +13,7 @@ import * as Yup from "yup";
 
 LoginForm.propTypes = {
   closeDialog: PropTypes.func.isRequired,
+  onSignIn: PropTypes.func.isRequired,
 };
 
 const theme = createTheme();
@@ -22,7 +23,7 @@ function LoginForm(props) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { closeDialog } = props;
+  const { closeDialog, onSignIn } = props;
 
   const Account = {
     email: "",
@@ -70,6 +71,9 @@ function LoginForm(props) {
             closeDialog();
           }
           localStorage.setItem("ACCOUNT__LOGGED", JSON.stringify(data.data));
+          if (onSignIn) {
+            onSignIn();
+          }
           enqueueSnackbar("Login successful", {
             variant: "success",
             anchorOrigin: {
@@ -86,7 +90,7 @@ function LoginForm(props) {
         }
       } catch (error) {
         // console.error("Error during login:", error);
-        enqueueSnackbar(error.message, {
+        enqueueSnackbar("Login failed, Check your username or password", {
           variant: "error",
           anchorOrigin: {
             horizontal: "right",
@@ -167,34 +171,28 @@ function LoginForm(props) {
           id="password"
           label="Password"
           name="password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={formik.values.password}
           onChange={formik.handleChange}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         {formik.touched.password && formik.errors.password ? (
           <Typography variant="caption" color="red">
             {formik.errors.password}
           </Typography>
         ) : null}
-
-        {/* <OutlinedInput>
-          id="outlined-adornment-password" type=
-          {showPassword ? "text" : "password"}
-          endAdornment=
-          {
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
-        </OutlinedInput> */}
 
         <Button
           type="submit"

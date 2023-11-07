@@ -187,13 +187,21 @@ function Header(props) {
                     </NavLink>
                   </Button>
                   {accountLogged == null && (
-                    <Button color="inherit" onClick={handleClickOpen}>
+                    <Button
+                      style={{ marginLeft: "auto" }}
+                      color="inherit"
+                      onClick={handleClickOpen}
+                    >
                       Sign In
                     </Button>
                   )}
                   {accountLogged != null && (
                     <IconButton
-                      style={{ color: "white", textDecoration: "none" }}
+                      style={{
+                        color: "white",
+                        textDecoration: "none",
+                        marginLeft: "auto",
+                      }}
                       onClick={handleUserClick}
                     >
                       <AccountCircle color="inherit"></AccountCircle>
@@ -261,13 +269,21 @@ function Header(props) {
                 </NavLink>
               </Button>
               {accountLogged == null && (
-                <Button color="inherit" onClick={handleClickOpen}>
+                <Button
+                  style={{ marginLeft: "auto" }}
+                  color="inherit"
+                  onClick={handleClickOpen}
+                >
                   Sign In
                 </Button>
               )}
               {accountLogged != null && (
                 <IconButton
-                  style={{ color: "white", textDecoration: "none" }}
+                  style={{
+                    color: "white",
+                    textDecoration: "none",
+                    marginLeft: "auto",
+                  }}
                   onClick={handleUserClick}
                 >
                   <AccountCircle color="inherit"></AccountCircle>
@@ -301,8 +317,13 @@ function Header(props) {
             horizontal: "left",
           }}
         >
-          <MenuItem component={Link} to="/user/profile">MY ACCOUNT</MenuItem>
-          <MenuItem component={Link} to="/buyer/orderHistory"> MY ORDER HISTORY</MenuItem>
+          <MenuItem component={Link} to="/user/profile">
+            MY ACCOUNT
+          </MenuItem>
+          <MenuItem component={Link} to="/buyer/orderHistory">
+            {" "}
+            MY ORDER HISTORY
+          </MenuItem>
           <MenuItem onClick={handleLoggedAccount}>SIGN OUT</MenuItem>
         </Menu>
         {/* Dialog login registrer */}
@@ -343,12 +364,6 @@ function Header(props) {
                 ></LoginForm>
                 <Box style={{ margin: "0 auto" }}>
                   <Button color="primary">Forgot password ?</Button>
-                  <Typography align="center">━━━━ OR ━━━━</Typography>
-                  <Box style={{ display: "flex" }} justifyContent="center">
-                    <IconButton color="primary">
-                      <GoogleIcon></GoogleIcon>
-                    </IconButton>
-                  </Box>
                   <Typography align="center">
                     ____________________________________________________________
                   </Typography>
@@ -364,17 +379,6 @@ function Header(props) {
               </>
             )}
           </DialogContent>
-          {/* <DialogActions>
-            <Button
-              onClick={handleClose}
-              variant="contained"
-              color="primary"
-              fullWidth
-              size="large"
-            >
-              Sign in
-            </Button>
-          </DialogActions> */}
         </Dialog>
       </Box>
     </ThemeProvider>

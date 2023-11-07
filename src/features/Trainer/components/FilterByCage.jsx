@@ -1,7 +1,7 @@
 import { MenuItem, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { GET_ALL_ANIMALS } from "../../../api/SwaggerAPI";
+// import { GET_ALL_ANIMALS } from "../../../api/SwaggerAPI";
 
 FilterByCage.propTypes = {};
 
@@ -19,7 +19,9 @@ function FilterByCage(props) {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(GET_ALL_ANIMALS);
+        const response = await axios.get(
+          "https://animall-400708.et.r.appspot.com/api/v1/animals"
+        );
         const animalData = response.data.data;
         setAnimalList(animalData);
         const filterCages = animalData.map((obj) => ({

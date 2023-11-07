@@ -1,13 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { useRouteMatch } from "react-router-dom";
-import { Box, createTheme } from "@mui/material";
+import { Box, Stack, Typography, createTheme } from "@mui/material";
 import { useEffect } from "react";
 import { useState } from "react";
 import TableSchedule from "../components/TableSchedule";
+import "../../Trainer/styles/animalDetailPage.css";
+
 AnimalDetailPage.propTypes = {};
 
-const thumbnailUrl = "https://via.placeholder.com/300x250";
+const thumbnailUrl =
+  "https://www.chromethemer.com/download/hd-wallpapers/wild-deer-4k-3840x2160.jpg";
 
 function AnimalDetailPage(props) {
   const {
@@ -16,11 +19,12 @@ function AnimalDetailPage(props) {
 
   const match = useRouteMatch();
 
-  const [animal, setAnimal] = useState({});
+  const [animal, setAnimal] = useState();
+
+  const [foodtrackings, setFoodTrackings] = useState();
 
   useEffect(() => {
     async function fetchData() {
-      console.log(idAnimal);
       try {
         const response = await fetch(
           `http://animall-400708.et.r.appspot.com/api/v1/animals/${idAnimal}`
@@ -28,6 +32,8 @@ function AnimalDetailPage(props) {
         if (response.ok) {
           const responseData = await response.json();
           setAnimal(responseData.data);
+          setFoodTrackings(responseData.data.foodTrackings);
+          console.log(responseData.data.foodTrackings);
         } else {
           console.error("Error fetching data:", response.statusText);
         }
@@ -36,11 +42,22 @@ function AnimalDetailPage(props) {
       }
     }
     fetchData();
-  }, [match]);
+  }, []);
 
   return (
     <Box>
       <div className="row pt-5">
+        <div className="title">
+          <Stack direction="row" className="my-3">
+            <div className="d-flex">
+              <div className="title-shape"></div>
+              {/* <Chip label="Animals Manage" color="success" /> */}
+              <Typography className="title-typo" variant="h6" gutterBottom>
+                Animal Detail
+              </Typography>
+            </div>
+          </Stack>
+        </div>
         {/* col-2 */}
         <div className="col-2"></div>
         {/* col-8 */}
@@ -49,29 +66,35 @@ function AnimalDetailPage(props) {
             className="card mb-3 "
             style={{ maxWidth: "100vw", maxHeight: "250px" }}
           >
-            <div className="row g-0">
+            <div className="row g-0 animal-detail">
               <div className="col-md-4">
                 <img
                   src={thumbnailUrl}
-                  className="img-fluid rounded-start"
-                  alt="..."
+                  className="img-fluid"
+                  alt="Animal Image"
                 />
               </div>
               <div className="col-md-8">
                 <div className="card-body">
-                  <h5 className="card-title">Tên : {animal.name}</h5>
+                  <h5 className="card-title">
+                    Tên :{" "}
+                    <span className="text-name">{animal && animal.name}</span>
+                  </h5>
                   <p className="card-text">
-                    Giới tính : {animal.sex ? "male" : "female"}
+                    Sex : {animal && animal.sex ? "male" : "female"}
+                  </p>
+                  <p className="card-text text-characteristic">
+                    Đặc điểm nhận dạng : {animal && animal.description}
                   </p>
                   <p className="card-text">
-                    Đặc điểm nhận dạng : {animal.description}
-                  </p>
-                  <p className="card-text">
-                    Được nhập về sở thú vào ngày : {animal.dob}
+                    Được nhập về sở thú vào ngày : {animal && animal.dob}
                   </p>
                   <p className="card-text">
                     <small className="text-muted">
-                      Tình trạng : {animal.status}
+                      Tình trạng :
+                      <span className="text-live">
+                        {animal && animal.status}
+                      </span>
                     </small>
                   </p>
                 </div>
@@ -82,7 +105,7 @@ function AnimalDetailPage(props) {
         {/* Table row */}
         <div className="row">
           <div className="d-flex justify-content-center">
-            <TableSchedule></TableSchedule>
+            <TableSchedule foodtracking={foodtrackings}></TableSchedule>
           </div>
         </div>
 

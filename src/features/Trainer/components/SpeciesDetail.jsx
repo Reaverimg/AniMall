@@ -2,25 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
   Typography,
 } from "@mui/material";
+import Button from '@mui/material/Button';
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 SpeciesDetail.propTypes = {
-  specie: PropTypes.object.isRequired,
+  specie: PropTypes.object,
 };
 
 function SpeciesDetail({ specie }) {
   const history = useHistory();
-
   //Redirect to Species Detail
   const handleClick = () => {
-    const cleanedIdSpecie = encodeURIComponent(specie.idSpecie);
-    history.push(`/trainer/speciesManage/${cleanedIdSpecie}`);
+    if (specie) {
+      const cleanedIdSpecie = encodeURIComponent(specie.idSpecie);
+      history.push(`/trainer/speciesManage/${cleanedIdSpecie}`);
+    }
   };
 
   return (
@@ -28,7 +29,7 @@ function SpeciesDetail({ specie }) {
       <Card sx={{ maxWidth: 250, maxWidth: 350 }}>
         <CardContent>
           <Typography sx={{ fontSize: 25 }} color="text.secondary" gutterBottom>
-            Loài : {specie.speciesName}
+            Loài : {specie.specieName}
           </Typography>
           <Typography variant="h5" component="div"></Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
@@ -41,6 +42,9 @@ function SpeciesDetail({ specie }) {
         <CardActions>
           <Button size="small" onClick={handleClick}>
             More Detail
+          </Button>
+          <Button color="warning" size="small" onClick={handleClick}>
+            Delete
           </Button>
         </CardActions>
       </Card>
