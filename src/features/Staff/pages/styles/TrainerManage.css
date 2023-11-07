@@ -21,4 +21,12 @@
 .role-but {
   border-radius: 5px;
   border: none;
+  
+}
+
+.live-but{
+  padding-left: 5%;
+  padding-right: 5%;
+  border-radius: 5px;
+  border: none;
 }

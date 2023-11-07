@@ -21,8 +21,7 @@ export const PUT_SPECIE =
   "https://animall-400708.et.r.appspot.com/api/v1/species";
 
 //news-controller
-export const GET_ALL_NEWS =
-  "https://animall-400708.et.r.appspot.com/api/v1/news";
+export const GET_ALL_NEWS ="https://animall-400708.et.r.appspot.com/api/v1/news";
 export const GET_NEW = "https://animall-400708.et.r.appspot.com/api/v1/news/";
 export const POST_NEW = "https://animall-400708.et.r.appspot.com/api/v1/news";
 export const PUT_NEW = "https://animall-400708.et.r.appspot.com/api/v1/news";
@@ -54,3 +53,20 @@ export const GET_ALL_FOOD =
 export const PUT_FOOD = "https://animall-400708.et.r.appspot.com/api/v1/food/";
 export const POST_FOOD = "https://animall-400708.et.r.appspot.com/api/v1/food";
 export const GET_FOOD = "https://animall-400708.et.r.appspot.com/api/v1/food/";
+
+//admin-account-controller
+export const GET_ALL_ACCOUNT = `http://animall-400708.et.r.appspot.com/api/v1/accounts`;
+export const PUT_ACCOUNT     = `http://animall-400708.et.r.appspot.com/api/v1/accounts`;
+
+//ticket-controller
+export const GET_ALL_TICKET_MANAGE =`http://animall-400708.et.r.appspot.com/api/v1/tickets/`;
+export const PUT_TICKET_MANAGE = "http://animall-400708.et.r.appspot.com/api/v1/tickets/";
+
+//system-controller
+export const PUT_ALL_QR =`https://api.cloudinary.com/v1_1/dhuf3diwk/image/upload?upload_preset=animall-qr`;
+export const PUT_QR = "https://64a7b284dca581464b8499d0.mockapi.io/QR";
+export const GET_ALL_QR = "https://64a7b284dca581464b8499d0.mockapi.io/QR";
+
+//system-controller
+export const GET_ALL_BILL =`http://animall-400708.et.r.appspot.com/api/v1/bills/`;
+export const PUT_BILL = "https://64a7b284dca581464b8499d0.mockapi.io/QR";

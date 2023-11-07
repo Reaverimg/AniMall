@@ -364,12 +364,6 @@ function Header(props) {
                 ></LoginForm>
                 <Box style={{ margin: "0 auto" }}>
                   <Button color="primary">Forgot password ?</Button>
-                  {/* <Typography align="center">━━━━ OR ━━━━</Typography>
-                  <Box style={{ display: "flex" }} justifyContent="center">
-                    <IconButton color="primary">
-                      <GoogleIcon></GoogleIcon>
-                    </IconButton>
-                  </Box> */}
                   <Typography align="center">
                     ____________________________________________________________
                   </Typography>

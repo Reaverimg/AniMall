@@ -12,7 +12,6 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import * as yup from "yup";
 import { enqueueSnackbar, useSnackbar } from "notistack";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 RegisterForm.propTypes = {
   onSubmit: PropTypes.func,
 };

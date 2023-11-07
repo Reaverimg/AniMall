@@ -15,6 +15,7 @@ import {
     Typography,
 } from "@mui/material";
 import Paper from '@mui/material/Paper';
+
 import { format } from "date-fns";
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import ConfirmRefund from "./OrderManageDialog/ConfirmRefund";
@@ -22,6 +23,7 @@ import CancelPayment from "./OrderManageDialog/CancelPayment";
 import ConfirmAlert from "./OrderManageDialog/ConfirmAlert";
 import CancelAlert from "./OrderManageDialog/CancelAlert";
 import '../styles/PaymentStatus.css';
+import { GET_ALL_BILL } from "../../../../api/SwaggerAPI";
 
 function RefundStatus(props) {
     const [searchValue, setSearchValue] = useState("");
@@ -122,31 +124,36 @@ function RefundStatus(props) {
     }
 
     // Get all order
+    const { sortBy } = require('lodash');
     async function fetchData(page) {
         try {
-            const response = await axios.get(`http://animall-400708.et.r.appspot.com/api/v1/bills/`);
-            const data = response.data.data;
-            const paymentStatusesToFetch = ["Request refund", "Refund", "Canceled"];
-            const getPaymentStatuses = data.filter(
-                (bill) =>
-                    bill.paymentStatus &&
-                    paymentStatusesToFetch.includes(bill.paymentStatus)
-            );
-            // Tính toán chỉ số bắt đầu và kết thúc của dữ liệu trên trang hiện tại
-            const startIndex = (page - 1) * perPage;
-            const endIndex = page * perPage;
-            // Lấy dữ liệu của trang hiện tại bằng cách slice mảng getPaymentStatuses
-            const currentPageData = getPaymentStatuses.slice(startIndex, endIndex);
-            setTotalPages(Math.ceil(getPaymentStatuses.length / perPage)); // Cập nhật tổng số trang
-            setOrderData(currentPageData);
+          const response = await axios.get(GET_ALL_BILL);
+          const data = response.data.data;
+          const paymentStatusesToFetch = ["Request refund", "Refund", "Canceled"];
+          const getPaymentStatuses = data.filter(
+            (bill) =>
+              bill.paymentStatus &&
+              paymentStatusesToFetch.includes(bill.paymentStatus)
+          );
+      
+          // Sắp xếp mảng getPaymentStatuses theo thời gian tạo (createdAt)
+          const sortedData = sortBy(getPaymentStatuses, [(bill) => -new Date(bill.timeCreate)]);
+      
+          const perPage = 10;
+          const startIndex = (page - 1) * perPage;
+          const endIndex = page * perPage;
+          const currentPageData = sortedData.slice(startIndex, endIndex);
+      
+          setTotalPages(Math.ceil(sortedData.length / perPage));
+          setOrderData(currentPageData);
         } catch (error) {
-            console.error(error);
+          console.error(error);
+          setUpdateFail(true);
+          setTimeout(() => {
             setUpdateFail(true);
-            setTimeout(() => {
-                setUpdateFail(true);
-            }, 3000);
+          }, 3000);
         }
-    }
+      }
 
     useEffect(() => {
         fetchData(1);
@@ -244,21 +251,21 @@ function RefundStatus(props) {
                                     <TableRow key={order.idBill}>
                                         <TableCell align="left">{order.idBill}</TableCell>
                                         <TableCell align="center">
-                                            <button className="price-but">
+                                            <button className="quantity-but">
                                                 {order.quantity}
                                             </button></TableCell>
-                                        <TableCell align="center">{order.totalPrice}$</TableCell>
+                                        <TableCell align="center">{order.totalPrice} VND</TableCell>
                                         <TableCell align="center">
-                                            <button className="status-but">
+                                            <button className="time-but">
                                                 {format(new Date(order.timeCreate), 'dd/MM/yyyy')}
                                             </button>
-                                            <button className="status-but" style={{ marginLeft: '10px' }}>
+                                            <button className="time-but" style={{ marginLeft: '10px' }}>
                                                 {format(new Date(order.timeCreate), 'hh:mm a')}
                                             </button>
                                         </TableCell>
                                         <TableCell align="left">
                                             <div>
-                                                <button className="status-but"
+                                                <button className="payment-status-but"
                                                     style={getStatusBackgroundColor(order.paymentStatus)}>
                                                     {order.paymentStatus}
                                                 </button>

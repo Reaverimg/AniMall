@@ -366,7 +366,7 @@ function TrainerManage(props) {
                                         <TableCell align="left">{animal.cage.cageName}</TableCell>
                                         <TableCell align="left">{animal.sex ? "Male" : "Female"}</TableCell>
                                         <TableCell align="left">
-                                            <button className="role-but" style={getStatusBackgroundColor(animal.status.toString())}>
+                                            <button className="live-but" style={getStatusBackgroundColor(animal.status.toString())}>
                                                 {animal.status === "live" && "Live"}
                                                 {animal.status === "dead" && "Dead"}
                                                 {animal.status === "sick" && "Sick"}

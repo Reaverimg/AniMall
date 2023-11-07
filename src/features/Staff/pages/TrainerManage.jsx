@@ -29,6 +29,7 @@ import UpdateAlert from "./TrainerManageDialog/UpdateAlert";
 import DeleteAler from "./TrainerManageDialog/DeleteAlert";
 import RegistrationAlert from "./TrainerManageDialog/RegistrationAlert";
 import ErrorAlert from "./TrainerManageDialog/ErrorAlert";
+import { GET_ALL_ACCOUNT, PUT_ACCOUNT } from "../../../api/SwaggerAPI";
 
 function TrainerManage(props) {
   const [searchValue, setSearchValue] = useState("");
@@ -107,7 +108,7 @@ function TrainerManage(props) {
     }
     try {
       const response = await axios.put(
-        `http://animall-400708.et.r.appspot.com/api/v1/accounts`,
+        PUT_ACCOUNT,
         formData
       );
       console.log("Account updated successfully:", response.data);
@@ -140,7 +141,7 @@ function TrainerManage(props) {
   const handleDeleteAccount = async () => {
     try {
       const response = await axios.put(
-        `http://animall-400708.et.r.appspot.com/api/v1/accounts`,
+        PUT_ACCOUNT,
         deleteData
       );
       console.log("Account delete successfully:", response.data);
@@ -182,7 +183,7 @@ function TrainerManage(props) {
 
     try {
       const response = await axios.put(
-        `http://animall-400708.et.r.appspot.com/api/v1/accounts`,
+        PUT_ACCOUNT,
         unbanData
       );
       console.log("Account unban successfully:", response.data);
@@ -206,7 +207,7 @@ function TrainerManage(props) {
   async function fetchData(page) {
     try {
       const response = await axios.get(
-        "http://animall-400708.et.r.appspot.com/api/v1/accounts"
+        GET_ALL_ACCOUNT
       );
       const data = response.data.data;
       const getRole = data.filter(

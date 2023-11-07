@@ -25,6 +25,7 @@ import CancelAlert from "./OrderManageDialog/CancelAlert";
 import ErrorAlert from "./OrderManageDialog/ErrorAlert";
 import UseBill from "./OrderManageDialog/UseBill";
 import UseBillAlert from "./OrderManageDialog/UseBillAlert";
+import { GET_ALL_BILL } from "../../../../api/SwaggerAPI";
 
 function PaymentStatus(props) {
     const [searchValue, setSearchValue] = useState("");
@@ -64,7 +65,7 @@ function PaymentStatus(props) {
     const handleUseBill = async () => {
         try {
             console.log(useData)
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/bills/${selectedOrder.idBill}`, useData);
+            const response = await axios.put(`${GET_ALL_BILL}${selectedOrder.idBill}`, useData);
             console.log("Use success", response.data.data);
             handelCloseUseDialog();
             setUseSuccess(true);
@@ -100,7 +101,7 @@ function PaymentStatus(props) {
     const handleConfirmOrder = async () => {
         try {
             console.log(confirmData)
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/bills/${selectedOrder.idBill}`, confirmData);
+            const response = await axios.put(`${GET_ALL_BILL}${selectedOrder.idBill}`, confirmData);
             console.log("Confirm success", response.data.data);
             handelCloseConfirmDialog();
             setConfirmSuccess(true);
@@ -136,7 +137,7 @@ function PaymentStatus(props) {
     const handleCancelOrder = async () => {
         try {
             console.log(cancelData)
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/bills/${selectedOrder.idBill}`, cancelData);
+            const response = await axios.put(`${GET_ALL_BILL}${selectedOrder.idBill}`, cancelData);
             console.log("Cancel success", response.data.data);
             handelCloseCancelDialog();
             setCancelSuccess(true);
@@ -167,33 +168,38 @@ function PaymentStatus(props) {
     const handelCloseCancelDialog = () => {
         setCancelDialogOpen(false);
     }
-
+   
     //Fetch all order list
+    const { sortBy } = require('lodash');
     async function fetchData(page) {
         try {
-            const response = await axios.get(`http://animall-400708.et.r.appspot.com/api/v1/bills/`);
-            const data = response.data.data;
-            const paymentStatusesToFetch = ["Paid", "Pending", "Used"];
-            const getPaymentStatuses = data.filter(
-                (bill) =>
-                    bill.paymentStatus &&
-                    paymentStatusesToFetch.includes(bill.paymentStatus)
-            );
-            // Tính toán chỉ số bắt đầu và kết thúc của dữ liệu trên trang hiện tại
-            const startIndex = (page - 1) * perPage;
-            const endIndex = page * perPage;
-            // Lấy dữ liệu của trang hiện tại bằng cách slice mảng getPaymentStatuses
-            const currentPageData = getPaymentStatuses.slice(startIndex, endIndex);
-            setTotalPages(Math.ceil(getPaymentStatuses.length / perPage)); // Cập nhật tổng số trang
-            setOrderData(currentPageData); // Cập nhật dữ liệu tài khoản
+          const response = await axios.get(GET_ALL_BILL);
+          const data = response.data.data;
+          const paymentStatusesToFetch = [ "Paid", "Pending", "Used"];
+          const getPaymentStatuses = data.filter(
+            (bill) =>
+              bill.paymentStatus &&
+              paymentStatusesToFetch.includes(bill.paymentStatus)
+          );
+      
+          // Sắp xếp mảng getPaymentStatuses theo thời gian tạo (createdAt)
+          const sortedData = sortBy(getPaymentStatuses, [(bill) => -new Date(bill.timeCreate)]);
+      
+          const perPage = 10;
+          const startIndex = (page - 1) * perPage;
+          const endIndex = page * perPage;
+          const currentPageData = sortedData.slice(startIndex, endIndex);
+      
+          setTotalPages(Math.ceil(sortedData.length / perPage));
+          setOrderData(currentPageData);
         } catch (error) {
-            console.error(error);
+          console.error(error);
+          setUpdateFail(true);
+          setTimeout(() => {
             setUpdateFail(true);
-            setTimeout(() => {
-                setUpdateFail(true);
-            }, 3000);
+          }, 3000);
         }
-    }
+      }
 
     useEffect(() => {
         fetchData(1);
@@ -293,23 +299,23 @@ function PaymentStatus(props) {
                                     <TableRow key={order.idBill}>
                                         <TableCell align="left">{order.idBill}</TableCell>
                                         <TableCell align="center">
-                                            <button className="price-but">
+                                            <button className="quantity-but">
                                                 {order.quantity}
                                             </button>
                                         </TableCell>
-                                        <TableCell align="center">{order.totalPrice}$</TableCell>
+                                        <TableCell align="center">{order.totalPrice}VND</TableCell>
                                         <TableCell align="center">
-                                            <button className="status-but">
+                                            <button className="time-but">
                                                 {format(new Date(order.timeCreate), 'dd/MM/yyyy')}
                                             </button>
-                                            <button className="status-but"
+                                            <button className="time-but"
                                                 style={{ marginLeft: '10px' }}>
                                                 {format(new Date(order.timeCreate), 'hh:mm a')}
                                             </button>
                                         </TableCell>
                                         <TableCell align="left">
 
-                                            <button className="status-but"
+                                            <button className="payment-status-but"
                                                 style={getStatusBackgroundColor(order.paymentStatus)}>
                                                 {order.paymentStatus}
                                             </button>
