@@ -12,8 +12,6 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import * as yup from "yup";
 import { enqueueSnackbar, useSnackbar } from "notistack";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-
 RegisterForm.propTypes = {
   onSubmit: PropTypes.func,
 };
@@ -193,40 +191,6 @@ function RegisterForm(props) {
       }
     },
   });
-
-  // const postRegister = async () => {
-  //   try {
-  //     const newAccount = {
-  //       name: `${formik.values.name}`,
-  //       phone: `${formik.values.phone}`,
-  //       email: `${formik.values.email}`,
-  //       password: `${formik.values.password}`,
-  //       roleId: 4,
-  //     };
-  //     const response = await fetch(
-  //       "http://animall-400708.et.r.appspot.com/api/v1/accounts/register",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(newAccount),
-  //       }
-  //     );
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       console.log("Registration successful:", data);
-  //       // Handle successful registration, such as redirecting to login page
-  //     } else {
-  //       console.error("Registration failed");
-  //       // Handle failed registration, show error message, etc.
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during registration:", error);
-  //     // Handle error, show error message, etc.
-  //   }
-  // };
 
   return (
     <Box>
