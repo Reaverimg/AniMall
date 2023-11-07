@@ -66,7 +66,6 @@ function LoginForm(props) {
 
         if (response.ok) {
           const data = await response.json();
-          console.log("Login successful:", data);
           if (closeDialog) {
             closeDialog();
           }
@@ -101,38 +100,6 @@ function LoginForm(props) {
       }
     },
   });
-
-  // // fetch api login
-  //   const postLogin = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         "http://animall-400708.et.r.appspot.com/api/v1/accounts/login",
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify(formData),
-  //         }
-  //       );
-
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         console.log("Login successful:", data);
-  //         localStorage.setItem("ACCOUNT__LOGGED", JSON.stringify(data.data));
-  //         enqueueSnackbar("Login successful", { variant: "success" });
-  //         // Handle successful login, such as setting authentication state
-  //       } else {
-  //         console.error("Login failed");
-  //         // Handle failed login, show error message, etc.
-  //       }
-  //     } catch (error) {
-  //       // console.error("Error during login:", error);
-  //       enqueueSnackbar(error.message, { variant: "error" });
-  //       // Handle error, show error message, etc.
-  //     }
-  //   };
-  //   postLogin();
 
   return (
     <Box>
