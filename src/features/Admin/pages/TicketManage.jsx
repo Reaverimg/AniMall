@@ -29,6 +29,7 @@ import RegistrationAlert from "./TicketDialog/RegistrationAlert";
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ErrorAlert from "./TicketDialog/ErrorAlert";
 import "../pages/styles/TicketManage.css";
+import { GET_ALL_TICKET_MANAGE, PUT_TICKET_MANAGE } from "../../../api/SwaggerAPI";
 function TicketManage(props) {
     const [searchValue, setSearchValue] = useState("");
     const [ticketData, setTicketData] = useState([]);
@@ -88,7 +89,7 @@ function TicketManage(props) {
             return;
         }
         try {
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/tickets/${selectedTicket.idTicket}`, updateData);
+            const response = await axios.put(`${PUT_TICKET_MANAGE}${selectedTicket.idTicket}`, updateData);
             console.log("Ticket updated successfully:", response.data.data);
             handleCloseUpdateDialog();
             setUpdateSuccess(true);
@@ -200,7 +201,7 @@ function TicketManage(props) {
     // Get all ticket
     async function fetchData(page) {
         try {
-            const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/tickets/");
+            const response = await axios.get(GET_ALL_TICKET_MANAGE);
             const data = response.data.data;
             // Tính toán chỉ số bắt đầu và kết thúc của dữ liệu trên trang hiện tại
             const startIndex = (page - 1) * perPage;
@@ -339,7 +340,7 @@ function TicketManage(props) {
                                         <TableCell align="left">
                                             <button className="price-but">
                                                 {ticket.ticketPrice}
-                                            </button>$</TableCell>
+                                            </button>VND</TableCell>
                                         <TableCell align="left">{ticket.ticketType}</TableCell>
                                         <TableCell align="left">
                                             <div>
@@ -423,9 +424,9 @@ function TicketManage(props) {
                         )}
 
                         {/* Fail alert */}
-                        {updateFail && (
+                        {/* {updateFail && (
                             <ErrorAlert />
-                        )}
+                        )} */}
                     </Table>
                 </TableContainer>
 
