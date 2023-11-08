@@ -34,7 +34,7 @@ function RegisterForm({ currenPage, setRegisterSuccess, fetchData, handleCloseCr
         validationSchema,
         onSubmit: async (values) => {
             try {
-                const response = await axios.post("http://animall-400708.et.r.appspot.com/api/v1/accounts/register",
+                const response = await axios.post("https://animall-400708.et.r.appspot.com/api/v1/accounts/register",
                     values,
                     {
                         headers: {

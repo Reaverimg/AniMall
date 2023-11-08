@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 function CreateDialog({ fetchListArea, handleCloseCreateDialog }) {
     const [formAreaData, setFormAreaData] = useState({ areaName: '' });
-    const apiUrl = 'http://animall-400708.et.r.appspot.com/api/v1';
+    const apiUrl = 'https://animall-400708.et.r.appspot.com/api/v1';
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {

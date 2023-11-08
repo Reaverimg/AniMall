@@ -113,7 +113,7 @@ function TrainerManage(props) {
             return;
         }
         try {
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/animals`, formData);
+            const response = await axios.put(`https://animall-400708.et.r.appspot.com/api/v1/animals`, formData);
             handleCloseUpdateDialog();
             setUpdateSuccess(true)
             setTimeout(() => {
@@ -144,7 +144,7 @@ function TrainerManage(props) {
     const handleDeleteAnimal = async () => {
         try {
 
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/animals`, deleteData);
+            const response = await axios.put(`https://animall-400708.et.r.appspot.com/api/v1/animals`, deleteData);
             setDeleteSuccess(true);
             setTimeout(() => {
                 setDeleteSuccess(false)
@@ -174,7 +174,7 @@ function TrainerManage(props) {
     const handleUnbanAnimal = async () => {
 
         try {
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/animals`, unbanData);
+            const response = await axios.put(`https://animall-400708.et.r.appspot.com/api/v1/animals`, unbanData);
             handleCloseUnbanDialog();
             setUnbanSuccess(true);
             fetchData(currentPage);
@@ -207,7 +207,7 @@ function TrainerManage(props) {
     // Get all account
     async function fetchData(page) {
         try {
-            const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/animals");
+            const response = await axios.get("https://animall-400708.et.r.appspot.com/api/v1/animals");
             const data = response.data.data;
 
             const startIndex = (page - 1) * perPage;

@@ -21,7 +21,7 @@ function UpdateDialog({ handleCloseUpdateDialog, formData, setFormData, handleUp
     //fetch account
     async function fetchTrainer() {
         try {
-            const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/accounts");
+            const response = await axios.get("https://animall-400708.et.r.appspot.com/api/v1/accounts");
             const data = response.data.data;
             const getRole = data.filter(account => account.role && account.role.roleDesc === "TRAINER");
             setIdAccountData(getRole);

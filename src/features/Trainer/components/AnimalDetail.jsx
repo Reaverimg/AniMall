@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -7,17 +7,38 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Typography,
 } from "@mui/material";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import Skeleton from "../../../components/loading/Skeletion";
 
 const thumbnailUrl = "https://shorturl.at/atQTY";
 
 AnimalDetail.propTypes = {
   animal: PropTypes.object.isRequired,
+  onOpen: PropTypes.func,
 };
 
-function AnimalDetail({ animal }) {
+function AnimalDetail({ animal, onOpen }) {
+  const [loading, setLoading] = useState();
+
+  const [idDialog, setIdDialog] = useState();
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const history = useHistory();
 
   const styles = {
@@ -42,7 +63,14 @@ function AnimalDetail({ animal }) {
   const handleClick = () => {
     const cleanedIdAnimal = encodeURIComponent(animal.idAnimal);
     history.push(`/trainer/animalManage/${cleanedIdAnimal}`);
-    console.log(history);
+  };
+
+  const sendToDad = () => {
+    setIdDialog(animal.idAnimal);
+    console.log("id duoi con :", idDialog);
+    if (onOpen) {
+      onOpen(idDialog);
+    }
   };
 
   return (
@@ -64,9 +92,10 @@ function AnimalDetail({ animal }) {
           <Typography gutterBottom variant="h6" component="div">
             {animal.name}
           </Typography>
-          {/* <Typography gutterBottom variant="h5" component="div">
+          {/* <Typography gutterBottom variant="h6" component="div">
             Cage : {animal.cage.cageName}
           </Typography> */}
+
           <Typography
             sx={{
               backgroundColor: "#006B3E",
@@ -94,7 +123,7 @@ function AnimalDetail({ animal }) {
           >
             Take care
           </Button>
-          <Button sx={styles.btnInfor} size="small">
+          <Button sx={styles.btnInfor} size="small" onClick={sendToDad}>
             Species Info
           </Button>
         </CardActions>

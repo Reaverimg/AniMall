@@ -31,7 +31,7 @@ function ResetPassForm() {
   };
 
   useEffect(() => {
-    const apiUrl = 'http://animall-400708.et.r.appspot.com/api/v1/accounts';
+    const apiUrl = 'https://animall-400708.et.r.appspot.com/api/v1/accounts';
     fetch(apiUrl)
       .then((response) => response.json())
       .then((result) => {

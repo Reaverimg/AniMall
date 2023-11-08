@@ -270,7 +270,7 @@ function Header(props) {
               </Button>
               {accountLogged == null && (
                 <Button
-                  style={{ marginLeft: "auto" }}
+                  style={{ marginLeft: "auto", marginLeft: "auto" }}
                   color="inherit"
                   onClick={handleClickOpen}
                 >
