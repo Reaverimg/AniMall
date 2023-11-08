@@ -180,10 +180,13 @@ function AnimalManage(props) {
       </div>
 
       <Dialog open={open}>
-        <DialogTitle>Specie : {dialogInfo?.specie.specieName}</DialogTitle>
+        <DialogTitle>
+          Specie : {dialogInfo?.specie.status ? dialogInfo?.specie.specieName : "Not species attached to this one yet"}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Specie info : {dialogInfo?.specie.description}
+            Specie info :{" "}
+            {dialogInfo?.specie.status ? dialogInfo?.specie.description : "Not species attached to this one yet"}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
