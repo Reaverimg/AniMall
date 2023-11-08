@@ -3,6 +3,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import {
   Box,
   Button,
+  Card,
+  CardActions,
   Chip,
   Dialog,
   DialogActions,
@@ -22,54 +24,77 @@ import SpeciesDetail from "../components/SpeciesDetail";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { enqueueSnackbar, useSnackbar } from "notistack";
+import Skeleton from "../../../components/loading/Skeletion";
+import { Warning } from "@mui/icons-material";
 
 SpeciesManage.propTypes = {};
 
 function SpeciesManage(props) {
-  const [specieslList, setSpeciesList] = useState([]);
+  const [specieslList, setSpeciesList] = useState();
 
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState();
 
   const [filterByName, setFilterByName] = useState([]);
 
+  const [delDialog, setDelDialog] = useState();
+
   const [addDialog, setAddDialog] = useState();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          "https://animall-400708.et.r.appspot.com/api/v1/species"
-        );
-        const speciesData = response.data.data;
-        setSpeciesList(speciesData);
-      } catch (error) {
-        console.error(error);
-      }
+  const [delForm, setDelForm] = useState();
+
+  const [loading, setLoading] = useState();
+
+  const [idSpecie, setIdSpecie] = useState();
+
+  const handleAddDialogOpen = () => {
+    setAddDialog(true);
+  };
+
+  const handleAddDialogClose = () => {
+    setAddDialog(false);
+  };
+
+  const handleDelDialogOpen = () => {
+    setDelDialog(true);
+  };
+  const handleDelDialogClose = () => {
+    setDelDialog(false);
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "https://animall-400708.et.r.appspot.com/api/v1/species"
+      );
+      const speciesData = response.data.data;
+      setSpeciesList(speciesData);
+      console.log("SpeciesList:", speciesData);
+    } catch (error) {
+      console.error(error);
     }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
-  function handleFilterByName() {
-    // if (searchValue) {
-    //   const filterdValues = specieslList.filter((specie) =>
-    //     specie.specieName.toLowerCase().includes(searchValue.toLowerCase())
-    //   );
-    //   setFilterByName(filterdValues);
-    // }
-    if (searchValue) {
-      const filteredValues = specieslList.filter(
-        (specie) =>
-          specie.specieName &&
-          specie.specieName.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setFilterByName(filteredValues);
-    }
-  }
+  //Search by name
+  // useEffect(() => {
+  //   handleFilterByName();
+  // }, [searchValue, specieslList]);
 
-  // Search by name
-  useEffect(() => {
-    handleFilterByName();
-  }, [searchValue, specieslList]);
+  // function handleFilterByName() {
+  //   if (specieslList && searchValue) {
+  //     const filteredValue = specieslList.filter(
+  //       (specie) =>
+  //         specie?.specieName
+  //           ?.toLowerCase()
+  //           .includes(searchValue.toLowerCase()) ||
+  //         specie?.origin?.toLowerCase().includes(searchValue.toLowerCase())
+  //     );
+  //     setFilterByName(filteredValue);
+  //   }
+  // }
 
   const formik = useFormik({
     initialValues: {
@@ -89,12 +114,12 @@ function SpeciesManage(props) {
           origin: values.origin,
           description: values.description,
         };
-
+        console.log("newSpecie :", newSpecie);
         const response = await axios.post(
-          "http://animall-400708.et.r.appspot.com/api/v1/exps/",
+          "https://animall-400708.et.r.appspot.com/api/v1/species",
           newSpecie
         );
-        enqueueSnackbar("Delete successfully !", {
+        enqueueSnackbar("Species created successfully!", {
           variant: "success",
           anchorOrigin: {
             horizontal: "right",
@@ -104,16 +129,90 @@ function SpeciesManage(props) {
         handleAddDialogClose();
       } catch (error) {
         console.error("Error during registration:", error);
+        enqueueSnackbar("Failed to create species. Please try again later.", {
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
       }
     },
   });
 
-  const handleAddDialogOpen = () => {
-    setAddDialog(true);
+  const setDeleteForm = (id) => {
+    setIdSpecie(id);
+    const fetchDataById = async () => {
+      try {
+        const response = await axios.get(
+          `https://animall-400708.et.r.appspot.com/api/v1/species/${id}`
+        );
+        const speciesData = response.data.data;
+        console.log("DelForm :", speciesData);
+        setDelForm(speciesData);
+        handleDelDialogOpen();
+      } catch (error) {
+        console.error("Lỗi khi lấy dữ liệu:", error);
+      }
+    };
+    fetchDataById();
   };
 
-  const handleAddDialogClose = () => {
-    setAddDialog(false);
+  const handleDelete = async () => {
+    const delData = {
+      idSpecie: delForm?.idSpecie,
+      specieName: delForm?.specieName,
+      origin: delForm?.origin,
+      description: delForm?.description,
+      status: false,
+    };
+    console.log("delData :", delData);
+    try {
+      const response = await fetch(
+        "https://animall-400708.et.r.appspot.com/api/v1/species",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(delData),
+        }
+      );
+
+      if (response.ok) {
+        enqueueSnackbar("Delete successfully !", {
+          variant: "success",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
+        setLoading(false);
+        handleDelDialogClose();
+        fetchData();
+      } else {
+        enqueueSnackbar("Delete failed !", {
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
+        throw new Error(`https error! status: ${response.status}`);
+      }
+      setLoading(false);
+      handleDelDialogClose();
+    } catch (error) {
+      console.error("Error:", error);
+      enqueueSnackbar("Delete failed !", {
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "top",
+        },
+      });
+    }
+    fetchData();
   };
 
   return (
@@ -153,28 +252,30 @@ function SpeciesManage(props) {
               ></TextField>
             </Box>
           </div>
-          {/* {filterByName.length === 0 ? (
+
+          {/* filterByName && filterByName.length === 0 ? 
             <div className="d-flex justify-content-end">
-              <Typography align="inherit" color="red">
-                No results found
-              </Typography>
-            </div>
+              <Typography color="error">No results found</Typography>
+            </div> */}
+
+          {loading ? (
+            <Skeleton />
           ) : (
             <Grid container spacing={5}>
-              {filterByName.map((specie) => (
-                <Grid item key={specie.idSpecie} xs={12} sm={6} md={6} lg={4}>
-                  <SpeciesDetail specie={specie}></SpeciesDetail>
-                </Grid>
-              ))}
+              {specieslList &&
+                specieslList.map((specie) => (
+                  <Grid item key={specie.idSpecie} xs={12} sm={6} md={6} lg={4}>
+                    <Card sx={{ maxWidth: 250, maxWidth: 350 }}>
+                      <SpeciesDetail
+                        specie={specie}
+                        getId={setDeleteForm}
+                      ></SpeciesDetail>
+                      {console.log}
+                    </Card>
+                  </Grid>
+                ))}
             </Grid>
-          )} */}
-          <Grid container spacing={5}>
-            {specieslList.map((specie) => (
-              <Grid item key={specie.idSpecie} xs={12} sm={6} md={6} lg={4}>
-                <SpeciesDetail specie={specie}></SpeciesDetail>
-              </Grid>
-            ))}
-          </Grid>
+          )}
         </div>
         <div className="col-1">
           <Box></Box>
@@ -250,6 +351,26 @@ function SpeciesManage(props) {
             <Button type="submit">Create</Button>
           </DialogActions>
         </form>
+      </Dialog>
+
+      {/* Delete Dialog */}
+      <Dialog
+        open={delDialog}
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle style={{ color: "#ED4337" }}>
+          Delete {delForm?.specieName} specie
+        </DialogTitle>
+        <DialogTitle style={{ color: "#ED4337" }}>
+          Origin from {delForm?.origin} ?
+        </DialogTitle>
+        <DialogActions>
+          <Button onClick={handleDelDialogClose}>Cancel</Button>
+          <Button style={{ color: "#ED4337" }} onClick={handleDelete}>
+            Delete
+          </Button>
+        </DialogActions>
       </Dialog>
     </Box>
   );

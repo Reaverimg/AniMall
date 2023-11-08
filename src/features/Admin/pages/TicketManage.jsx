@@ -151,7 +151,7 @@ function TicketManage(props) {
     const handleDeleteTicket = async () => {
         try {
             console.log(deleteData)
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/tickets/${selectedTicket.idTicket}`, deleteData);
+            const response = await axios.put(`https://animall-400708.et.r.appspot.com/api/v1/tickets/${selectedTicket.idTicket}`, deleteData);
             console.log("Delete success", response.data.data);
             setDeleteSuccess(true);
             setTimeout(() => {
@@ -182,7 +182,7 @@ function TicketManage(props) {
         console.log("Active trươc khi gui", setActiveData);
 
         try {
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/tickets/${selectedTicket.idTicket}`, activeData);
+            const response = await axios.put(`https://animall-400708.et.r.appspot.com/api/v1/tickets/${selectedTicket.idTicket}`, activeData);
             console.log("Active success", response.data.data);
             setUpdateSuccess(true);
             setTimeout(() => {

@@ -31,31 +31,37 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { enqueueSnackbar } from "notistack";
 import "../../Trainer/styles/animalDetailPage.css";
 import axios from "axios";
+import FoodSelection from "./FoodSelection";
 
 // import { updateFoodTracking } from "../../Trainer/components/dialog/updateFoodTracking";
 
 TableSchedule.propTypes = {
   foodtracking: PropTypes.object.isRequired,
+  Render: PropTypes.func,
 };
 
-function TableSchedule({ foodtracking }) {
+function TableSchedule({ foodtracking, Render }) {
   const history = useHistory();
-  //update dialog
+
   const [updateDialog, setUpdateDialog] = useState();
-  //delete dialog
+
   const [delDialog, setDelDialog] = useState();
-  //edit dialog
+
   const [editDialog, setEditDialog] = useState();
 
   const currentDate = new Date();
 
-  const [value, setValue] = useState(dayjs(currentDate));
+  const [dateValue, setDateValue] = useState(dayjs(currentDate));
 
   const [idFood, setIdFood] = useState();
 
-  const [updateForm, setUpdateForm] = useState({});
+  const [updateForm, setUpdateForm] = useState();
+
+  const [deleteForm, setDeleteForm] = useState();
 
   const [idFoodTracking, setIdFoodTracking] = useState();
+
+  const [onChangeFood, setOnChangeFood] = useState();
 
   const openUpdateDialog = () => {
     setUpdateDialog(true);
@@ -80,40 +86,61 @@ function TableSchedule({ foodtracking }) {
     setDelDialog(false);
   };
 
-  function compareDateWithToday(dateString) {
-    // Chuyển đổi chuỗi ngày thành đối tượng Date
-    const [day, month, year] = dateString.split("/").map(Number);
-    const comparisonDate = new Date(year, month - 1, day); // Tháng trong JavaScript bắt đầu từ 0
-
-    // Ngày hiện tại
-    const currentDate = new Date();
-
-    // So sánh ngày
-    if (comparisonDate > currentDate) {
-      return "Ngày trong tương lai";
-    } else if (comparisonDate < currentDate) {
-      return "Ngày trong quá khứ";
-    } else {
-      return `Ngày hiện tại và animalHealth: ${foodtracking.animalHealth}`;
-    }
-  }
-
   const handleClickAdd = () => {
     history.push(`/trainer/feedingSchedule`);
   };
 
+  //Set id state and open delete dialog
   let deleteFoodTracking = (idFoodTracking) => {
     if (!idFoodTracking) return;
     setIdFood(idFoodTracking);
+    console.log("id:", idFoodTracking);
+    const getFoodTrackingById = async () => {
+      try {
+        const response = await axios.get(
+          `https://animall-400708.et.r.appspot.com/api/v1/foodtracking/${idFoodTracking}`
+        );
+        setDeleteForm(response.data.data);
+        console.log("DeleteForm :", response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+      }
+    };
+    getFoodTrackingById();
     handleDelDialogOpen();
-    console.log(idFoodTracking);
   };
 
+  //Set id state and open edit dialog
+  let editFoodTracking = (idFoodTracking) => {
+    setIdFoodTracking(idFoodTracking);
+    const foodTrackingById = async () => {
+      if (idFoodTracking) {
+        try {
+          const response = await axios.get(
+            `https://animall-400708.et.r.appspot.com/api/v1/foodtracking/${idFoodTracking}`
+          );
+          if (response) {
+            const responseData = response.data.data;
+            setUpdateForm(responseData);
+            console.log("UpdateForm :", responseData);
+            openUpdateDialog();
+          }
+        } catch (error) {
+          console.error("Đã có lỗi:", error);
+          throw error;
+        }
+      }
+    };
+    foodTrackingById();
+  };
+
+  //Handel Delete
   const handleDelete = async () => {
     const id = idFood;
     try {
       const response = await axios.delete(
-        `http://animall-400708.et.r.appspot.com/api/v1/foodtracking/${id}`
+        `https://animall-400708.et.r.appspot.com/api/v1/foodtracking/${id}`
       );
       if (response.status === 200) {
         enqueueSnackbar("Delete successfully !", {
@@ -123,6 +150,9 @@ function TableSchedule({ foodtracking }) {
             vertical: "top",
           },
         });
+        if (Render) {
+          Render();
+        }
       } else {
         enqueueSnackbar("Delete failed !", {
           variant: "error",
@@ -144,26 +174,54 @@ function TableSchedule({ foodtracking }) {
     handleDelDialogClose();
   };
 
-  let editFoodTracking = (idFoodTracking) => {
-    setIdFoodTracking(idFoodTracking);
-    async function foodTrackingById() {
-      if (idFoodTracking) {
-        try {
-          const response = await axios.get(
-            `http://animall-400708.et.r.appspot.com/api/v1/foodtracking/${idFoodTracking}`
-          );
-          if (response) {
-            const responseData = response.data.data;
-            setUpdateForm(responseData);
-            openUpdateDialog();
-          }
-        } catch (error) {
-          console.error("Đã có lỗi:", error);
-          throw error;
+  // Handle Edit
+  const handleEditFoodTracking = async () => {
+    const getDate = dayjs(dateValue).format("DD/MM/YYYY");
+    const putData = {
+      idTracking: idFoodTracking,
+      date: getDate,
+      animalName: updateForm?.animal.name,
+      foodName: onChangeFood ? onChangeFood : updateForm.food.name,
+      foodAmount: updateForm?.foodAmount,
+      animalHealth: updateForm?.animalHealth,
+    };
+    console.log("putData :", putData);
+    try {
+      const response = await axios.put(
+        "https://animall-400708.et.r.appspot.com/api/v1/foodtracking/",
+        putData
+      );
+      if (response.status >= 200 && response.status < 300) {
+        enqueueSnackbar("Edit successfully !", {
+          variant: "success",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
+        if (Render) {
+          Render();
         }
+        closeUpdateDialog();
+      } else {
+        enqueueSnackbar(`Edit failed !`, {
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
       }
+    } catch (error) {
+      console.error("Error:", error);
+      enqueueSnackbar(error, {
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "top",
+        },
+      });
     }
-    foodTrackingById();
   };
 
   const styles = {
@@ -194,7 +252,7 @@ function TableSchedule({ foodtracking }) {
       >
         <TableHead>
           <TableRow>
-            <TableCell className="table-title" align="left">
+            <TableCell className="table-title" align="center">
               Date
             </TableCell>
             <TableCell className="table-title" align="center">
@@ -204,10 +262,10 @@ function TableSchedule({ foodtracking }) {
               Food Name
             </TableCell>
             <TableCell className="table-title" align="center">
-              Health
+              Health Status
             </TableCell>
             <TableCell className="table-title" align="center">
-              Action
+              Actions
             </TableCell>
             <TableCell className="table-title" align="center"></TableCell>
           </TableRow>
@@ -271,31 +329,22 @@ function TableSchedule({ foodtracking }) {
         <DialogContent>
           {/* <CreateFeedingPlan></CreateFeedingPlan> */}
           <Grid container spacing={2}>
-            {/* Name */}
-            {/* <Grid item xs={12}>
-              <TextField
-                label="Animal name"
-                style={{ marginTop: "10px" }}
-                variant="outlined"
-                fullWidth
-                value={updateForm && updateForm.animal.name}
-                disabled
-              ></TextField>
-            </Grid> */}
-
             {/* Date */}
             <Grid item xs={12}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  // value={updateForm.date}
-                  label="Feeding date"
-                  onChange={(e) =>
-                    setUpdateForm({ ...updateForm, date: e.target.value })
-                  }
-                  format="DD-MM-YYYY"
-                  disablePast
-                />
-              </LocalizationProvider>
+              {updateForm && (
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    value={
+                      updateForm?.date
+                        ? dayjs(updateForm.date, "DD/MM/YYYY")
+                        : null
+                    }
+                    onChange={(e) => setDateValue(e)}
+                    format="DD/MM/YYYY"
+                    disablePast
+                  />
+                </LocalizationProvider>
+              )}
             </Grid>
 
             {/* Status */}
@@ -311,44 +360,75 @@ function TableSchedule({ foodtracking }) {
               ></TextField>
             </Grid> */}
 
-            {/* Phone */}
+            {/* Food Amount */}
             <Grid item xs={12}>
-              <TextField
-                label="Food consume"
-                variant="outlined"
-                value={updateForm.foodAmount}
-                onChange={(e) => {
-                  // Cập nhật giá trị foodAmount trong updateForm
-                  setUpdateForm({ ...updateForm, foodAmount: e.target.value });
+              {updateForm && (
+                <TextField
+                  label="Food Consumes"
+                  variant="outlined"
+                  value={updateForm.foodAmount}
+                  onChange={(e) => {
+                    // Cập nhật giá trị foodAmount trong updateForm
+                    setUpdateForm({
+                      ...updateForm,
+                      foodAmount: e.target.value,
+                    });
+                  }}
+                  fullWidth
+                  endAdornment={
+                    <InputAdornment position="end">kg</InputAdornment>
+                  }
+                />
+              )}
+            </Grid>
 
-                  // Log ra data mỗi khi giá trị thay đổi
-                  console.log("Update Form Data:", {
-                    ...updateForm,
-                    foodAmount: e.target.value,
-                  });
-                }}
-                fullWidth
-                endAdornment={
-                  <InputAdornment position="end">kg</InputAdornment>
-                }
-              />
+            {/* Food Name */}
+            <Grid item xs={12}>
+              {updateForm && (
+                <FoodSelection
+                  formData={updateForm.food.name}
+                  onFoodChange={(value) => {
+                    setOnChangeFood(value);
+                  }}
+                ></FoodSelection>
+              )}
+            </Grid>
+
+            {/* Health */}
+            <Grid item xs={12}>
+              {updateForm && (
+                <TextField
+                  label="Health Status"
+                  variant="outlined"
+                  fullWidth
+                  value={updateForm?.animalHealth}
+                  onChange={(e) => {
+                    setUpdateForm({
+                      ...updateForm,
+                      animalHealth: e.target.value,
+                    });
+                  }}
+                />
+              )}
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={closeUpdateDialog}>Cancel</Button>
-          <Button onClick={closeUpdateDialog}>Confirm</Button>
+          <Button onClick={handleEditFoodTracking}>Confirm</Button>
         </DialogActions>
       </Dialog>
 
-      {/* {console.log("update form:", updateForm)} */}
       {/* Delete Dialog */}
       <Dialog
         open={delDialog}
         keepMounted
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>Delete this food tracking ?</DialogTitle>
+        <DialogTitle>
+          Delete feeding plan for {deleteForm?.animal.name} on{" "}
+          {deleteForm?.date} ?
+        </DialogTitle>
         <DialogActions>
           <Button onClick={handleDelDialogClose}>Cancel</Button>
           <Button color="warning" onClick={handleDelete}>
@@ -356,15 +436,6 @@ function TableSchedule({ foodtracking }) {
           </Button>
         </DialogActions>
       </Dialog>
-
-      {/* {foodtracking &&
-        foodtracking.forEach((tracking) => {
-          const result = compareDateWithToday(tracking.date);
-          console.log(
-            ID Tracking: ${tracking.idTracking} - Kết quả so sánh: ${result}
-          );
-        })} */}
-      {/* Table */}
     </Box>
   );
 }

@@ -55,7 +55,7 @@ function RefundStatus(props) {
     const handleConfirmOrder = async () => {
         try {
             console.log(confirmData)
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/bills/${selectedOrder.idBill}`, confirmData);
+            const response = await axios.put(`https://animall-400708.et.r.appspot.com/api/v1/bills/${selectedOrder.idBill}`, confirmData);
             console.log("Confirm success", response.data.data);
             handelCloseConfirmDialog();
             setConfirmSuccess(true);
@@ -91,7 +91,7 @@ function RefundStatus(props) {
     const handleCancelOrder = async () => {
         try {
             console.log(cancelData)
-            const response = await axios.put(`http://animall-400708.et.r.appspot.com/api/v1/bills/${selectedOrder.idBill}`, cancelData);
+            const response = await axios.put(`https://animall-400708.et.r.appspot.com/api/v1/bills/${selectedOrder.idBill}`, cancelData);
             console.log("Cancel success", response.data.data);
             handelCloseCancelDialog();
             setCancelSuccess(true);

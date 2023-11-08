@@ -47,25 +47,45 @@ function AnimalSelection({ formData, onAnimalChange }) {
 
   return (
     <Grid item xs={12}>
-      <TextField
-        style={{ marginTop: "10px" }}
-        label="Chọn con thú"
-        variant="outlined"
-        fullWidth
-        defaultValue={formData}
-        value={selectedAnimal}
-        onChange={handleChange}
-        select
-      >
-        {animals &&
-          animals
-            .filter((item) => item.idAccount === idStaff.idAccount)
-            .map((item) => (
-              <MenuItem key={item.idAnimal} value={item.name}>
-                {item.name}
-              </MenuItem>
-            ))}
-      </TextField>
+      {selectedAnimal ? (
+        <TextField
+          style={{ marginTop: "10px" }}
+          label="Food Name"
+          variant="outlined"
+          fullWidth
+          value={selectedAnimal}
+          onChange={handleChange}
+          select
+        >
+          {animals &&
+            animals
+              .filter((item) => item.idAccount === idStaff.idAccount)
+              .map((item) => (
+                <MenuItem key={item.idAnimal} value={item.name}>
+                  {item.name}
+                </MenuItem>
+              ))}
+        </TextField>
+      ) : (
+        <TextField
+          style={{ marginTop: "10px" }}
+          label="Animal Name"
+          variant="outlined"
+          fullWidth
+          value={formData}
+          onChange={handleChange}
+          select
+        >
+          {animals &&
+            animals
+              .filter((item) => item.idAccount === idStaff.idAccount)
+              .map((item) => (
+                <MenuItem key={item.idAnimal} value={item.name}>
+                  {item.name}
+                </MenuItem>
+              ))}
+        </TextField>
+      )}
     </Grid>
   );
 }

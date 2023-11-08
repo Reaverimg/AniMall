@@ -9,7 +9,7 @@ function StaffCms(props) {
     const fetchAnimals = async () => {
       try {
         const response = await fetch(
-          "http://animall-400708.et.r.appspot.com/api/v1/tickets/",
+          "https://animall-400708.et.r.appspot.com/api/v1/tickets/",
           {
             method: "GET",
             headers: {

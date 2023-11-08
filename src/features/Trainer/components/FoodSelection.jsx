@@ -46,7 +46,7 @@ function FoodSelection({ formData, onFoodChange }) {
     <Grid item xs={12}>
       {selectedFood ? (
         <TextField
-          label="Loại thức ăn"
+          label="Food Name"
           variant="outlined"
           fullWidth
           value={selectedFood}
@@ -62,7 +62,7 @@ function FoodSelection({ formData, onFoodChange }) {
         </TextField>
       ) : (
         <TextField
-          label="Loại thức ăn"
+          label="Food Name"
           variant="outlined"
           fullWidth
           value={formData}

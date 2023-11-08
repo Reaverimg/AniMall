@@ -79,7 +79,7 @@ function TrainerSideBar(props) {
                 </ListItem>
               </List>
               {/* Button */}
-              <List>
+              {/* <List>
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
@@ -97,7 +97,7 @@ function TrainerSideBar(props) {
                     </NavLink>
                   </ListItemButton>
                 </ListItem>
-              </List>
+              </List> */}
               {/* Button */}
               <List>
                 <ListItem disablePadding>

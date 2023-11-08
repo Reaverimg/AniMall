@@ -1,6 +1,12 @@
 import {
   Box,
+  Button,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
   Icon,
   InputAdornment,
@@ -16,6 +22,7 @@ import "../../Trainer/styles/animalManage.css";
 import FilterByCage from "../components/FilterByCage";
 // import { GET_ALL_SPECIES, GET_ALL_ANIMALS } from "../../../api/SwaggerAPI";
 import AnimalDetail from "../components/AnimalDetail";
+import Skeleton from "../../../components/loading/Skeletion";
 
 AnimalManage.propTypes = {};
 
@@ -26,7 +33,21 @@ function AnimalManage(props) {
 
   const [filterByName, setFilterByName] = useState([]);
 
+  const [loading, setLoading] = useState(true);
+
   const [searchValue, setSearchValue] = useState("");
+
+  const [open, setOpen] = useState(false);
+
+  const [dialogInfo, setDialogInfo] = useState();
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const idAccount = JSON.parse(localStorage.getItem("ACCOUNT__LOGGED"));
 
@@ -39,6 +60,7 @@ function AnimalManage(props) {
         );
         const animalData = response.data.data;
         setAnimalList(animalData);
+        setLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -79,6 +101,23 @@ function AnimalManage(props) {
     setFilterByName(filterdValue);
   }
 
+  const openDialog = (id) => {
+    console.log("id tren cha:", id);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://animall-400708.et.r.appspot.com/api/v1/animals/${id}`
+        );
+        setDialogInfo(response.data.data);
+        console.log("Data from API:", response.data.data);
+        handleClickOpen();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  };
+
   return (
     <Box>
       <div class="row pt-5">
@@ -115,20 +154,21 @@ function AnimalManage(props) {
               ></TextField>
             </div>
           </div>
-
-          {filterByName && filterByName.length === 0 ? (
+          {loading ? (
+            <Skeleton /> // Show Skeleton component when loading is true
+          ) : filterByName && filterByName.length === 0 ? (
+            // Show "No results found" message when filterByName is empty
             <div className="d-flex justify-content-end">
-              <Typography align="inherit" color="red">
-                No results found
-              </Typography>
+              <Typography color="error">No results found</Typography>
             </div>
           ) : (
+            // Render the list of animals when filterByName is not empty and loading is false
             <Grid container spacing={5}>
               {filterByName
                 .filter((animal) => animal.idAccount === idAccount.idAccount)
                 .map((animal) => (
                   <Grid item key={animal.idAnimal} xs={12} sm={6} md={6} lg={4}>
-                    <AnimalDetail animal={animal}></AnimalDetail>
+                    <AnimalDetail animal={animal} onOpen={openDialog} />
                   </Grid>
                 ))}
             </Grid>
@@ -138,6 +178,18 @@ function AnimalManage(props) {
           <Box></Box>
         </div>
       </div>
+
+      <Dialog open={open}>
+        <DialogTitle>Specie : {dialogInfo?.specie.specieName}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Specie info : {dialogInfo?.specie.description}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

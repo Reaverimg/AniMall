@@ -140,7 +140,7 @@ function RegisterForm(props) {
         };
 
         const response = await fetch(
-          "http://animall-400708.et.r.appspot.com/api/v1/accounts/register",
+          "https://animall-400708.et.r.appspot.com/api/v1/accounts/register",
           {
             method: "POST",
             headers: {
@@ -160,7 +160,7 @@ function RegisterForm(props) {
                 password: data.password,
               };
               const response = await fetch(
-                "http://animall-400708.et.r.appspot.com/api/v1/accounts/login",
+                "https://animall-400708.et.r.appspot.com/api/v1/accounts/login",
                 {
                   method: "POST",
                   headers: {

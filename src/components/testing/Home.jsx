@@ -7,7 +7,7 @@ import { FiArrowRight } from "react-icons/fi";
 const Home = () => {
   return (
     <section className="home-container">
-      <Navbar />
+      {/* <Navbar /> */}
       <section className="home-banner-container">
         {/* <section className="home-bannerImage-container">
           <img src={BannerBackground} alt="" />

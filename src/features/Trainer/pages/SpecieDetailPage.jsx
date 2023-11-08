@@ -59,26 +59,27 @@ function SpecieDetailPage(props) {
   };
 
   const handleEditDialogClose = () => setEditDialogOpen(false);
+  
+  async function fetchData() {
+    try {
+      const response = await fetch(
+        `https://animall-400708.et.r.appspot.com/api/v1/species/${idSpecie}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setSpecie(data.data);
+        setSpecieAnimals(data.data.animalList);
+        // console.log("SpecieAnimals :", specieAnimals);
+        // console.log("specie :", specie);
+      } else {
+        console.error("Error fetching data:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch(
-          `http://animall-400708.et.r.appspot.com/api/v1/species/${idSpecie}`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          setSpecie(data.data);
-          setSpecieAnimals(data.data.animalList);
-          // console.log("SpecieAnimals :", specieAnimals);
-          // console.log("specie :", specie);
-        } else {
-          console.error("Error fetching data:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
     fetchData();
   }, [match]);
 
@@ -91,33 +92,41 @@ function SpecieDetailPage(props) {
     },
     validationSchema: Yup.object({
       specieName: Yup.string()
-        .matches(/^[a-zA-ZÀ-ỹ]+$/, "Name must contain only letters")
+        .matches(/^[a-zA-ZÀ-ỹ\s]+$/, "Name must contain only letters")
         .required("Please enter name")
         .min(2, "Species name must be at least 2 characters"),
       origin: Yup.string()
-        .matches(/^[a-zA-ZÀ-ỹ]+$/, "Origin must contain only letters")
+        .matches(/^[a-zA-ZÀ-ỹ\s]+$/, "Origin must contain only letters")
         .required("Please enter origin")
         .min(4, "Origin must be at least 4 characters"),
       description: Yup.string()
-        .matches(/^[a-zA-ZÀ-ỹ]+$/, "Description name must contain only letters")
+        .matches(/^.*$/, "Description name must contain only letters")
         .required("Please enter description")
         .min(5, "Description must be at least 5 characters"),
     }),
     onSubmit: async (values) => {
       const data = {
         ...updateSpecie,
+        idSpecie: updateSpecie.idSpecie,
         specieName: values.specieName,
         origin: values.origin,
         description: values.description,
+        status: updateSpecie.status,
       };
-      console.log("values :", data);
+      console.log(" put values :", data);
       try {
-        const response = await axios.put(
-          "http://animall-400708.et.r.appspot.com/api/v1/species/",
-          values
+        const response = await fetch(
+          "https://animall-400708.et.r.appspot.com/api/v1/species",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          }
         );
         if (response.ok) {
-          enqueueSnackbar("Update succesfully", {
+          enqueueSnackbar("Update successfully", {
             variant: "success",
             anchorOrigin: {
               horizontal: "right",
@@ -125,6 +134,7 @@ function SpecieDetailPage(props) {
             },
           });
           handleEditDialogClose();
+          fetchData()
         } else {
           enqueueSnackbar("Update failed", {
             variant: "error",
@@ -164,11 +174,11 @@ function SpecieDetailPage(props) {
                   </Button>
                 </Grid>
                 <Grid container justifyContent="flex-start">
-                  <h5 className="card-title">Loài : {specie.specieName} </h5>
+                  <h5 className="card-title">Specie : {specie.specieName} </h5>
                 </Grid>
-                <p className="card-text">Nguồn gốc : {specie.origin}</p>
+                <p className="card-text">Origin : {specie.origin}</p>
                 <p className="card-text">
-                  Đặc điểm của loài : {specie.description}
+                  Specie character : {specie.description}
                 </p>
               </div>
             </div>

@@ -16,7 +16,7 @@ function NewsDetail(props) {
     async function fetchData() {
       try {
         const response = await fetch(
-          `http://animall-400708.et.r.appspot.com/api/v1/news/${idNews}`
+          `https://animall-400708.et.r.appspot.com/api/v1/news/${idNews}`
         );
         if (response.ok) {
           const rpData = await response.json();

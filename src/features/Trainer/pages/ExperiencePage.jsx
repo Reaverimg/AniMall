@@ -31,25 +31,25 @@ import * as yup from "yup";
 
 ExperiencePage.propTypes = {};
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
+// const StyledTableCell = styled(TableCell)(({ theme }) => ({
+//   [`&.${tableCellClasses.head}`]: {
+//     backgroundColor: theme.palette.common.black,
+//     color: theme.palette.common.white,
+//   },
+//   [`&.${tableCellClasses.body}`]: {
+//     fontSize: 14,
+//   },
+// }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
+// const StyledTableRow = styled(TableRow)(({ theme }) => ({
+//   "&:nth-of-type(odd)": {
+//     backgroundColor: theme.palette.action.hover,
+//   },
+//   // hide last border
+//   "&:last-child td, &:last-child th": {
+//     border: 0,
+//   },
+// }));
 
 function ExperiencePage(props) {
   const [experienceList, setExperienceList] = useState();
@@ -62,22 +62,25 @@ function ExperiencePage(props) {
 
   const [formData, setFormData] = useState();
 
+  const [updateForm, setUpdateForm] = useState();
+
   const [idExp, setIdExp] = useState();
 
   const idAccount = JSON.parse(localStorage.getItem("ACCOUNT__LOGGED"));
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await axios.get(
-          "https://animall-400708.et.r.appspot.com/api/v1/exps/"
-        );
-        const responseData = response.data.data;
-        setExperienceList(responseData);
-      } catch (error) {
-        console.error(error);
-      }
+  async function fetchData() {
+    try {
+      const response = await axios.get(
+        "https://animall-400708.et.r.appspot.com/api/v1/exps/"
+      );
+      const responseData = response.data.data;
+      setExperienceList(responseData);
+    } catch (error) {
+      console.error(error);
     }
+  }
+
+  useEffect(() => {
     fetchData();
   }, [experienceList]);
 
@@ -126,7 +129,7 @@ function ExperiencePage(props) {
         handleAddDialogClose();
         console.log(newExp);
         const response = await axios.post(
-          "http://animall-400708.et.r.appspot.com/api/v1/exps/",
+          "https://animall-400708.et.r.appspot.com/api/v1/exps/",
           newExp
         );
         enqueueSnackbar("Add successfully !", {
@@ -136,60 +139,105 @@ function ExperiencePage(props) {
             vertical: "top",
           },
         });
+        fetchData();
       } catch (error) {
         console.error("Error during registration:", error);
+        enqueueSnackbar("Add failed !", {
+          variant: "success",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
       }
     },
   });
 
   let editExp = (exp) => {
-    handleEditDialogOpen();
-    if (!exp) return;
     setIdExp(exp.idExp);
-    const id = idExp;
     async function fetchData() {
       try {
         const response = await axios.get(
-          `https://animall-400708.et.r.appspot.com/api/v1/exps/${id}`
+          `https://animall-400708.et.r.appspot.com/api/v1/exps/${idExp}`
         );
         const responseData = response.data.data;
         setFormData(responseData);
+        console.log("setFormData :", responseData);
+        handleEditDialogOpen();
       } catch (error) {
         console.error(error);
       }
     }
     fetchData();
-    console.log(exp.idExp);
   };
 
   let deleteExp = (exp) => {
     handleDelDialogOpen();
     if (!exp) return;
     setIdExp(exp.idExp);
-    console.log(exp.idExp);
   };
 
   const handleDelete = async () => {
     const id = idExp;
     try {
       const response = await axios.delete(
-        `http://animall-400708.et.r.appspot.com/api/v1/exps?id=${id}`
+        `https://animall-400708.et.r.appspot.com/api/v1/exps?id=${id}`
       );
-      if (response.status === 200) {
-        console.log("Delete successfully");
-      } else {
-        console.error("Delete failed");
-      }
+      enqueueSnackbar("Delete successfully !", {
+        variant: "success",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "top",
+        },
+      });
+      handleDelDialogClose();
     } catch (error) {
       console.error("Error making DELETE request", error);
+      enqueueSnackbar("Delete failed !", {
+        variant: "error",
+        anchorOrigin: {
+          horizontal: "right",
+          vertical: "top",
+        },
+      });
     }
-    enqueueSnackbar("Delete successfully !", {
-      variant: "success",
-      anchorOrigin: {
-        horizontal: "right",
-        vertical: "top",
-      },
-    });
+  };
+
+  const handleEditExp = () => {
+    console.log("update form data :", updateForm);
+    const putData = {
+      expId: idExp,
+      specieId: updateForm?.specie.idSpecie,
+      years: 0,
+      description: updateForm?.description,
+      certiImg: updateForm?.certiImg,
+    };
+    console.log("putData :", putData);
+    const updateDataToAPI = async () => {
+      try {
+        const response = await axios.put(
+          "https://animall-400708.et.r.appspot.com/api/v1/exps",
+          putData
+        );
+        enqueueSnackbar("Edit successfully !", {
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
+      } catch (error) {
+        console.error("Lỗi khi gửi yêu cầu PUT đến API:", error);
+        enqueueSnackbar("Edit failed !", {
+          variant: "error",
+          anchorOrigin: {
+            horizontal: "right",
+            vertical: "top",
+          },
+        });
+      }
+    };
+    updateDataToAPI();
   };
 
   return (
@@ -231,31 +279,27 @@ function ExperiencePage(props) {
           </div>
           <Grid>
             <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 400 }} aria-label="customized table">
+              <Table aria-label="customized table">
                 <TableHead>
                   <TableRow>
-                    <StyledTableCell align="center">
-                      Specie Name
-                    </StyledTableCell>
-                    <StyledTableCell align="center">Experience</StyledTableCell>
-                    <StyledTableCell align="center">Images</StyledTableCell>
-                    <StyledTableCell align="center"></StyledTableCell>
+                    <TableCell align="center">Specie Name</TableCell>
+                    <TableCell align="center">Experience</TableCell>
+                    <TableCell style={{ paddingLeft: "60px" }} align="left">
+                      Actions
+                    </TableCell>
+                    {/* <TableCell align="center">Images</TableCell> */}
                   </TableRow>
                 </TableHead>
                 {experienceList &&
                   experienceList.map((exp) => (
                     <TableBody>
-                      <StyledTableRow>
-                        <StyledTableCell align="center">
+                      <TableRow>
+                        <TableCell align="center">
                           {exp.specie.specieName}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          {exp.description}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
-                          {exp.certiImg}
-                        </StyledTableCell>
-                        <StyledTableCell align="center">
+                        </TableCell>
+                        <TableCell align="left">{exp.description}</TableCell>
+                        {/* <TableCell align="center">{exp.certiImg}</TableCell> */}
+                        <TableCell align="left">
                           <Button onClick={() => editExp(exp)}>Edit</Button>
                           <Button
                             color="warning"
@@ -263,8 +307,8 @@ function ExperiencePage(props) {
                           >
                             Delete
                           </Button>
-                        </StyledTableCell>
-                      </StyledTableRow>
+                        </TableCell>
+                      </TableRow>
                     </TableBody>
                   ))}
               </Table>
@@ -279,68 +323,69 @@ function ExperiencePage(props) {
             aria-describedby="alert-dialog-slide-description"
           >
             <DialogTitle>Edit Experience</DialogTitle>
-            <form onSubmit={formik.handleSubmit}>
-              <DialogContent>
-                {/* <CreateFeedingPlan></CreateFeedingPlan> */}
-                <Grid container spacing={2}>
-                  {/* Name */}
-                  <Grid item xs={12}>
+            <DialogContent>
+              {/* <CreateFeedingPlan></CreateFeedingPlan> */}
+              <Grid container spacing={2}>
+                {/* Specie Name */}
+                <Grid item xs={12}>
+                  {formData && (
                     <TextField
                       style={{ marginTop: "10px" }}
                       label="Specie Name"
-                      name="specie"
                       variant="outlined"
                       fullWidth
-                      value={formik.values.specie}
-                      onChange={formik.handleChange}
+                      value={formData.specie.specieName}
+                      onChange={(e) =>
+                        setUpdateForm({
+                          ...formData,
+                          specieName: e.target.value,
+                        })
+                      }
                     ></TextField>
-                    {formik.touched.specie && formik.errors.specie ? (
-                      <Typography variant="caption" color="red">
-                        {formik.errors.specie}
-                      </Typography>
-                    ) : null}
-                  </Grid>
+                  )}
+                </Grid>
 
-                  {/* Status */}
-                  <Grid item xs={12}>
+                {/* Description */}
+                <Grid item xs={12}>
+                  {formData && (
                     <TextField
                       label="Experience "
                       variant="outlined"
-                      name="description"
                       fullWidth
-                      value={formik.values.description}
-                      onChange={formik.handleChange}
+                      value={formData.description}
+                      onChange={(e) =>
+                        setUpdateForm({
+                          ...formData,
+                          description: e.target.value,
+                        })
+                      }
                     ></TextField>
-                    {formik.touched.description && formik.errors.description ? (
-                      <Typography variant="caption" color="red">
-                        {formik.errors.description}
-                      </Typography>
-                    ) : null}
-                  </Grid>
+                  )}
+                </Grid>
 
-                  {/* Phone */}
-                  <Grid item xs={12}>
+                {/* Certificate */}
+                <Grid item xs={12}>
+                  {formData && (
                     <TextField
                       label="Images"
                       variant="outlined"
-                      name="images"
                       fullWidth
-                      value={formik.values.images}
-                      onChange={formik.handleChange}
+                      value={formData.certiImg}
+                      onChange={(e) =>
+                        setUpdateForm({
+                          ...formData,
+                          certiImg: e.target.value,
+                        })
+                      }
                     />
-                    {formik.touched.images && formik.errors.images ? (
-                      <Typography variant="caption" color="red">
-                        {formik.errors.images}
-                      </Typography>
-                    ) : null}
-                  </Grid>
+                  )}
                 </Grid>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleEditDialogClose}>Cancel</Button>
-                <Button type="submit">Edit</Button>
-              </DialogActions>
-            </form>
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleEditDialogClose}>Cancel</Button>
+              <Button onClick={handleEditExp}>Edit</Button>
+            </DialogActions>
           </Dialog>
 
           {/* Add Dialog */}

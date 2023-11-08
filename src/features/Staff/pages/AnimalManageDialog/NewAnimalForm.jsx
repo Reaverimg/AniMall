@@ -33,7 +33,7 @@ function NewAnimalForm({ setAddSuccess, fetchData, handleCloseCreateDialog }) {
     //fetch Cage
     async function fetchCageData() {
         try {
-            const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/cages");
+            const response = await axios.get("https://animall-400708.et.r.appspot.com/api/v1/cages");
             const data = response.data.data;
             setIdCageData(data);
             console.log("idCageData : ", idCageData)
@@ -48,7 +48,7 @@ function NewAnimalForm({ setAddSuccess, fetchData, handleCloseCreateDialog }) {
     //fetch Speciies
     async function fetchSpecies() {
         try {
-            const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/species")
+            const response = await axios.get("https://animall-400708.et.r.appspot.com/api/v1/species")
             const data = response.data.data;
             setIdSpeciesData(data);
             console.log("idSpeciesData : ", idSpeciesData);
@@ -63,7 +63,7 @@ function NewAnimalForm({ setAddSuccess, fetchData, handleCloseCreateDialog }) {
     //fetch account
     async function fetchTrainer() {
         try {
-            const response = await axios.get("http://animall-400708.et.r.appspot.com/api/v1/accounts");
+            const response = await axios.get("https://animall-400708.et.r.appspot.com/api/v1/accounts");
             const data = response.data.data;
             const getRole = data.filter(account => account.role && account.role.roleDesc === "TRAINER");
             setIdAccountData(getRole);
@@ -92,7 +92,7 @@ function NewAnimalForm({ setAddSuccess, fetchData, handleCloseCreateDialog }) {
             console.log(values)
 
             try {
-                const response = await axios.post("http://animall-400708.et.r.appspot.com/api/v1/animals",
+                const response = await axios.post("https://animall-400708.et.r.appspot.com/api/v1/animals",
                     values,
                     {
                         headers: {

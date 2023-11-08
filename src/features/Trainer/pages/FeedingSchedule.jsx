@@ -88,7 +88,7 @@ function FeedingSchedule(props) {
   async function fetchData(page) {
     try {
       const response = await axios.get(
-        `http://animall-400708.et.r.appspot.com/api/v1/foodtracking/`
+        `https://animall-400708.et.r.appspot.com/api/v1/foodtracking/`
       );
       const responseData = response.data.data;
       setAnimalFoodTrackings(responseData);
@@ -151,7 +151,7 @@ function FeedingSchedule(props) {
       try {
         console.log("post data :", data);
         const response = await axios.post(
-          "http://animall-400708.et.r.appspot.com/api/v1/foodtracking/",
+          "https://animall-400708.et.r.appspot.com/api/v1/foodtracking/",
           data,
           {
             headers: {
@@ -200,7 +200,7 @@ function FeedingSchedule(props) {
     const getFoodTrackingById = async () => {
       try {
         const response = await axios.get(
-          `http://animall-400708.et.r.appspot.com/api/v1/foodtracking/${foodId}`
+          `https://animall-400708.et.r.appspot.com/api/v1/foodtracking/${foodId}`
         );
         if (response) {
           const foodTrackingData = response.data.data;
@@ -220,7 +220,7 @@ function FeedingSchedule(props) {
     const getFoodTrackingById = async () => {
       try {
         const response = await axios.get(
-          `http://animall-400708.et.r.appspot.com/api/v1/foodtracking/${foodId}`
+          `https://animall-400708.et.r.appspot.com/api/v1/foodtracking/${foodId}`
         );
         if (response) {
           const foodTrackingData = response.data.data;
@@ -240,7 +240,7 @@ function FeedingSchedule(props) {
     const foodId = idFoodTracking;
     try {
       const response = await axios.delete(
-        `http://animall-400708.et.r.appspot.com/api/v1/foodtracking/${foodId}`
+        `https://animall-400708.et.r.appspot.com/api/v1/foodtracking/${foodId}`
       );
       enqueueSnackbar("Delete  successfully !", {
         variant: "success",
@@ -277,7 +277,7 @@ function FeedingSchedule(props) {
     console.log("putData :", putData);
     try {
       const response = await axios.put(
-        "http://animall-400708.et.r.appspot.com/api/v1/foodtracking/",
+        "https://animall-400708.et.r.appspot.com/api/v1/foodtracking/",
         putData
       );
       enqueueSnackbar("Edit successfully !", {
@@ -371,21 +371,20 @@ function FeedingSchedule(props) {
           </Grid>
 
           {/* filter by name */}
-          {/* {loading ? <Skeleton></Skeleton> : } */}
-          {filterByName && filterByName.length === 0 ? (
+          {loading ? (
+            <Skeleton />
+          ) : filterByName && filterByName.length === 0 ? (
             <div className="d-flex justify-content-end">
-              <Typography align="inherit" color="red">
+              <Typography align="inherit" color="error">
                 No results found
               </Typography>
             </div>
-          ) : loading ? (
-            <Skeleton />
           ) : (
             <Grid container justifyContent="center" alignItems="center" sx={12}>
               <Table
                 sx={{
                   maxWidth: "60vw",
-                  backgroundColor: " rgba(200, 200, 200, 0.2);",
+                  backgroundColor: "rgba(200, 200, 200, 0.2)",
                 }}
               >
                 <TableHead>
@@ -414,7 +413,7 @@ function FeedingSchedule(props) {
                         {tracking?.food?.name}
                       </TableCell>
                       <TableCell align="center">
-                        {tracking?.foodAmount}kg
+                        {tracking?.foodAmount}Kg
                       </TableCell>
                       <TableCell align="center">
                         {tracking?.animalHealth}
@@ -546,8 +545,18 @@ function FeedingSchedule(props) {
         <DialogTitle>CREATE FEEDING PLAN</DialogTitle>
         <form onSubmit={formik.handleSubmit}>
           <DialogContent>
-            {/* <CreateFeedingPlan></CreateFeedingPlan> */}
             <Grid container spacing={2}>
+              {/* Date */}
+              <Grid item xs={12}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    value={dateValue}
+                    onChange={(newDate) => setDateValue(newDate)}
+                    format="DD/MM/YYYY"
+                    disablePast
+                  />
+                </LocalizationProvider>
+              </Grid>
               {/* Name */}
               <AnimalSelection
                 formData={formData}
@@ -562,66 +571,11 @@ function FeedingSchedule(props) {
                   setOnChangeFood(value);
                 }}
               ></FoodSelection>
-              {/* <Grid item xs={12}>
-                <TextField
-                  style={{ marginTop: "10px" }}
-                  label="Chọn con vật cho ăn"
-                  variant="outlined"
-                  name="name"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  fullWidth
-                ></TextField>
-                {formik.touched.name && formik.errors.name ? (
-                  <Typography variant="caption" color="red">
-                    {formik.errors.name}
-                  </Typography>
-                ) : null}
-              </Grid> */}
-
-              {/* <Grid item xs={12}>
-                <TextField
-                  style={{ marginTop: "10px" }}
-                  label="Chọn con vật cho ăn"
-                  variant="outlined"
-                  fullWidth
-                  select
-                >
-                  <MenuItem value="1">Henry</MenuItem>
-                  <MenuItem value="2">Lior</MenuItem>
-                  <MenuItem value="3">Daisy</MenuItem>
-                </TextField>
-              </Grid> */}
-
-              {/* Date */}
-              {/* <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    defaultValue={value}
-                    value={dayjs(formik.values.date)}
-                    onChange={() => {
-                      dayjs(formik.handleChange);
-                    }}
-                    format="DD-MM-YYYY"
-                    disablePast
-                  />
-                </LocalizationProvider>
-              </Grid> */}
-              <Grid item xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    value={dateValue}
-                    onChange={(newDate) => setDateValue(newDate)}
-                    format="DD/MM/YYYY"
-                    disablePast
-                  />
-                </LocalizationProvider>
-              </Grid>
 
               {/* Food Amount */}
               <Grid item xs={12}>
                 <TextField
-                  label="Lượng thức ăn"
+                  label="Food Amount"
                   variant="outlined"
                   name="foodAmount"
                   value={formik.values.foodAmount}
@@ -643,7 +597,7 @@ function FeedingSchedule(props) {
               {/* Animal Health */}
               <Grid item xs={12}>
                 <TextField
-                  label="Sức khỏe"
+                  label="Health Status"
                   variant="outlined"
                   name="animalHealth"
                   value={formik.values.animalHealth}
@@ -674,29 +628,7 @@ function FeedingSchedule(props) {
       >
         <DialogTitle>Edit Feeding Plan</DialogTitle>
         <DialogContent>
-          {/* <CreateFeedingPlan></CreateFeedingPlan> */}
           <Grid container spacing={2}>
-            {/* Name */}
-            {/* <Grid item xs={12}>
-              {formData && (
-                <TextField
-                  style={{ marginTop: "10px" }}
-                  label="Chọn con vật cho ăn"
-                  variant="outlined"
-                  value={formData?.animal.name}
-                  fullWidth
-                ></TextField>
-              )}
-            </Grid> */}
-            {formData && (
-              <AnimalSelection
-                formData={formData.animal.name}
-                onAnimalChange={(value) => {
-                  setOnChangeAnimal(value);
-                }}
-              ></AnimalSelection>
-            )}
-
             {/* Date */}
             <Grid item xs={12}>
               {formData && (
@@ -712,18 +644,17 @@ function FeedingSchedule(props) {
                 </LocalizationProvider>
               )}
             </Grid>
+            {/* Animal Name */}
+            {formData && (
+              <AnimalSelection
+                formData={formData.animal.name}
+                onAnimalChange={(value) => {
+                  setOnChangeAnimal(value);
+                }}
+              ></AnimalSelection>
+            )}
 
             {/* Food name */}
-            {/* <Grid item xs={12}>
-              {formData && (
-                <TextField
-                  label="Loại thức ăn"
-                  variant="outlined"
-                  value={formData?.food.name}
-                  fullWidth
-                ></TextField>
-              )}
-            </Grid> */}
             {formData && (
               <FoodSelection
                 formData={formData.food.name}
@@ -752,6 +683,7 @@ function FeedingSchedule(props) {
                 />
               )}
             </Grid>
+
             {/* Health */}
             <Grid item xs={12}>
               {formData && (
