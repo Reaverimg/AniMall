@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
+    Alert,
     Button,
     Dialog,
     DialogContent,
@@ -31,6 +32,7 @@ import NewAnimalForm from "./AnimalManageDialog/NewAnimalForm";
 import NewAnimal from "./AnimalManageDialog/NewAnimal";
 import UnbanDialog from "./AnimalManageDialog/UnbanDialog";
 import UnbanAler from "./AnimalManageDialog/UnbanAlert";
+import { GET_ALL_ANIMALS } from "../../../api/SwaggerAPI";
 
 function TrainerManage(props) {
     const [searchValue, setSearchValue] = useState("");
@@ -45,12 +47,13 @@ function TrainerManage(props) {
     const [deleteSuccess, setDeleteSuccess] = useState(false);
     const [addSuccess, setAddSuccess] = useState(false);
     const [updateFail, setUpdateFail] = useState(false);
+    const [updateFail2, setUpdateFail2] = useState(false);
     const [unbanFail, setUbanFail] = useState(false);
-    const [perPage, setPerPage] = useState(10); // Số lượng dữ liệu trên mỗi trang
+    const [perPage, setPerPage] = useState(5); // Số lượng dữ liệu trên mỗi trang
     const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(0); // Tổng số trang
     const [unbanSuccess, setUnbanSuccess] = useState(false);
-    
+
     //Update data
     const [formData, setFormData] = useState({
         name: "",
@@ -92,8 +95,8 @@ function TrainerManage(props) {
         setDeleteDialogOpen(false);
     };
 
-     //Unban animal dialog
-     const handleCloseUnbanDialog = () => {
+    //Unban animal dialog
+    const handleCloseUnbanDialog = () => {
         setUnbanDialogOpen(false);
     };
 
@@ -109,6 +112,20 @@ function TrainerManage(props) {
             setUpdateFail(true);
             setTimeout(() => {
                 setUpdateFail(false);
+            }, 2000);
+            return;
+        }
+        const response = await axios.get(`http://animall-400708.et.r.appspot.com/api/v1/animals`);
+        const existingAnimal = response.data.data;
+        const isNameUnique = !existingAnimal.some(
+            (animal) =>
+                animal.name.toLowerCase() === formData.name.toLowerCase()
+        );
+
+        if (!isNameUnique) {
+            setUpdateFail2(true);
+            setTimeout(() => {
+                setUpdateFail2(false);
             }, 2000);
             return;
         }
@@ -190,8 +207,8 @@ function TrainerManage(props) {
         }
     };
 
-     // Handle open unban dialog animal
-     const handleOpenUnbanDialog = (animal) => {
+    // Handle open unban dialog animal
+    const handleOpenUnbanDialog = (animal) => {
         setSelectedAnimal(animal);
         setUnbandata({
             idAnimal: animal.idAnimal,
@@ -382,7 +399,7 @@ function TrainerManage(props) {
                                                     variant="outlined"
                                                     size="small"
                                                     color="primary"
-                                                    onClick={() =>  handleOpenUnbanDialog(animal) }
+                                                    onClick={() => handleOpenUnbanDialog(animal)}
                                                 >
                                                     <RefreshIcon />
                                                 </Button>
@@ -419,6 +436,7 @@ function TrainerManage(props) {
                         <Dialog open={updateDialogOpen} onClose={handleCloseUpdateDialog}>
                             <UpdateAnimalDialog
                                 formData={formData}
+                                updateFail2={updateFail2}
                                 setFormData={setFormData}
                                 handleCloseUpdateDialog={handleCloseUpdateDialog}
                                 handleUpdateAnimal={handleUpdateAnimal}
@@ -466,6 +484,7 @@ function TrainerManage(props) {
                         {unbanSuccess && (
                             <UnbanAler />
                         )}
+
                     </Table>
                 </TableContainer>
 

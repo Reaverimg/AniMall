@@ -42,7 +42,7 @@ function TicketManage(props) {
     const [deleteSuccess, setDeleteSuccess] = useState(false);
     const [registereSuccess, setRegisterSuccess] = useState(false);
     const [updateFail, setUpdateFail] = useState(false);
-    const [perPage, setPerPage] = useState(10); // Số lượng dữ liệu trên mỗi trang
+    const [perPage, setPerPage] = useState(5); // Số lượng dữ liệu trên mỗi trang
     const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(0); // Tổng số trang
 
@@ -81,13 +81,34 @@ function TicketManage(props) {
     //Handle Update ticket
     const handleUpdateTicket = async () => {
         console.log(updateData);
-        if (!updateData.ticketName || !updateData.ticketPrice || !updateData.ticketType) {
+        if (
+            !updateData.ticketName ||
+            !updateData.ticketPrice ||
+            !updateData.ticketType ||
+            !(updateData.ticketPrice > 0)
+          ) {
             setUpdateFail(true);
             setTimeout(() => {
-                setUpdateFail(false);
+              setUpdateFail(false);
             }, 2000);
             return;
-        }
+          }
+          
+          const response = await axios.get(GET_ALL_TICKET_MANAGE); 
+          const existingTickets = response.data.data; 
+          const isNameUnique = !existingTickets.some(
+            (ticket) =>
+              ticket.ticketName.toLowerCase() === updateData.ticketName.toLowerCase()
+          );
+          
+          if (!isNameUnique) {
+            setUpdateFail(true);
+            setTimeout(() => {
+              setUpdateFail(false);
+            }, 2000);
+            return;
+          }
+          
         try {
             const response = await axios.put(`${PUT_TICKET_MANAGE}${selectedTicket.idTicket}`, updateData);
             console.log("Ticket updated successfully:", response.data.data);
@@ -338,13 +359,14 @@ function TicketManage(props) {
                                         <TableCell align="left">{ticket.ticketName}</TableCell>
 
                                         <TableCell align="left">
-                                            <button className="price-but" style={{width:'60px'}}>
-                                                {ticket.ticketPrice}
-                                            </button>VND</TableCell>
+                                            <button className="price-but" style={{ width: '60px' }}>
+                                                {ticket.ticketPrice.toLocaleString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}
+                                            </button>VND
+                                        </TableCell>
                                         <TableCell align="left">{ticket.ticketType}</TableCell>
                                         <TableCell align="left">
                                             <div>
-                                                <button className="status-but" 
+                                                <button className="status-but"
                                                     style={getStatusBackgroundColor(ticket.status.toString())}>
                                                     {ticket.status ? "Active" : "Disable"}
                                                 </button>

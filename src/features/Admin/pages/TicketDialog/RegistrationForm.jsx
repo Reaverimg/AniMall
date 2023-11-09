@@ -11,8 +11,20 @@ import {
 import axios from "axios";
 
 const validationSchema = Yup.object().shape({
-    ticketName: Yup.string().required("Ticket name is required"),
-    ticketPrice: Yup.number().required("PTicket price is required"),
+    ticketName: Yup.string()
+        .required("Ticket name is required")
+        .test("unique", "Ticket name already existed", async function (value) {
+            if (!value) {
+                return true;
+            }
+            const response = await axios.get(`http://animall-400708.et.r.appspot.com/api/v1/tickets/`);
+            const existingTickets = response.data.data;
+            const isUnique = !existingTickets.some((ticket) =>
+                ticket.ticketName.toLowerCase() === value.toLowerCase()
+            );
+            return isUnique;
+        }),
+    ticketPrice: Yup.number().min(0, "Ticket price must be a non-negative number").required("Ticket price is required"),
     ticketType: Yup.string().required("Ticket type is require"),
 });
 

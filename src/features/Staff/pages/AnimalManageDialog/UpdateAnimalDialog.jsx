@@ -14,7 +14,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
 
-function UpdateDialog({ handleCloseUpdateDialog, formData, setFormData, handleUpdateAnimal, updateFail }) {
+function UpdateDialog({ updateFail2, handleCloseUpdateDialog, formData, setFormData, handleUpdateAnimal, updateFail }) {
 
     const [idAccountData, setIdAccountData] = useState([]);
 
@@ -153,7 +153,22 @@ function UpdateDialog({ handleCloseUpdateDialog, formData, setFormData, handleUp
                     }}>
                     <Paper>
                         <Alert variant="filled" severity="error">
-                            Vui lòng điền đủ thông tin và ngày giờ dd/mm/yyy !!
+                            Date format dd/mm/yyy !!
+                        </Alert>
+                    </Paper>
+                </div>
+            )}
+
+            {updateFail2 && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 20,
+                        right: 20
+                    }}>
+                    <Paper>
+                        <Alert variant="filled" severity="error">
+                            Name existed !!
                         </Alert>
                     </Paper>
                 </div>
