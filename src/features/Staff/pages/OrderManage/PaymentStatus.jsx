@@ -39,7 +39,7 @@ function PaymentStatus(props) {
     const [useSuccess, setUseSuccess] = useState(false);
     const [cancelSuccess, setCancelSuccess] = useState(false);
     const [updateFail, setUpdateFail] = useState(false);
-    const [perPage, setPerPage] = useState(10); // Số lượng dữ liệu trên mỗi trang
+    const [perPage, setPerPage] = useState(5); // Số lượng dữ liệu trên mỗi trang
     const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(0); // Tổng số trang
 
@@ -185,7 +185,6 @@ function PaymentStatus(props) {
           // Sắp xếp mảng getPaymentStatuses theo thời gian tạo (createdAt)
           const sortedData = sortBy(getPaymentStatuses, [(bill) => -new Date(bill.timeCreate)]);
       
-          const perPage = 10;
           const startIndex = (page - 1) * perPage;
           const endIndex = page * perPage;
           const currentPageData = sortedData.slice(startIndex, endIndex);
@@ -277,7 +276,7 @@ function PaymentStatus(props) {
                     <Table >
                         <TableHead>
                             <TableRow sx={{ backgroundColor: '#f0f0f0' }}>
-                                <TableCell align="left">Bill No.</TableCell>
+                                <TableCell align="left">Order No.</TableCell>
                                 <TableCell align="center">Quantity</TableCell>
                                 <TableCell align="center">Total Price</TableCell>
                                 <TableCell align="center">Time Create </TableCell>

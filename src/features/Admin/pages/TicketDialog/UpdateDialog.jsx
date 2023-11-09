@@ -112,7 +112,7 @@ function UpdateDialog({ handleCloseUpdateDialog, updateData, setUpdateData, hand
           }}>
           <Paper>
             <Alert variant="filled" severity="error">
-              Error, please try again !!
+              Error !! (Price must higher 0 / Name is existed)
             </Alert>
           </Paper>
         </div>

@@ -54,6 +54,7 @@ function UpdateDialog({ handleCloseUpdateDialog, formData, setFormData, handleUp
               fullWidth
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              disabled
             />
           </Grid>
 
