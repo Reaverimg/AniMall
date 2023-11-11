@@ -46,7 +46,7 @@ function AccountManage(props) {
     const [registereSuccess, setRegisterSuccess] = useState(false);
     const [updateFail, setUpdateFail] = useState(false);
     const [unbanFail, setUbanFail] = useState(false);
-    const [perPage, setPerPage] = useState(10); // Số lượng dữ liệu trên mỗi trang
+    const [perPage, setPerPage] = useState(5); // Số lượng dữ liệu trên mỗi trang
     const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(0); // Tổng số trang
 
@@ -342,7 +342,7 @@ function AccountManage(props) {
                     <Table >
                         <TableHead>
                             <TableRow sx={{ backgroundColor: '#f0f0f0' }}>
-                                <TableCell align="left">User Name</TableCell>
+                                <TableCell align="left">Name</TableCell>
                                 <TableCell align="left">Role</TableCell>
                                 <TableCell align="left">Email</TableCell>
                                 <TableCell align="left">Phone Number</TableCell>

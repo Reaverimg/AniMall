@@ -11,7 +11,19 @@ import {
 import axios from "axios";
 
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required"),
+    name: Yup.string()
+        .required("Animal name is required")
+        .test("unique", "Animal name already existed ", async function (value) {
+            if (!value) {
+                return true;
+            }
+            const response = await axios.get(`http://animall-400708.et.r.appspot.com/api/v1/animals`);
+            const existingAnimal = response.data.data;
+            const isUnique = !existingAnimal.some((animal) =>
+                animal.name.toLowerCase() === value.toLowerCase()
+            );
+            return isUnique;
+        }),
     idCage: Yup.string().required("Cage is required"),
     idSpecie: Yup.string().required("Species is required"),
     sex: Yup.boolean().required('Gender is required'),
