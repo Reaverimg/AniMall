@@ -3,6 +3,9 @@ import axios from "axios";
 import {
     Button,
     Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     Grid,
     Pagination,
     Table,
@@ -26,6 +29,7 @@ import ErrorAlert from "./OrderManageDialog/ErrorAlert";
 import UseBill from "./OrderManageDialog/UseBill";
 import UseBillAlert from "./OrderManageDialog/UseBillAlert";
 import { GET_ALL_BILL } from "../../../../api/SwaggerAPI";
+import { Tag } from "antd";
 
 function PaymentStatus(props) {
     const [searchValue, setSearchValue] = useState("");
@@ -39,9 +43,16 @@ function PaymentStatus(props) {
     const [useSuccess, setUseSuccess] = useState(false);
     const [cancelSuccess, setCancelSuccess] = useState(false);
     const [updateFail, setUpdateFail] = useState(false);
-    const [perPage, setPerPage] = useState(10); // Số lượng dữ liệu trên mỗi trang
+    const [perPage, setPerPage] = useState(5); // Số lượng dữ liệu trên mỗi trang
     const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState(0); // Tổng số trang
+    const [popupOpen, setPopupOpen] = useState(false);
+
+    const handleOrderClick = (order) => {
+        setSelectedOrder(order);
+        setPopupOpen(true);
+    };
+
 
     //Confirm Data
     const [confirmData, setConfirmData] = useState({
@@ -168,6 +179,11 @@ function PaymentStatus(props) {
     const handelCloseCancelDialog = () => {
         setCancelDialogOpen(false);
     }
+
+    const handelClosePopup = () => {
+        setPopupOpen(false);
+    }
+
    
     //Fetch all order list
     const { sortBy } = require('lodash');
@@ -185,7 +201,6 @@ function PaymentStatus(props) {
           // Sắp xếp mảng getPaymentStatuses theo thời gian tạo (createdAt)
           const sortedData = sortBy(getPaymentStatuses, [(bill) => -new Date(bill.timeCreate)]);
       
-          const perPage = 10;
           const startIndex = (page - 1) * perPage;
           const endIndex = page * perPage;
           const currentPageData = sortedData.slice(startIndex, endIndex);
@@ -277,7 +292,7 @@ function PaymentStatus(props) {
                     <Table >
                         <TableHead>
                             <TableRow sx={{ backgroundColor: '#f0f0f0' }}>
-                                <TableCell align="left">Bill No.</TableCell>
+                                <TableCell align="left">Order No.</TableCell>
                                 <TableCell align="center">Quantity</TableCell>
                                 <TableCell align="center">Total Price</TableCell>
                                 <TableCell align="center">Time Create </TableCell>
@@ -296,22 +311,22 @@ function PaymentStatus(props) {
                             ) : (
                                 // Search found
                                 filteredOrderData.map((order) => (
-                                    <TableRow key={order.idBill}>
+                                    <TableRow key={order.idBill} onClick={() => handleOrderClick(order)}>
                                         <TableCell align="left">{order.idBill}</TableCell>
                                         <TableCell align="center">
                                             <button className="quantity-but">
                                                 {order.quantity}
                                             </button>
                                         </TableCell>
-                                        <TableCell align="center">{order.totalPrice}VND</TableCell>
+                                        <TableCell align="center"> {order.totalPrice.toLocaleString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')}VND</TableCell>
                                         <TableCell align="center">
                                             <button className="time-but">
                                                 {format(new Date(order.timeCreate), 'dd/MM/yyyy')}
                                             </button>
-                                            <button className="time-but"
+                                            {/* <button className="time-but"
                                                 style={{ marginLeft: '10px' }}>
                                                 {format(new Date(order.timeCreate), 'hh:mm a')}
-                                            </button>
+                                            </button> */}
                                         </TableCell>
                                         <TableCell align="left">
 
@@ -442,6 +457,69 @@ function PaymentStatus(props) {
                         onChange={handlePageChange}
                     />
                 </div>
+
+                 {/* Order Detail Popup */}
+                 <Dialog open={popupOpen} onClose={handelClosePopup}>
+                    <DialogTitle>
+                        Order Details
+                    </DialogTitle>
+                    <DialogContent>
+                        {popupOpen && selectedOrder && (
+
+                            <div>
+                                <p>
+                                    <strong>Order ID:</strong> {selectedOrder.idBill}
+                                </p>
+
+                                <p>
+                                    <strong>Quantity:</strong> {selectedOrder.quantity} (Ticket)
+                                </p>
+
+                                <p>
+                                    <strong>Status:</strong>
+                                    <Tag style={getStatusBackgroundColor(selectedOrder.paymentStatus)}>
+                                        {selectedOrder.paymentStatus}
+                                    </Tag>
+                                </p>
+
+                                {/* <div className="row">
+                                    <div className="col-md-6 text-start table-header">
+                                        Ticket
+                                    </div>
+
+                                    <div className="col-md-2 text-center table-header">
+                                        Quantity
+                                    </div>
+
+                                    <div className="col-md-4 text-end table-header">
+                                        Amount
+                                    </div>
+                                </div> */}
+
+                                <div className="d-flex justify-content-between row">
+
+                                    <div className="col-md-6">
+
+                                    </div>
+
+                                    <p >  {/* className="col-md-6 total p-3 text-end mb-0" */}
+                                        <strong>Total Price :{" "}
+                                            {selectedOrder.totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}{' VND'}
+                                        </strong>
+                                    </p>
+                                </div>
+                            </div>
+
+                        )}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            color="error"
+                            onClick={() => setPopupOpen(false)}>
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </Grid>
         </div >
     );
